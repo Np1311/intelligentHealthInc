@@ -1,0 +1,141 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body {
+                font-family: 'alata', sans-serif !important;
+                background-image: url('{% static 'background.png'%}'); /* Replace with the actual path to your image */
+                background-size: cover; /* Cover the entire .table element */
+                background-position: center;
+                background-repeat: repeat;
+                background-attachment: fixed;
+                color:#333333;
+            }
+            .divider:after,
+            .divider:before {
+                content: "";
+                flex: 1;
+                height: 1px;
+                background: #eee;
+            }
+            #submit-button {
+                /* Add custom styles for the "Sign in" button */
+                width: 520px;
+            }
+            
+            .mb-5 {
+                /* Add custom styles for the bottom paragraph */
+                text-align: center;
+                color: #393f81;
+            }
+            #loginlogo {
+                /*resizing of the picture*/
+                width: 200px;
+                height: 200px;
+                object-fit: cover;  
+            }
+
+            .IntelligentHealthInc {
+                margin-left: 10px;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                margin-bottom: 90px;
+            }
+            .centered-h3 {
+                text-align: center;
+                margin: 0;
+                font-size: 40px; /* Adjust the font size as needed */
+                font-family: 'Kollektif Regular', sans-serif;
+                word-wrap: break-word;
+                color: #004AAD;
+                padding-left: 30px;
+                letter-spacing: 15px;
+            }
+            .centered-h4{
+                text-align: right;
+                margin: 20;
+                font-size: 20px; /* Adjust the font size as needed */
+                font-family: 'Kollektif Regular', sans-serif;
+                word-wrap: break-word;
+                color: #0099CC;
+                padding-left: 120px;
+                letter-spacing: 10px;
+            }
+        </style>
+        <link rel="stylesheet"  href="{% static 'bootstrap.min.css' %}">
+    </head>
+    <body>
+        <section class="vh-100">
+            <div class="container py-5 h-100">
+                <div class="row d-flex align-items-center justify-content-center h-100">
+                    <div class="col-md-6 col-lg-5 col-xl-4 d-flex flex-column align-items-center">
+                        <!-- static is used to load static files such as images, javascript and css file -->
+                        <img id='loginlogo' src="{% static 'logo.png' %}" class="img-fluid" alt="Logo">
+                        <div class="IntelligentHealthInc">
+                            <span class="centered-h3" style='font-weight: 450;' >INTELLIGENT</span>
+                            <span class="centered-h4" >HEALTH INC.</span>
+                        </div>
+                      </div>
+                    <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
+                        
+                        <form method='post'>
+                            {% csrf_token %}
+
+                            {% if messages %}
+                                <div class="alert alert-danger">
+                                    <ul class="mb-0">
+                                        {% for message in messages %}
+                                            <li>{{ message }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        <!-- Email input -->
+                        <div class="form-outline mb-4">
+                            <input type="textbox" id="username" name = 'username' class="form-control form-control-lg" />
+                            <label class="form-label" for="username">Username</label>
+                        </div>
+                
+                        <!-- Password input -->
+                        <div class="form-outline mb-4">
+                            <input type="password" id="password" name = 'password' class="form-control form-control-lg" />
+                            <label class="form-label" for="password">Password</label>
+                        </div>
+                
+                        <div class="d-flex justify-content-around align-items-center mb-4">
+                            <!-- Checkbox -->
+                            <a href="#!">Forgot password?</a>
+                        </div>
+                
+                        <!-- Submit button -->
+                        <button type="submit" class="btn btn-primary btn-lg btn-block" id='submit-button'>Sign in</button>
+                        <div class="divider d-flex align-items-center my-4">
+                            <p class="text-center fw-bold mx-3 mb-0 text-muted">OR</p>
+                        </div>
+                        <p class="mb-5 pb-lg-2" style="color: #393f81;">Don't have an account? <a href="{% url 'createAccount'%}"
+                            style="color: #393f81;">Register here</a></p>
+                        </form>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+        <script src="{% static 'javascript.js' %}"></script> 
+        <script>
+            $(document).ready(function() {
+            // Clear the alert message when the page is refreshed
+            window.onbeforeunload = function() {
+                $('.alert').remove();
+            };
+        
+            // Clear the alert message when the user is redirected to the login page
+            $('a[href="/login"]').click(function() {
+                $('.alert').remove();
+            });
+            });
+        </script>
+    </body>
+</html>

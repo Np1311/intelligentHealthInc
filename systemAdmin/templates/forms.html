@@ -1,0 +1,88 @@
+{% extends 'menu.html' %}
+
+{% block content %}
+<style>
+	
+	#createButton, #nextButton {
+		width: 100% !important;
+		z-index: 1;
+		background-color: #44AEE7;
+		color: white;
+		border: 2px solid #276FBF;
+		padding: 8px 15px;
+		cursor: pointer;
+		overflow: hidden;
+		position: relative; /* Add this line */
+	}
+	
+	#createButton:hover, #nextButton:hover {
+		background-color: #F8F8F8;
+		color: #333333;
+	}
+	
+	#createButton::before,#nextButton::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: -100%; /* Start the pseudo-element from the left edge */
+		width: 100%;
+		height: 100%;
+		background-color: #F8F8F8; /* Hover color */
+		z-index: -1;
+		transition: left 0.5s ease; /* Use left property for transition */
+	}
+	
+	#createButton:hover::before, #nextButton:hover::before{
+		left: 0; 
+	}
+	#homeButton{
+		width: 100%;
+		margin-top: 10px;
+	}
+</style>
+<div class="col-md-6 offset-md-3">
+	{% if 'updateProfile/' in request.path or 'updateAccount/' in request.path%}
+		<h1>Update </h1>
+	{% else %}
+		{% if 'createProfile' in request.path%}
+			<h1>Create Profile</h1>
+		{% else %}
+			<h1>Create Account</h1>
+		{%endif%}
+	{%endif%}
+</br>
+	<form method="post" id="createForm">
+		{% csrf_token%}
+		{% if form.errors %}
+			<div class="alert alert-warning alert-dismissible fade show" role="alert">
+			Your Form Has Errors
+			{% for field in form %}
+				{% if field.errors %}
+					{{ field.errors }}
+				{% endif %}
+			{% endfor %}
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		{% endif %}
+		{{ form.as_p }}
+		{% if 'updateProfile/' in request.path or 'updateAccount/' in request.path%}
+			<button type="submit" class="btn btn-primary" id = 'createButton'>Update</button>
+		{% else %}
+			{% if 'createProfile' in request.path %}
+				<button type="submit" class="btn btn-primary" id = 'createButton'>Create</button>
+			{% else %}
+				<button type="submit" class="btn btn-primary" id = 'nextButton'>Next</button>
+			{% endif %}
+		{%endif%}
+	</form>
+</div>
+
+<script>
+	
+	{% comment %} document.getElementById('nextButton').addEventListener('click', function () {
+		document.getElementById('createForm').submit();
+		window.location.href= "{% url 'createProfile' %}"
+	}); {% endcomment %}
+</script>
+
+{% endblock %}
