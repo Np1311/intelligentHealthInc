@@ -1,0 +1,6 @@
+.vercel
+.git
+venv
+*.pyc
+__pycache__
+staticfiles_build

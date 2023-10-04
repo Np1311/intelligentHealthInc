@@ -1,5 +1,8 @@
 {
     "version": 2,
+    "env": {
+      "CACHE_VERSION": 1
+    },
     "builds": [
       {
         "src": "intelligentHealthInc/wsgi.py",
