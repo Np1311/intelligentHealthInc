@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'systemAdmin',
     # 'medicalTech',
-    # 'healthcareadmin',
+    'healthcareadmin',
     # 'radiologistDoctor',
 ]
 

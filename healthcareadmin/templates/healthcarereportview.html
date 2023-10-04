@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>healthcareportview</title>
+
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- Include PDF.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.js"></script>
+
+    <!-- Custom CSS for modal -->
+    <style>
+        /* Style the file preview content for visibility on the black background */
+        body {
+            color: white;
+            margin-left: 20px;
+        }
+
+        /* Style to move the left arrow to the right side */
+        .modal-header .close {
+            position: absolute;
+            left: 10px; /* Adjust the left position as needed */
+            top: 28px; /* Adjust the top position as needed */
+            font-size: 36px; /* Increase the font size as needed */
+            cursor: pointer;
+            padding: 0; /* Remove padding */
+            border: none; /* Remove border */
+            background: none; /* Remove background */
+            color: #FFFFFF;
+        }
+
+        .modal-title {
+            margin-left: 190px; /* Adjust the margin as needed */
+        }
+
+        /* Style for the download button on the right side */
+        .modal-header .download-button {
+            position: absolute;
+            right: 15px; /* Adjust the right position as needed */
+            top: 15px;
+            font-size: 16px; /* Adjust the font size as needed */
+            padding: 5px 10px; /* Adjust padding as needed */
+            background-color: #007bff; /* Adjust the background color */
+            color: white; /* Text color */
+            border: none; /* Remove the border */
+            cursor: pointer;
+        }
+
+        /* Style for the modal content with 75% transparency */
+        .modal-content {
+            background-color: rgba(0, 0, 0, .40); /* 75% opacity */
+            max-width: 100%;
+            max-height: 60%;
+        }
+
+        /* Increase the modal size */
+        .custom-modal-lg {
+            max-width: 100%; /* Adjust the max width as needed */
+        }
+
+        /* Center the PDF viewer */
+        #pdf-viewer-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 70vh;
+            overflow: auto;
+        }
+
+        #pdf-viewer {
+            max-width: 100%;
+            max-height: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- modal.html -->
+    <div class="modal fade" id="filePreviewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog custom-modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!-- Place the left arrow on the right side -->
+                    <span class="close" data-dismiss="modal" aria-label="Close">&larr;</span>
+                    <!-- Add space between the arrow and the "File Preview" text -->
+                    <h5 class="modal-title" id="exampleModalLabel">&nbsp;&nbsp;File Preview</h5>
+                    <!-- Move the download button to the right side -->
+                    <a href="https://arxiv.org/abs/1608.06993" class="btn btn-success download-button" target="_blank">
+                        Open PDF
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <!-- Display the PDF viewer within a container -->
+                    <div id="pdf-viewer-container">
+                        <div id="pdf-viewer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Button to open the modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#filePreviewModal">
+        Preview File
+    </button>
+
+    <!-- Include Bootstrap JS and jQuery (necessary for Bootstrap modal functionality) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- JavaScript to load and display the PDF file -->
+    <script>
+        $(document).ready(function() {
+            // Load and display the PDF file
+            $("#filePreviewModal").on("show.bs.modal", function() {
+                var pdfViewer = document.getElementById("pdf-viewer");
+
+                // Define the URL of the PDF file
+                var pdfUrl = "https://arxiv.org/pdf/1608.06993.pdf";
+
+                // Load and display the PDF using PDF.js
+                pdfjsLib.getDocument(pdfUrl).promise.then(function(pdfDocument) {
+                    pdfDocument.getPage(1).then(function(pdfPage) {
+                        var viewport = pdfPage.getViewport({ scale: 1.0 });
+                        var canvas = document.createElement("canvas");
+                        var context = canvas.getContext("2d");
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
+                        pdfPage.render({ canvasContext: context, viewport: viewport }).promise.then(function() {
+                            pdfViewer.appendChild(canvas);
+                        });
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html> 
