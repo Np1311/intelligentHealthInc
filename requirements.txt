@@ -2,10 +2,6 @@ django
 django-phonenumber-field
 phonenumbers
 python-dateutil
-pydicom
-matplotlib
-mpld3
-tensorflow
 numpy
 pillow
 azure-storage-blob
