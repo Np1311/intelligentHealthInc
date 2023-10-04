@@ -40,8 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'whitenoise.runserver_nostatic',
     'systemAdmin',
-    # 'medicalTech',
-    'healthcareadmin',
+    'medicalTech',
+    # 'healthcareadmin',
     # 'radiologistDoctor',
 ]
 
