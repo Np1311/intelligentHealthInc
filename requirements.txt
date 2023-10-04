@@ -2,14 +2,6 @@ django
 django-phonenumber-field
 phonenumbers
 python-dateutil
-numpy
-pillow
-azure-storage-blob
 fontawesomefree==6.4.2
-fonttools==4.42.1
-google-auth==2.22.0
-google-auth-oauthlib==1.0.0
-google-pasta==0.2.0
-grpcio==1.57.0
 PyMySQL
 whitenoise
