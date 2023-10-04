@@ -1,7 +1,7 @@
 {
     "version": 2,
     "env": {
-      "CACHE_VERSION": 1
+      "CACHE_VERSION": "1"
     },
     "builds": [
       {
