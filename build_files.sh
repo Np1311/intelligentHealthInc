@@ -29,6 +29,9 @@ echo "Removing unnecessary files and directories..."
 rm -rf venv/lib/python*/site-packages/tests
 rm -rf venv/lib/python*/site-packages/docs
 
+# Remove PostgreSQL-related files (assuming you don't need them)
+rm -rf venv/lib/python*/site-packages/django/contrib/postgres
+
 # Collect static files
 python manage.py collectstatic --noinput || { echo 'Failed to collect static files'; exit 1; }
 
