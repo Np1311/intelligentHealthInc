@@ -22,7 +22,7 @@ source venv/bin/activate
 pip install --upgrade pip
 
 # Install dependencies excluding humanize and admindocs
-pip install --no-cache-dir --use-feature=fast-deps --no-dev -r requirements.txt
+pip install --no-cache-dir --use-feature=fast-deps -r requirements.txt
 
 # Remove unnecessary files and directories
 echo "Removing unnecessary files and directories..."
