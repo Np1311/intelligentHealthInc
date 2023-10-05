@@ -19,7 +19,7 @@ source venv/bin/activate
 pip install --upgrade pip
 
 # Install dependencies
-pip install -r requirements.txt || { echo 'Failed to install dependencies'; exit 1; }
+pip install --no-cache-dir --global-option="--exclude-packages=tests,docs" -r requirements.txt || { echo 'Failed to install dependencies'; exit 1; }
 
 # Collect static files
 python manage.py collectstatic --noinput || { echo 'Failed to collect static files'; exit 1; }
