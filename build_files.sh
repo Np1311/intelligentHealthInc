@@ -10,6 +10,8 @@ source venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt || { echo 'Failed to install dependencies'; exit 1; }
 python manage.py collectstatic --noinput || { echo 'Failed to collect static files'; exit 1; }
+du -sh venv
+du -sh .
 deactivate
 
 echo "BUILD END"
