@@ -21,13 +21,16 @@ source venv/bin/activate
 # Upgrade pip
 pip install --upgrade pip
 
-# Install dependencies
+# Install dependencies excluding humanize and admindocs
 pip install --no-cache-dir -r requirements.txt || { echo 'Failed to install dependencies'; exit 1; }
 
 # Remove unnecessary files and directories
 echo "Removing unnecessary files and directories..."
 rm -rf venv/lib/python*/site-packages/tests
 rm -rf venv/lib/python*/site-packages/docs
+
+# Remove specific packages (humanize and admindocs)
+pip uninstall -y humanize admindocs  # Assuming these packages are installed
 
 # Remove PostgreSQL-related files (assuming you don't need them)
 rm -rf venv/lib/python*/site-packages/django/contrib/postgres
