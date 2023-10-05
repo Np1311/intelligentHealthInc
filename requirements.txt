@@ -6,5 +6,3 @@ PyMySQL
 whitenoise
 pydicom
 matplotlib
-tensorflow
-azure-storage-blob
