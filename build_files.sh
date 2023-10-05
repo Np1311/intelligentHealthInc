@@ -28,12 +28,9 @@ pip install --no-cache-dir -r requirements.txt || { echo 'Failed to install depe
 echo "Removing unnecessary files and directories..."
 rm -rf venv/lib/python*/site-packages/tests
 rm -rf venv/lib/python*/site-packages/docs
-
-# Remove specific packages (humanize and admindocs)
-pip uninstall -y humanize admindocs  # Assuming these packages are installed
-
-# Remove PostgreSQL-related files (assuming you don't need them)
 rm -rf venv/lib/python*/site-packages/django/contrib/postgres
+rm -rf venv/lib/python*/site-packages/django/contrib/humanize
+rm -rf venv/lib/python*/site-packages/django/contrib/admindocs
 
 # Collect static files
 python manage.py collectstatic --noinput || { echo 'Failed to collect static files'; exit 1; }
