@@ -6,3 +6,7 @@ PyMySQL
 whitenoise
 pydicom
 matplotlib
+tensorflow
+azure-storage-blob
+gunicorn
+django-heroku
