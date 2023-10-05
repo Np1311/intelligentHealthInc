@@ -33,7 +33,6 @@ rm -rf venv/lib/python*/site-packages/django/contrib/humanize
 rm -rf venv/lib/python*/site-packages/django/contrib/admindocs
 rm -rf venv/lib/python*/site-packages/django/contrib/flatpages
 rm -rf venv/lib/python*/site-packages/django/contrib/gis
-rm -rf venv/lib/python*/site-packages/django/contrib/contenttypes
 
 
 # Collect static files
