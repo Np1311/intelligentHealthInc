@@ -18,11 +18,8 @@ fi
 python3 -m venv venv
 source venv/bin/activate
 
-# Upgrade pip
-pip install --upgrade pip
-
 # Install dependencies with cache disabled and excluding unnecessary files
-pip install -v --no-cache-dir --global-option="--exclude-packages=tests,docs" -r requirements.txt || { echo 'Failed to install dependencies'; exit 1; }
+pip install --global-option="--exclude-packages=tests,docs" -r requirements.txt || { echo 'Failed to install dependencies'; exit 1; }
 
 # Collect static files
 python manage.py collectstatic -v --noinput || { echo 'Failed to collect static files'; exit 1; }
