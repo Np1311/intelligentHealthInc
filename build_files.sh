@@ -58,6 +58,10 @@ du -sh requirements.txt
 du -sh static
 du -sh templates
 
+# Print the size of individual files in the lib directory
+echo "Size of individual files in the lib directory:"
+du -h venv/lib/python*/site-packages/* | sort -h
+
 # Deactivate the virtual environment
 deactivate
 
