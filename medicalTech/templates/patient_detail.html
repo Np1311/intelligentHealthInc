@@ -316,7 +316,8 @@
                             var plotHtml = response.image_data;
                     
                             
-                            $("#imageContainer").html(plotHtml);
+                            /*$("#imageContainer").html(plotHtml);*/
+                            $("#imageContainer").html('<img src="data:image/png;base64,' + plotHtml + '" alt="Image" />');
                             $("#loadingMessage").hide();
                     
                             var prediction = response.prediction;
