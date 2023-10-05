@@ -35,13 +35,17 @@ rm -rf venv/lib/python*/site-packages/django/contrib/admindocs
 # Collect static files
 python manage.py collectstatic --noinput || { echo 'Failed to collect static files'; exit 1; }
 
-
+# Debugging: Print the size of the virtual environment
 du -sh venv
 
+# Debugging: List installed packages and their sizes
+echo "Installed packages and their sizes:"
+pip freeze | xargs pip show | awk '/^Name:/ {name=$2} /^Size:/ {print name, $2}'
 
+# Debugging: Print the size of the deployment directory
 du -sh .
 
-
+# Debugging: Print the size of specific files or directories in the environment
 echo "Size of specific files or directories in the environment:"
 du -sh venv/bin
 du -sh venv/lib
@@ -56,10 +60,6 @@ du -sh manage.py
 du -sh requirements.txt
 du -sh static
 du -sh templates
-
-# Print the size of individual files in the lib directory
-echo "Size of individual files in the lib directory:"
-du -h venv/lib/python*/site-packages/* | sort -h
 
 # Deactivate the virtual environment
 deactivate
