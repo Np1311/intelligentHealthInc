@@ -2,6 +2,9 @@
 
 echo "BUILD START"
 
+# Check Python version
+echo "Using Python version $(python3 --version)"
+
 # Remove existing virtual environment if it exists
 if [ -d "venv" ]; then
     echo "Removing existing virtual environment..."
@@ -18,11 +21,11 @@ source venv/bin/activate
 # Upgrade pip
 pip install --upgrade pip
 
-# Install dependencies
-pip install --no-cache-dir --global-option="--exclude-packages=tests,docs" -r requirements.txt || { echo 'Failed to install dependencies'; exit 1; }
+# Install dependencies with cache disabled and excluding unnecessary files
+pip install -v --no-cache-dir --global-option="--exclude-packages=tests,docs" -r requirements.txt || { echo 'Failed to install dependencies'; exit 1; }
 
 # Collect static files
-python manage.py collectstatic --noinput || { echo 'Failed to collect static files'; exit 1; }
+python manage.py collectstatic -v --noinput || { echo 'Failed to collect static files'; exit 1; }
 
 # Debugging: Print the size of the virtual environment
 du -sh venv
