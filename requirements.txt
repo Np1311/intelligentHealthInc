@@ -4,3 +4,4 @@ phonenumbers
 python-dateutil
 PyMySQL
 whitenoise
+pydicom
