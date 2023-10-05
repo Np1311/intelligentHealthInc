@@ -2,7 +2,6 @@ django
 django-phonenumber-field
 phonenumbers
 python-dateutil
-fontawesomefree==6.4.2
 PyMySQL
 whitenoise
 pydicom
