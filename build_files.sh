@@ -18,11 +18,19 @@ fi
 python3 -m venv venv
 source venv/bin/activate
 
-# Install dependencies with cache disabled and excluding unnecessary files
-pip install --global-option="--exclude-packages=tests,docs" -r requirements.txt || { echo 'Failed to install dependencies'; exit 1; }
+# Upgrade pip
+pip install --upgrade pip
+
+# Install dependencies
+pip install --no-cache-dir -r requirements.txt || { echo 'Failed to install dependencies'; exit 1; }
+
+# Remove unnecessary files and directories
+echo "Removing unnecessary files and directories..."
+rm -rf venv/lib/python*/site-packages/tests
+rm -rf venv/lib/python*/site-packages/docs
 
 # Collect static files
-python manage.py collectstatic -v --noinput || { echo 'Failed to collect static files'; exit 1; }
+python manage.py collectstatic --noinput || { echo 'Failed to collect static files'; exit 1; }
 
 # Debugging: Print the size of the virtual environment
 du -sh venv
