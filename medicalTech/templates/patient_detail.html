@@ -316,8 +316,8 @@
                             var plotHtml = response.image_data;
                     
                             
-                            /*$("#imageContainer").html(plotHtml);*/
-                            $("#imageContainer").html('<img src="data:image/png;base64,' + plotHtml + '" alt="Image" />');
+                            $("#imageContainer").html(plotHtml);
+                            //$("#imageContainer").html('<img src="data:image/png;base64,' + plotHtml + '" alt="Image" />');*
                             $("#loadingMessage").hide();
                     
                             var prediction = response.prediction;
@@ -380,9 +380,13 @@
                     headers: {
                         "X-CSRFToken": getCookie("csrftoken")
                     },
+                    beforeSend: function () {
+                        //$('#loading-spinner').show();
+                        alert('Please wait. Your request is being processed...');
+                    },
                     success: function (response) {
-                        window.location.href="{% url 'medical_tech_home'%}";
-                        console.log(response);
+                        console.log(response);  // Log the entire response object for debugging
+                        window.location.href = "{% url 'medical_tech_home'%}";
                     },
                     error: function (xhr, status, error, response) {
                         // Handle error here

@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 # from keras.models import load_model
 import numpy as np
 # from azure.storage.blob import BlobServiceClient
+import mpld3
 import tempfile
 import base64
 
@@ -41,19 +42,23 @@ class DicomViewer:
         fig, ax = plt.subplots()
         ax.imshow(self.dataset.pixel_array, cmap=plt.cm.gray)
         ax.axis('off')
+        
+        plot_html = mpld3.fig_to_html(fig)
+        plt.close(fig)
 
-        # Create a temporary file to save the image
-        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as temp_file:
-            temp_file_path = temp_file.name
-            fig.savefig(temp_file_path, bbox_inches="tight", pad_inches=0.0)
-            plt.close(fig)
+        return plot_html
+        # # Create a temporary file to save the image
+        # with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as temp_file:
+        #     temp_file_path = temp_file.name
+        #     fig.savefig(temp_file_path, bbox_inches="tight", pad_inches=0.0)
+        #     plt.close(fig)
 
-        # Read the image file and encode it in base64
-        with open(temp_file_path, "rb") as image_file:
-            image_data = base64.b64encode(image_file.read()).decode("utf-8")
+        # # Read the image file and encode it in base64
+        # with open(temp_file_path, "rb") as image_file:
+        #     image_data = base64.b64encode(image_file.read()).decode("utf-8")
 
-        # Return the base64 encoded image data
-        return image_data
+        # # Return the base64 encoded image data
+        # return image_data
 
    
    

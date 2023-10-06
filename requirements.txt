@@ -7,4 +7,4 @@ whitenoise
 pydicom
 matplotlib
 gunicorn
-django-heroku
+mpld3
