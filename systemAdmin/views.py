@@ -134,7 +134,7 @@ def create_profile(request):
             elif profile.role == 'healthcareAdmin':
                 return redirect('healthcareAdmin')
             elif profile.role == 'radiologyDoctor':
-                return redirect('radiologyDoctor ')
+                return redirect('radiologyDoctor')
             else:
                 return redirect('profile')
     else:

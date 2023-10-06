@@ -22,8 +22,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-v4=+vc&0%j447_&@6vm%7wfwi8bjblldio=v)v(3jc_q%#ql47'
-SECRET_KEY = os.environ.get('SECRET_KEY', default='your secret key')
+SECRET_KEY = 'django-insecure-v4=+vc&0%j447_&@6vm%7wfwi8bjblldio=v)v(3jc_q%#ql47'
+# SECRET_KEY = os.environ.get('SECRET_KEY', default='your secret key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -43,8 +43,8 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'systemAdmin',
     'medicalTech',
-    # 'healthcareadmin',
-    # 'radiologistDoctor',
+    'healthcareadmin',
+    'radiologistDoctor',
 ]
 
 MIDDLEWARE = [
@@ -137,14 +137,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
-
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
 
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage' 

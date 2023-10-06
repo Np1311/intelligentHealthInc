@@ -1,0 +1,252 @@
+{% extends 'logout.html' %}
+{% block content%}
+
+{%load static %}
+
+<head>
+    <title>View Image</title>
+    
+    <style>
+        
+        .content {
+            display: flex;
+            flex-direction: column; 
+            align-items: center; 
+            padding-top: 100px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px; 
+        }
+        
+        .container-wrap {
+            background-color: #e3ecfa;
+            padding: 10px 80px 10px 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .container-wrap .image-viewer-container {
+            flex-basis: 50%; 
+        }
+        .toggle-switch {
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            margin-top: 20px;
+        }
+
+        .container-wrap .main-content {
+            flex: 1; 
+            display: flex;
+            flex-direction: column;
+        }
+
+        
+
+        .container-wrap .toggle-label {
+            margin: 0 10px 0 10px;
+        }
+
+        .container-wrap .toggle {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .container-wrap .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .container-wrap .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 30px; 
+        }
+
+        .container-wrap .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 40%; 
+        }
+
+        .container-wrap input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        .container-wrap input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        .container-wrap input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        .system-predictions{
+            margin : 40px 0 80px 0;
+        }
+        #update-button,#back-button {
+            background-color: #276fbf;
+            color: #fff;
+            border: none;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 17px;
+            cursor: pointer;
+            border-radius: 20px;
+            margin-bottom: 10px;
+            width: 50%;
+        }
+        #back-button{
+            background-color:red;
+            margin-left: 20px;
+            
+        }
+
+
+        .button-group {
+            display: flex;
+            
+        }
+        .image-filename {
+            background-color: white;
+            color: black;
+            font-size: 20px;
+            padding: 0 0 0 20px;
+            margin-top: 30px;
+            border-radius: 10px;
+            width: 75%;
+        }
+        
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+
+</head>
+<body>
+    <div class="content">
+        <div class="title">Update Status</div>
+        <div class="container-wrap">
+            <div class="image-viewer-container">
+                <div class="image-viewer">
+                    <div class="image-filename">{{ image_data.image_filename }}</div>
+                    <span> {{ image_data.image|safe }}</span>
+                </div>
+            </div>
+    
+            <div class="main-content">
+                <div class="toggle-switch">
+                    <span class="toggle-label">COVID-19 Negative</span>
+                    <label class="toggle">
+                        <input type="checkbox" {% if image_data.prediction == 'Positive' %}checked{% endif %}>
+                        <span class="slider"></span>
+                    </label>
+                    <span class="toggle-label">COVID-19 Positive</span>
+                </div>
+                <div class="container system-predictions">
+                    <h2 style="font-size: 24px;">Notes</h2>
+                    <textarea id="system-predictions-note" rows="4" cols="50" placeholder="Enter your notes">{{image_data.notes}}</textarea>
+                </div>
+                
+                <div class="button-group">
+                    <button id="update-button">Update</button>
+                    <button id="back-button">Back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            
+            var checkbox = document.querySelector('input[type="checkbox"]');
+            var updateButton = document.getElementById('update-button');
+            var predictions = '';
+            var notesInput = document.getElementById('system-predictions-note');
+            var backButton = document.getElementById('back-button');
+            var changed = false;
+            
+            notesInput.addEventListener('input', function() {
+                notes = notesInput.value; 
+                var changed = true;
+            });
+            
+            updateButton.addEventListener('click', function() {
+                
+                if (checkbox.checked) {
+                    
+                    predictions = "Positive";
+                    console.log(predictions);
+                } else {
+                    predictions = "Negative";
+                    console.log(predictions);
+                }
+
+                if (changed == false ) {
+                    alert("Note is not changed yet");
+                }
+                var formData = new FormData();
+                formData.append('notes', notes);
+                formData.append('predictions', predictions);
+
+                for (const pair of formData.entries()) {
+                    console.log(pair[0], pair[1]);
+                }
+                $.ajax({
+                    url: "{% url 'save_update' image_data.record_id %}",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        "X-CSRFToken": getCookie("csrftoken")
+                    },
+                    success: function (response) {
+                       window.location.href = "{% url 'radiologistDoctorHome' %}" 
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle error here
+                        console.error(error);
+                    }
+                });
+            });
+            backButton.addEventListener("click", function() {
+                window.location.href = "{% url 'radiologistDoctorHome' %}" 
+            });
+        });
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+</body>
+
+{% endblock %} 

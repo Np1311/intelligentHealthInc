@@ -25,6 +25,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('systemAdmin/', include('systemAdmin.urls')),
     path('medicalTech/', include('medicalTech.urls')),
-    # path('healthcareAdmin/', include('healthcareadmin.urls')),
-    # path('radiologistDoctor/', include('radiologistDoctor.urls')),
+    path('healthcareAdmin/', include('healthcareadmin.urls')),
+    path('radiologistDoctor/', include('radiologistDoctor.urls')),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

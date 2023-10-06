@@ -53,6 +53,7 @@ class CreateProfileForm(forms.ModelForm):
                 field.help_text = 'Please enter your phone number format, such as 6234 5678.'
             elif field_name in ['account', 'role', 'status']:
                 field.widget.attrs.update({'class': 'form-control dropdown-arrow', 'style': 'background-color: white; color: black;'})
+                field.queryset = User.objects.filter(profile__isnull=True)
             else:
                 field.widget.attrs.update({'class': 'form-control'})
 
