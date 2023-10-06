@@ -2,8 +2,8 @@ import pydicom
 import matplotlib
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
-from keras.preprocessing import image
-from keras.models import load_model
+# from keras.preprocessing import image
+# from keras.models import load_model
 import numpy as np
 from azure.storage.blob import BlobServiceClient
 from PIL import Image
