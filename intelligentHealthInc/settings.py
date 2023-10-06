@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
-import django_heroku
+# import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -161,4 +161,4 @@ CSRF_COOKIE_SECURE = True
 
 CSRF_TRUSTED_ORIGINS = ['https://*.intelligenthealthinc.azurewebsites.net/.com','https://*.127.0.0.1']
 
-django_heroku.settings(locals())
+# django_heroku.settings(locals())
