@@ -188,17 +188,14 @@ def display_image(request, record_id):
         dicom_file = request.FILES.get("dicom_file")
 
         if dicom_file:
-            # Process the dicom_file as needed
-            # filename = dicom_file.name
             
-            #contex = DicomViewer(dicom_file,connection_string, container_name, blob_name)
             contex = DicomViewer(dicom_file)
-            # contex.generate_image()  # Generate the image
+            
 
             # Get the generated image data
             image_data = contex.generate_image()
-            # prediction = contex.predict_image()
-            prediction = 0
+            prediction = contex.predict_image()
+            #prediction = 0
 
             response_data = {"image_data": image_data, "record_id": record_id, "prediction": prediction}
             return JsonResponse(response_data)

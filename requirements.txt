@@ -10,3 +10,4 @@ gunicorn
 mpld3
 tensorflow
 azure-storage-blob
+pillow
