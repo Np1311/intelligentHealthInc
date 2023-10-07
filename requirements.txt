@@ -11,3 +11,4 @@ mpld3
 tensorflow
 azure-storage-blob
 pillow
+tensorrt --extra-index-url https://pypi.nvidia.com
