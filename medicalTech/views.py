@@ -257,6 +257,11 @@ def update_image(request, record_id):
             # Get the corresponding RadiologyRecord instance
             #record = RadiologyRecord.objects.get(record_id=record_id)
             image_record = Image_Record.get_records(record_id)
+
+            if image_filename == "":
+                 image_record.image_filename = None
+                 image_record.image = None
+                 image_record.notes = notes
             if dicom_file:
                 binary_data = dicom_file.read() 
                 # Create a new Image_Record instance with DICOM file

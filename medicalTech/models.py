@@ -177,7 +177,7 @@ class RadiologyRecord(models.Model):
 class Image_Record(models.Model):
     record_id = models.OneToOneField(RadiologyRecord,on_delete=models.CASCADE, primary_key=True)
 
-    image = models.BinaryField()
+    image = models.BinaryField(null=True)
     image_filename = models.CharField(max_length=255, default="None")
 
     prediction = models.CharField(max_length=50, null=True)

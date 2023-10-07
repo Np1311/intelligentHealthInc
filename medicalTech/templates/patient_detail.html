@@ -207,9 +207,11 @@
         
         <div class="image-header">
             <h2>Images</h2>
-            <label for="fileInput" class="fa-solid fa-folder-plus">
-                <input type="file" id="fileInput" style="display: none;" accept=".dcm">
-            </label>
+            {% if 'medicalTech' in path %}
+                <label for="fileInput" class="fa-solid fa-folder-plus">
+                    <input type="file" id="fileInput" style="display: none;" accept=".dcm">
+                </label>
+            {% endif %}
         </div>
         <div class="image-container">
             <div id="imageName">
@@ -223,9 +225,9 @@
                 {% endif %}
             </div>
             <div>
-                
-                <i class="fa-solid fa-trash-can" style="margin-right: 10px;"></i>
-                
+                {% if 'medicalTech' in path %}
+                    <i class="fa-solid fa-trash-can" style="margin-right: 10px;" onclick="resetContent()"></i>
+                {% endif %}
             </div>
         </div>
         <div class="image-prediction-container">
@@ -257,7 +259,7 @@
         <div class="notes-container" style="border: 1px solid #000; padding: 10px; border-radius: 10px; background-color: white;">
             {% if image_available %}
                 {% comment %} <span id="notesSpan" onclick="makeEditable()" style="display: inline-block;white-space: pre-wrap;">{{ image_record.notes }}</span> {% endcomment %}
-                <textarea id="notesInput" placeholder="Enter notes..." style="display: block; width: 100%; resize: vertical;" > {{ image_record.notes }}</textarea>
+                <textarea id="notesInput" placeholder="Enter notes..." style="display: block; width: 100%; resize: vertical;" onclick="addSaveButton()"> {{ image_record.notes }}</textarea>
             {% else %}
                 <textarea id="notesInput" placeholder="Enter notes..." style="display: block; width: 100%; resize: vertical;"></textarea>
             {% endif %}
@@ -266,14 +268,17 @@
     </div>
     
     <div class="button-section wide-section">
-        <button data-href="{% if 'medicalTech' in path %}{% url 'medical_tech_home' %}{% else %}{% url 'radiologistDoctorHome' %}{% endif %}" id= 'backButton'class="back-button">{% if 'medicalTech' in path %}Back{% else %}Accept{% endif %}</button>
+        <button data-href="{% if 'medicalTech' in path %}{% url 'medical_tech_home' %}{% else %}{% url 'radiologistDoctorHome' %}{% endif %}" id= 'backButton'class="back-button">Back</button>
         {% if image_available %}
             {% if 'medicalTech' in path %}
                 <button class="update-save-button" id='updateButton'>Update</button>
             {% endif %}
         {% else %}
-            <button class="update-save-button" id='saveButton'>Save</button>
+            {% if 'medicalTech' in path %}
+                <button class="update-save-button" id='saveButton'>Save</button>
+            {% endif %}
         {% endif %}
+        <span id='saveButtonPlaceholder'></span>
     </div>
 </div>
 
@@ -398,17 +403,23 @@
     
         if (updateButton) {
             updateButton.addEventListener('click', () => {
-                const selectedFile = fileInput.files[0];
+                
                 const notes = document.getElementById('notesInput').value;
                 const formData = new FormData();
     
-                if (selectedFile) {
+                if (fileInput.files.length > 0) {
+                    const selectedFile = fileInput.files[0];
                     formData.append("dicom_file", selectedFile);
                     formData.append("filename", selectedFile.name);
+                }else{
+                    formData.append("dicom_file", None);
+                    formData.append("filename", '');
                 }
     
                 formData.append("notes", notes);
-    
+                for (const pair of formData.entries()) {
+                    console.log(pair[0], pair[1]);
+                }
                 $.ajax({
                     url: "{% url 'update_image_record' record.record_id %}",
                     type: "POST",
@@ -419,7 +430,7 @@
                         "X-CSRFToken": getCookie("csrftoken")
                     },
                     success: function (response) {
-                        window.location.href="{% url 'medical_tech_home'%}";
+                        //window.location.href="{% url 'medical_tech_home'%}";
                         console.log(response);
                     },
                     error: function (xhr, status, error) {
@@ -490,6 +501,68 @@
         
         console.log('Button clicked!');
     });
+
+
+    function addSaveButton() {
+        var notesInput = document.getElementById("notesInput");
+        var saveButtonPlaceholder = document.getElementById("saveButtonPlaceholder");
+
+        // Check if the content of the textarea has changed
+        if (notesInput.value.trim() !== "") {
+            // If there are changes, add the "Save" button to the placeholder span
+            saveButtonPlaceholder.innerHTML = '<button class="update-save-button" id="saveNotes">Save</button>';
+            var saveButton = document.getElementById("saveNotes");
+            saveButton.addEventListener("click", function() {
+                let notes = notesInput.value;
+                console.log(notes);
+                const formData = new FormData();
+                formData.append("notes", notes);
+                $.ajax({
+                    url: "{% url 'save_notes' record.record_id %}",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        "X-CSRFToken": getCookie("csrftoken")
+                    },
+                    beforeSend: function () {
+                        //$('#loading-spinner').show();
+                        alert('Please wait. Your request is being processed...');
+                    },
+                    success: function (response) {
+                        console.log(response);  // Log the entire response object for debugging
+                        window.location.href = "{% url 'radiologistDoctorHome'%}";
+                    },
+                    error: function (xhr, status, error, response) {
+                        // Handle error here
+                        console.error(response);
+                    }
+                });
+            });
+        }
+    }
+    
+    function resetContent() {
+        var imageName = document.getElementById("imageName");
+        var imageContainer = document.getElementById("imageContainer");
+        var prediction = document.getElementById("prediction");
+        var rerunButton = document.getElementById("rerun-button");
+        var notesInput = document.getElementById("notesInput");
+        var fileInput = document.getElementById("fileInput");
+    
+        // Reset the content to its original state
+        imageName.innerHTML = '<i class="fa-regular fa-file-image"></i><span style=\'margin-left: 10px;\'>No file selected</span>';
+        imageContainer.innerHTML = '';
+        prediction.innerHTML = '';
+        rerunButton.style.display = 'none';
+        notesInput.value = '';  // Clear the notes input
+    
+        // Check if the file input has changed
+        
+        fileInput.value = '';  // Clear the file input if there are changes
+        
+    }
 
 </script>
 

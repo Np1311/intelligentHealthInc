@@ -90,3 +90,27 @@ def save_update(request, record_id):
             return JsonResponse(response_data, status=500)
     else:
         return JsonResponse({}, status=405)
+    
+def saveNotes(request, record_id):
+    if request.method == 'POST':
+        notes = request.POST.get("notes")
+    
+        try:
+            # Get the corresponding RadiologyRecord instance
+            #record = RadiologyRecord.objects.get(record_id=record_id)
+            image_record = Image_Record.get_records(record_id)
+            
+            image_record.notes = notes
+
+            image_record.save()
+
+            response_data = {"message": "Image and data saved successfully"}
+            return JsonResponse(response_data)
+        except RadiologyRecord.DoesNotExist:
+            response_data = {"message": "Record with the provided ID not found"}
+            return JsonResponse(response_data, status=400)
+        except Exception as e:
+            response_data = {"message": str(e)}
+            return JsonResponse(response_data, status=500)
+    else:
+        return JsonResponse({}, status=405)
