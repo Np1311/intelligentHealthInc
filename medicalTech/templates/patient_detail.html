@@ -22,7 +22,7 @@
 
 
 {%load static %}
-
+<meta charset="UTF-8">
 
 <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
 <style>
@@ -259,7 +259,7 @@
         <div class="notes-container" style="border: 1px solid #000; padding: 10px; border-radius: 10px; background-color: white;">
             {% if image_available %}
                 {% comment %} <span id="notesSpan" onclick="makeEditable()" style="display: inline-block;white-space: pre-wrap;">{{ image_record.notes }}</span> {% endcomment %}
-                <textarea id="notesInput" placeholder="Enter notes..." style="display: block; width: 100%; resize: vertical;" onclick="addSaveButton()"> {{ image_record.notes }}</textarea>
+                <textarea id="notesInput" placeholder="Enter notes..." style="display: block; width: 100%; resize: vertical;" {% if 'medicalTech' not in path %} onclick="addSaveButton()" {% endif %}> {{ image_record.notes }}</textarea>
             {% else %}
                 <textarea id="notesInput" placeholder="Enter notes..." style="display: block; width: 100%; resize: vertical;"></textarea>
             {% endif %}
@@ -292,10 +292,15 @@
     
         fileInput.addEventListener('change', (event) => {
             const selectedFile = event.target.files[0];
+            var prediction = document.getElementById("prediction");
+            var rerunButton = document.getElementById("rerun-button");
             if (selectedFile) {
                 imageName.innerHTML = `<i class="fa-regular fa-file-image"></i><span style='margin-left: 10px;'>${selectedFile.name}</span>`;
                 $("#loadingMessage").show();
-                
+                imageContainer.innerHTML = '';
+                prediction.innerHTML = '';
+                rerunButton.style.display = 'none';
+
                 console.log('Selected file:', selectedFile.name);
                 console.log('File size:', selectedFile.size, 'bytes');
                 console.log('File type:', selectedFile.type);
@@ -395,7 +400,7 @@
                     },
                     error: function (xhr, status, error, response) {
                         // Handle error here
-                        console.error(response);
+                        alert('No file selected');
                     }
                 });
             });
@@ -403,23 +408,17 @@
     
         if (updateButton) {
             updateButton.addEventListener('click', () => {
-                
+                const selectedFile = fileInput.files[0];
                 const notes = document.getElementById('notesInput').value;
                 const formData = new FormData();
     
-                if (fileInput.files.length > 0) {
-                    const selectedFile = fileInput.files[0];
+                if (selectedFile) {
                     formData.append("dicom_file", selectedFile);
                     formData.append("filename", selectedFile.name);
-                }else{
-                    formData.append("dicom_file", None);
-                    formData.append("filename", '');
                 }
     
                 formData.append("notes", notes);
-                for (const pair of formData.entries()) {
-                    console.log(pair[0], pair[1]);
-                }
+    
                 $.ajax({
                     url: "{% url 'update_image_record' record.record_id %}",
                     type: "POST",
@@ -430,7 +429,7 @@
                         "X-CSRFToken": getCookie("csrftoken")
                     },
                     success: function (response) {
-                        //window.location.href="{% url 'medical_tech_home'%}";
+                        window.location.href="{% url 'medical_tech_home'%}";
                         console.log(response);
                     },
                     error: function (xhr, status, error) {
@@ -441,20 +440,7 @@
             });
         }
     });
-    function getCookie(name) {
-        var cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            var cookies = document.cookie.split(';');
-            for (var i = 0; i < cookies.length; i++) {
-                var cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
+    
     function updateNote() {
         const notesInput = document.getElementById('notesInput');
         const updatedNote = notesInput.value.trim();
@@ -542,7 +528,20 @@
             });
         }
     }
-    
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
     function resetContent() {
         var imageName = document.getElementById("imageName");
         var imageContainer = document.getElementById("imageContainer");
@@ -556,11 +555,23 @@
         imageContainer.innerHTML = '';
         prediction.innerHTML = '';
         rerunButton.style.display = 'none';
-        notesInput.value = '';  // Clear the notes input
-    
-        // Check if the file input has changed
-        
-        fileInput.value = '';  // Clear the file input if there are changes
+        fileInput.value = '';  
+        $.ajax({
+            url: "{% url 'delete_files' record.record_id %}",
+            type: "GET",
+            beforeSend: function () {
+                //$('#loading-spinner').show();
+                alert('Please wait. Your request is being processed...');
+            },
+            success: function (response) {
+                console.log(response);  // Log the entire response object for debugging
+                //window.location.href = "{% url 'radiologistDoctorHome'%}";
+            },
+            error: function (xhr, status, error, response) {
+                // Handle error here
+                console.error(response);
+            }
+        });
         
     }
 

@@ -15,5 +15,6 @@ urlpatterns = [
     path('patient/update/<str:record_id>/', views.update_image, name='update_image_record'),
     path('download_images/', views.download_images, name='download_images'),
     path('delete_images/', views.delete_images, name='delete_images'),
+    path('delete_files/<str:record_id>', views.delete_file, name='delete_files'),
 ]
 

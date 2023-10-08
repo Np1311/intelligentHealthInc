@@ -248,7 +248,7 @@ def save_image(request, record_id):
     
 def update_image(request, record_id):
     if request.method == "POST":
-        dicom_file = request.FILES.get("dicom_file")
+        dicom_file = request.FILES.get('dicom_file', None)
         notes = request.POST.get("notes")
         image_filename = request.POST.get("filename")
         # binary_data = dicom_file.read() if dicom_file else None  # Read binary data if dicom_file is provided
@@ -257,11 +257,6 @@ def update_image(request, record_id):
             # Get the corresponding RadiologyRecord instance
             #record = RadiologyRecord.objects.get(record_id=record_id)
             image_record = Image_Record.get_records(record_id)
-
-            if image_filename == "":
-                 image_record.image_filename = None
-                 image_record.image = None
-                 image_record.notes = notes
             if dicom_file:
                 binary_data = dicom_file.read() 
                 # Create a new Image_Record instance with DICOM file
@@ -327,3 +322,16 @@ def delete_images(request):
     else:
         return HttpResponse(status=405, content="Method not allowed")
         
+
+def delete_file(request, record_id):
+    if request.method == 'GET':
+        image_record = get_object_or_404(Image_Record, record_id=record_id)
+
+        # Delete the file and filename
+        image_record.image = None
+        image_record.image_filename = "None"
+        image_record.save()
+
+        return JsonResponse({'message': 'File deleted successfully'})
+    else:
+        return JsonResponse({'message': 'Invalid request method'}, status=400)
