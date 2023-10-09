@@ -2,9 +2,9 @@ import pydicom
 import matplotlib
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
-# from keras.preprocessing import image
-# from keras.models import load_model
-import tensorflow as tf
+from keras.preprocessing import image
+from keras.models import load_model
+# import tensorflow as tf
 import numpy as np
 from azure.storage.blob import BlobServiceClient
 from PIL import Image
@@ -95,7 +95,7 @@ class DicomViewer:
         model_filename = 'model.json'
 
         model_path = os.path.join(static_folder, 'tfjs_model', model_filename)
-        model = tf.keras.models.load_model(model_path)
+        model = load_model(model_path)
         
         # blob_service_client = BlobServiceClient.from_connection_string(self.connection_string)
 
