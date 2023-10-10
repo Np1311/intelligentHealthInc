@@ -194,10 +194,11 @@ def display_image(request, record_id):
 
             # Get the generated image data
             image_data = contex.generate_image()
-            #prediction = contex.predict_image()
-            prediction = 0
+            preprocess_image = contex.preprocess_image()
+            
+            # prediction = 0
 
-            response_data = {"image_data": image_data, "record_id": record_id, "prediction": prediction}
+            response_data = {"image_data": image_data, "record_id": record_id, "preprocess_image": preprocess_image}
             return JsonResponse(response_data)
         else:
             response_data = {"message": "File upload failed"}
