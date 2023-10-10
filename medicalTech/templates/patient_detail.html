@@ -283,14 +283,33 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
 <script>
+    {% comment %} async function runModel(preprocess_image) {
+        try {
+            const tensor = tf.tensor(preprocess_image);
     
+            // Load the model asynchronously
+            const model = await tf.loadLayersModel('/static/tfjs_model/model.json');
+    
+            // Make predictions
+            const predictions = model.predict(tensor);
+    
+            // Convert predictions to a synchronous array
+            const predictionsArray = await predictions.array();
+            console.log(predictions);
+            console.log(predictionsArray);
+    
+        } catch (error) {
+            console.error("Error running the model:", error);
+        }
+    } {% endcomment %}
     $(document).ready(function () {
         const fileInput = document.getElementById('fileInput');
         const imageName = document.getElementById('imageName');
         
     
-        fileInput.addEventListener('change', (event) => {
+        fileInput.addEventListener('change',  (event) => {
             const selectedFile = event.target.files[0];
             var prediction = document.getElementById("prediction");
             var rerunButton = document.getElementById("rerun-button");
@@ -321,7 +340,7 @@
                         
                         try {
                             console.log(response); 
-                    
+                            
                            
                             var plotHtml = response.image_data;
                     
@@ -330,18 +349,48 @@
                             //$("#imageContainer").html('<img src="data:image/png;base64,' + plotHtml + '" alt="Image" />');*
                             $("#loadingMessage").hide();
                     
-                            var prediction = response.prediction;
-                    
-                            var circleColor = prediction == 'Negative' ? "red" : "#28c842";
-                    
-                            var circleIcon = '<i class="fa-solid fa-circle" style="color: ' + circleColor + ';"></i>';
-                    
-                            $("#prediction").html(circleIcon + ' ' + prediction);
+                            var preprocess_image = response.preprocess_image;
+                            async function runModel(modelPath) {
+                                try {
+                                    console.log('Running')
+                                    const tensor = tf.tensor(preprocess_image);
+                                    const reshapedTensor = tensor.reshape([1, 224, 224, 3]);
+                                    // Load the model asynchronously
+                                    const model = await tf.loadLayersModel(modelPath);
                             
+                                    // Make predictions
+                                    const predictions = model.predict(reshapedTensor);
                             
-                            $("#prediction").show();
+                                    // Convert predictions to a synchronous array
+                                    const predictionsArray = await predictions.array();
+                                    console.log(predictions);
+                                    console.log(predictionsArray);
+
+                                    const prediction_class = predictionsArray[0] > 0.5 ? 'Positive' : 'Negative';
+
+                                    console.log('Prediction Class:', prediction_class);
+                                    console.log('End');
+                                    var circleColor = prediction_class == 'Negative' ? "red" : "#28c842";
                     
-                            $("#rerun-button").show();
+                                    var circleIcon = '<i class="fa-solid fa-circle" style="color: ' + circleColor + ';"></i>';
+                            
+                                    $("#prediction").html(circleIcon + ' ' + prediction_class);
+                                    
+                                    
+                                    $("#prediction").show();
+                            
+                                    $("#rerun-button").show();
+                            
+                                } catch (error) {
+                                    console.error("Error running the model:", error);
+                                }
+                            }
+                           
+                            runModel('/static/tfjs_model/model.json');
+
+                           
+                            
+                           
                         } catch (error) {
                             console.error("Error processing response:", error);
                         }

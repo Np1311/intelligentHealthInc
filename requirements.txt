@@ -8,7 +8,4 @@ pydicom
 matplotlib
 gunicorn
 mpld3
-tensorflow
-azure-storage-blob
 pillow
-keras

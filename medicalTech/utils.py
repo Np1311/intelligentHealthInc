@@ -2,11 +2,11 @@ import pydicom
 import matplotlib
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
-from keras.preprocessing import image
-from keras.models import load_model
+# from keras.preprocessing import image
+# from keras.models import load_model
 # import tensorflow as tf
 import numpy as np
-from azure.storage.blob import BlobServiceClient
+# from azure.storage.blob import BlobServiceClient
 from PIL import Image
 import mpld3
 import tempfile
@@ -65,68 +65,27 @@ class DicomViewer:
 
    
    
-    def predict_image(self):
+    def preprocess_image(self):
         dicom_array = self.dataset.pixel_array
 
-        # Resize the DICOM array to your desired dimensions
+    # Resize the DICOM array to your desired dimensions
         image_width = 224
         image_height = 224
         resized_dicom_array = np.array(Image.fromarray(dicom_array).resize((image_width, image_height)))
 
         # Convert resized DICOM array to a NumPy array
-        img_array_gray = Image.img_to_array(resized_dicom_array)
+        img_array_gray = np.array(resized_dicom_array)
 
         # Duplicate the single channel to create RGB channels
-        img_array_rgb = np.repeat(img_array_gray, 3, axis=-1)
+        img_array_rgb = np.repeat(img_array_gray[:, :, np.newaxis], 3, axis=-1)
+
+        # Convert to float and then normalize
+        img_array_rgb = img_array_rgb.astype('float32') / 255.0
 
         # Expand dimensions to match the model's input shape (add a batch dimension)
-        img_array_rgb = np.expand_dims(img_array_rgb, axis=0)
+        img_array_json = img_array_rgb.tolist()
 
-        # Normalize the image array
-        img_array_rgb /= 255.0
-        
-#         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-# # Specify the relative path to your h5 model file within the static folder
-#         model_relative_path = 'collected_static/Model2_VGG16.h5'
-
-#         # Create the full path to your h5 model file using os.path
-        static_folder = os.path.join(os.path.dirname(__file__), 'static')
-        model_filename = 'model.json'
-
-        model_path = os.path.join(static_folder, 'tfjs_model', model_filename)
-        model = load_model(model_path)
-        
-        # blob_service_client = BlobServiceClient.from_connection_string(self.connection_string)
-
-        # # Get a reference to the container
-        # container_client = blob_service_client.get_container_client(self.container_name)
-
-        # # Get a reference to the blob
-        # blob_client = container_client.get_blob_client(self.blob_name)
-
-        # # Read the blob content into memory
-        # blob_content = blob_client.download_blob().readall()
-
-        # Save the blob content to a temporary file
-        # with tempfile.NamedTemporaryFile(delete=False, suffix=".h5") as temp_model_file:
-        #     temp_model_file.write(blob_content)
-
-        # # Load the model from the temporary file
-        # model = load_model(temp_model_file.name)
-       
-
-        # Make predictions
-        predictions = model.predict(img_array_rgb)
-
-        if predictions > 0.5 :
-            prediction_class = 'Positive'
-        else :
-            prediction_class = 'Negative'
-
-        # os.remove(temp_model_file.name)
-        
-        return prediction_class
+        return img_array_json
 
 
     # def show_image(self):
