@@ -26,12 +26,13 @@ class RadiologyRecord(models.Model):
     
     # Status of the record
     STATUS_CHOICES = (
-        ('pending', 'Pending'),
+        ('Registered', 'Registered'),
+        ('Queueing', 'Queueing'),
         ('In Progress', 'In Progress'),
-        ('completed', 'Completed'),
+        ('Completed', 'Completed'),
         ('EMERGENCY', 'EMERGENCY'),
     )
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Registered')
 
     filtered_records = None
     
@@ -186,6 +187,13 @@ class Image_Record(models.Model):
 
     upload_date = models.DateTimeField(auto_now_add=True)
 
+    examination = models.CharField(max_length=255, null=True)
+
+    indications = models.CharField(max_length=255, null=True)
+
+    findings = models.TextField(blank=True)
+
+    impressions = models.CharField(max_length=255, null=True)
     @classmethod
     def get_records(cls, id):
         image_records = cls.objects.get(record_id=id)

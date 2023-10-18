@@ -1,13 +1,13 @@
-{% extends 'logout.html' %}
+{% comment %} {% extends 'logout.html' %}
 {% block content%}
 
-{%load static %}
+{%load static %} {% endcomment %}
 
 <head>
-    <title>View Image</title>
+   
     
     <style>
-        
+{% comment %}         
         .content {
             display: flex;
             flex-direction: column; 
@@ -31,40 +31,44 @@
 
         .container-wrap .image-viewer-container {
             flex-basis: 50%; 
+        } {% endcomment %}
+        .main-content input:not(:checked) + .slider {
+            background-color: red;
         }
         .toggle-switch {
             display: flex; 
             align-items: center; 
             justify-content: center; 
             margin-top: 20px;
+            
         }
 
-        .container-wrap .main-content {
+        {% comment %} .container-wrap .main-content {
             flex: 1; 
             display: flex;
             flex-direction: column;
-        }
+        } {% endcomment %}
 
         
 
-        .container-wrap .toggle-label {
+        .main-content .toggle-label {
             margin: 0 10px 0 10px;
         }
 
-        .container-wrap .toggle {
+        .main-content .toggle {
             position: relative;
             display: inline-block;
             width: 60px;
             height: 34px;
         }
 
-        .container-wrap .toggle input {
+        .main-content .toggle input {
             opacity: 0;
             width: 0;
             height: 0;
         }
 
-        .container-wrap .slider {
+        .main-content .slider {
             position: absolute;
             cursor: pointer;
             top: 0;
@@ -76,7 +80,7 @@
             border-radius: 30px; 
         }
 
-        .container-wrap .slider:before {
+        .main-content .slider:before {
             position: absolute;
             content: "";
             height: 26px;
@@ -88,21 +92,21 @@
             border-radius: 40%; 
         }
 
-        .container-wrap input:checked + .slider {
-            background-color: #2196F3;
+        .main-content input:checked + .slider {
+            background-color: #28c842;
         }
 
-        .container-wrap input:focus + .slider {
-            box-shadow: 0 0 1px #2196F3;
+        .main-content input:focus + .slider {
+            box-shadow: 0 0 1px #28c842;
         }
 
-        .container-wrap input:checked + .slider:before {
+        .main-content input:checked + .slider:before {
             transform: translateX(26px);
         }
         .system-predictions{
             margin : 40px 0 80px 0;
         }
-        #update-button,#back-button {
+        #update-button{
             background-color: #276fbf;
             color: #fff;
             border: none;
@@ -112,12 +116,7 @@
             cursor: pointer;
             border-radius: 20px;
             margin-bottom: 10px;
-            width: 50%;
-        }
-        #back-button{
-            background-color:red;
-            margin-left: 20px;
-            
+            width: 100%;
         }
 
 
@@ -134,46 +133,82 @@
             border-radius: 10px;
             width: 75%;
         }
-        
+        input[type="text"],
+        input[type="password"],
+        input[type="email"],
+        textarea,
+        select {
+            border-radius: 5px;
+            padding: 8px;
+            box-sizing: border-box;
+            width: 100%;
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+    
 
 </head>
 <body>
-    <div class="content">
-        <div class="title">Update Status</div>
-        <div class="container-wrap">
-            <div class="image-viewer-container">
+    
+            {% comment %} <div class="image-viewer-container">
                 <div class="image-viewer">
                     <div class="image-filename">{{ image_data.image_filename }}</div>
                     <span> {{ image_data.image|safe }}</span>
                 </div>
-            </div>
+            </div> {% endcomment %}
     
             <div class="main-content">
                 <div class="toggle-switch">
                     <span class="toggle-label">COVID-19 Negative</span>
                     <label class="toggle">
-                        <input type="checkbox" {% if image_data.prediction == 'Positive' %}checked{% endif %}>
+                        <input type="checkbox" {% if image_record.prediction == 'Positive' %}checked{% endif %}>
                         <span class="slider"></span>
                     </label>
                     <span class="toggle-label">COVID-19 Positive</span>
                 </div>
-                <div class="container system-predictions">
-                    <h2 style="font-size: 24px;">Notes</h2>
-                    <textarea id="system-predictions-note" rows="4" cols="50" placeholder="Enter your notes">{{image_data.notes}}</textarea>
-                </div>
+                {% if image_form %}
+                <form method="post" >
+                    <div class="container system-predictions">
+                    
+                                {% csrf_token %}
+                                
+                                <!-- Display form fields with labels -->
+                                <div class="form-group">
+                                    {{ image_form.examination.label_tag }}
+                                </br>
+                                    {{ image_form.examination }}
+                                </div>
+                    
+                                <div class="form-group">
+                                    {{ image_form.indications.label_tag }}
+                                </br>
+                                    {{ image_form.indications }}
+                                </div>
+                    
+                                <div class="form-group">
+                                    {{ image_form.findings.label_tag }}
+                                </br>
+                                    {{ image_form.findings }}
+                                </div>
+                    
+                                <div class="form-group">
+                                    {{ image_form.impressions.label_tag }}
+                                </br>
+                                    {{ image_form.impressions }}
+                                </div>
+
+                           
+                    </div>
                 
-                <div class="button-group">
-                    <button id="update-button">Update</button>
-                    <button id="back-button">Back</button>
-                </div>
+                    <div class="button-group">
+                        <button type = 'submit' id="update-button">Update</button>
+                    </div>
+                </form>
+                {% endif %}
             </div>
-        </div>
-    </div>
+           
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             
@@ -182,71 +217,80 @@
             var predictions = '';
             var notesInput = document.getElementById('system-predictions-note');
             var backButton = document.getElementById('back-button');
-            var changed = false;
-            
-            notesInput.addEventListener('input', function() {
-                notes = notesInput.value; 
-                var changed = true;
-            });
-            
-            updateButton.addEventListener('click', function() {
-                
+            var findingsInput = document.getElementById('{{ image_form.findings.id_for_label }}');
+            var indicationInput = document.getElementById('{{ image_form.indications.id_for_label }}');
+            var impressionsInput = document.getElementById('{{ image_form.impressions.id_for_label }}');
+            var initialFindingsValue = findingsInput.value;
+            var initialIndicationsValue = indicationInput.value;
+            var initialImpressionsValue = impressionsInput.value;
+            function updatePredictions() {
                 if (checkbox.checked) {
-                    
                     predictions = "Positive";
                     console.log(predictions);
+                    findingsInput.value = initialFindingsValue;
+                    indicationInput.value = initialIndicationsValue;
+                    impressionsInput.value = initialImpressionsValue;
                 } else {
                     predictions = "Negative";
                     console.log(predictions);
+                    // Clear the findings input when the checkbox is unchecked
+                    findingsInput.value = '';
+                    indicationInput.value = '';
+                    impressionsInput.value = 'Normal';
                 }
-
-                if (changed == false ) {
-                    alert("Note is not changed yet");
-                }
+            }
+        
+            // Update predictions on checkbox change
+            checkbox.addEventListener('change', updatePredictions);
+            updateButton.addEventListener('click', function() {
+                // Perform AJAX request to update the server
                 var formData = new FormData();
-                formData.append('notes', notes);
                 formData.append('predictions', predictions);
-
-                for (const pair of formData.entries()) {
-                    console.log(pair[0], pair[1]);
-                }
-                $.ajax({
-                    url: "{% url 'save_update' image_data.record_id %}",
-                    type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
+                formData.append('examination', document.getElementById('{{ image_form.examination.id_for_label }}').value);
+                formData.append('indications', indicationInput.value);
+                formData.append('findings', findingsInput.value);
+                formData.append('impressions', impressionsInput.value);
+    
+                fetch("{% url 'update_image_findings' record.record_id %}", {
+                    method: "POST",
+                    body: formData,
                     headers: {
                         "X-CSRFToken": getCookie("csrftoken")
                     },
-                    success: function (response) {
-                       window.location.href = "{% url 'radiologistDoctorHome' %}" 
-                    },
-                    error: function (xhr, status, error) {
-                        // Handle error here
-                        console.error(error);
-                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Update the DOM with the response content
+                    console.log(data); // Log the response to the console
+                    // Update the DOM with the response content, e.g., display a message
+                    alert(data.message);
+                    // Optionally, you can redirect to another page
+                    window.location.href = "{% url 'radiologistDoctorHome' %}";
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert("An error occurred during the update operation.");
                 });
             });
             backButton.addEventListener("click", function() {
                 window.location.href = "{% url 'radiologistDoctorHome' %}" 
             });
-        });
-        function getCookie(name) {
-            var cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                var cookies = document.cookie.split(';');
-                for (var i = 0; i < cookies.length; i++) {
-                    var cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
                     }
                 }
+                return cookieValue;
             }
-            return cookieValue;
-        }
+        });
     </script>
 </body>
 
-{% endblock %} 
+{% comment %} {% endblock %}  {% endcomment %}

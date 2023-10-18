@@ -61,7 +61,9 @@
         <div class="tab">
             <button class="tablinks" onclick="changeTab(event, 'home')">Home</button>
             {% if 'medicalTech' in path %}
-            <button class="tablinks" onclick="changeTab(event, 'Archive')">Archive</button>
+            <button class="tablinks" onclick="changeTab(event, 'Tab2')">Archive</button>
+            {% else %}
+            <button class="tablinks" onclick="changeTab(event, 'Tab2')">Templates</button>
             {% endif %}
         </div>
         <div id="home" class="tabcontent">
@@ -69,9 +71,14 @@
             {% include 'worklist.html' %}
         </div>
         {% if 'medicalTech' in path %}
-            <div id="Archive" class="tabcontent">
+            <div id="Tab2" class="tabcontent">
                 <h3>Archive</h3>
                 {% include 'archive_page.html' %}
+            </div>
+        {% else %}
+            <div id="Tab2" class="tabcontent">
+                <h3>Template</h3>
+                {% include 'findings_template.html' %}
             </div>
         {% endif %}
     </div>

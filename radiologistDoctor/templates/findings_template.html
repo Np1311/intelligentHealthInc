@@ -1,0 +1,97 @@
+<style>
+    .template-column {
+        max-width: 600px;
+        word-wrap: break-word;
+    }
+</style>
+
+<div class="container">
+    <div class="alert alert-danger" role="alert" id="deleteAlert" style="display: none;">
+        <span id='message'></span>
+        <br>
+        <button type="button" class="btn btn-danger btn-sm" id="confirmDeleteButton">Confirm</button>
+        <button type="button" class="btn btn-secondary btn-sm mr-2" id="cancelDeleteButton">Cancel</button>
+    </div>
+    
+    <table class="table table-hover">
+        <thead id='table'>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Template Name</th>
+                <th scope="col">Template</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody id='table'>
+            {% for template in templates %}
+                <tr>
+                    <td>{{ template.id }}</td>
+                    <td>{{ template.template_name }}</td>
+                    <td class='template-column'>{{ template.template }}</td>
+                    <td>
+                        <a href="{% url 'update_template' template.id %}">
+                            <button type="button" class="btn btn-sm btn-rounded" style="background-color: #37B54A !important; color: #000;">
+                                Update
+                            </button>
+                        </a>
+
+                        <button type="button" class="btn btn-sm btn-rounded btn-danger" onclick="confirmDelete('{% url 'delete_template' template.id %}')" style="color:#000;">
+                            Delete
+                        </button>
+
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="9">No records available.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script>
+    function confirmDelete(urls) {
+        // Show the delete confirmation alert
+        document.getElementById('deleteAlert').style.display = 'block';
+        document.getElementById('message').innerHTML = 'Are you sure you want to delete this?';
+        // Attach the templateId to the Confirm button for further processing
+        document.getElementById('confirmDeleteButton').setAttribute('data-href', urls);
+    }
+
+    function hideDeleteConfirmation() {
+        // Hide the delete confirmation alert
+        document.getElementById('deleteAlert').style.display = 'none';
+    }
+
+    document.getElementById('confirmDeleteButton').addEventListener('click', function () {
+        // Retrieve the templateId from the Confirm button
+        var dataHref = this.getAttribute('data-href');
+
+        // Perform the delete operation via AJAX
+        $.ajax({
+            type: "get",
+            url: dataHref,
+            success: function (data) {
+                // Update the message span content
+                if (data.success){
+                    $("#message").html(data.message);
+
+                    // Fade out the message after 5 seconds
+                    setTimeout(function () {
+                        $("#message").fadeOut("slow");
+                    }, 5000);
+                    location.reload();
+                }
+            },
+            error: function () {
+                // Handle AJAX error
+                $("#deleteMessage").html("An error occurred during the delete operation.");
+            },
+        });
+
+        // Hide the confirmation alert
+        hideDeleteConfirmation();
+    });
+</script>
