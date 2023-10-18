@@ -187,7 +187,7 @@
             <p><strong>Age:</strong> </br>{{ record.age }}</p>
             <p><strong>Date of Birth:</strong> </br>{{ record.date_of_birth }}</p>
             <p><strong>Modality:</strong> </br>{{ record.modality }}</p>
-            
+            <p><strong>Gender:</strong> </br>{{ record.gender }}</p>
             <p><strong>Status:</strong> </br>{{ record.status }}</p>
         </div>
     </div>
@@ -234,52 +234,79 @@
             <span id="loadingMessage" style="display: none;">Loading DICOM Image...</span>
             {% if image_available %}
                 <span id="imageContainer">{{ image_record.image_data|safe }}</span>
+                
             {% else %}
                 <span id="imageContainer"></span>
+                <span id='timestamp'>TIMESTAMP:</span>
             {% endif %}
             <div class='load-prediction'>
                 {% if image_available %}
-                    <span id="prediction">{{image_record.prediction}}</span>
-                    <br>
+                    
                     {% if 'medicalTech' in path %}
+                        <span id="prediction">{{image_record.prediction}}</span>
+                        <br>
                         <button id='rerun-button' style='display: block;'>Re-run</button> 
-                    {% else %}
-                        <button id='updateStatus-button' data-href= '{% url "update_status" record.record_id %}' >Update Status</button>
+                    {% comment %} {% else %}
+                        <button id='updateStatus-button' data-href= '{% url "update_status" record.record_id %}' >Update Status</button> {% endcomment %}
                     {% endif %}
                 {% else %}
                     <span id="prediction" style="display: none;"></span>
                     <button id='rerun-button' style='display: none;'>Re-run</button>
                 {% endif %}
             </div>
-        </div>        
+            
+        </div>  
+        {% if image_available %}
+            <span id='timestamp'>TIMESTAMP: {{ image_record.upload_date }}</span>
+        {% else %}
+            <span id='timestamp'>TIMESTAMP:</span>
+        {% endif %}      
     </div>
     <div class="section section4">
         <!-- Content for the fourth section -->
+        {% if 'medicalTech' in path %}
+            <h2>Notes</h2>
+            <div class="notes-container" style="border: 1px solid #000; padding: 10px; border-radius: 10px; background-color: white;">
+                {% if image_available %}
+                    {% comment %} <span id="notesSpan" onclick="makeEditable()" style="display: inline-block;white-space: pre-wrap;">{{ image_record.notes }}</span> {% endcomment %}
+                    <textarea id="notesInput" placeholder="Enter notes..." style="display: block; width: 100%; resize: vertical;" {% if 'medicalTech' not in path %} onclick="addSaveButton()" {% endif %}> {{ image_record.notes }}</textarea>
+                {% else %}
+                    <textarea id="notesInput" placeholder="Enter notes..." style="display: block; width: 100%; resize: vertical;"></textarea>
+                {% endif %}
+                
+            </div>
+            
+        {% else %}
+            {% include "update_status.html" %}
+        {% endif %}
+        
+    </div>
+    {% if 'radiologistDoctor' in path %}
+    <div class="section section5" style='height: 200px;'>
+        <!-- Content for the fourth section -->
+        
         <h2>Notes</h2>
         <div class="notes-container" style="border: 1px solid #000; padding: 10px; border-radius: 10px; background-color: white;">
-            {% if image_available %}
                 {% comment %} <span id="notesSpan" onclick="makeEditable()" style="display: inline-block;white-space: pre-wrap;">{{ image_record.notes }}</span> {% endcomment %}
-                <textarea id="notesInput" placeholder="Enter notes..." style="display: block; width: 100%; resize: vertical;" {% if 'medicalTech' not in path %} onclick="addSaveButton()" {% endif %}> {{ image_record.notes }}</textarea>
-            {% else %}
-                <textarea id="notesInput" placeholder="Enter notes..." style="display: block; width: 100%; resize: vertical;"></textarea>
-            {% endif %}
+            <textarea id="notesInput" placeholder="Enter notes..." style="display: block; width: 100%; resize: vertical;" disabled > {{ image_record.notes }}</textarea>
             
         </div>
     </div>
+    {% endif %}
     
-    <div class="button-section wide-section">
-        <button data-href="{% if 'medicalTech' in path %}{% url 'medical_tech_home' %}{% else %}{% url 'radiologistDoctorHome' %}{% endif %}" id= 'backButton'class="back-button">Back</button>
-        {% if image_available %}
-            {% if 'medicalTech' in path %}
-                <button class="update-save-button" id='updateButton'>Update</button>
-            {% endif %}
-        {% else %}
-            {% if 'medicalTech' in path %}
-                <button class="update-save-button" id='saveButton'>Save</button>
-            {% endif %}
+</div>
+<div>
+    <button data-href="{% if 'medicalTech' in path %}{% url 'medical_tech_home' %}{% else %}{% url 'radiologistDoctorHome' %}{% endif %}" id= 'backButton'class="back-button">Back</button>
+    {% if image_available %}
+        {% if 'medicalTech' in path %}
+            <button class="update-save-button" id='updateButton'>Update</button>
         {% endif %}
-        <span id='saveButtonPlaceholder'></span>
-    </div>
+    {% else %}
+        {% if 'medicalTech' in path %}
+            <button class="update-save-button" id='saveButton'>Save</button>
+        {% endif %}
+    {% endif %}
+    <span id='saveButtonPlaceholder'></span>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -538,7 +565,7 @@
     });
 
 
-    function addSaveButton() {
+    {% comment %} function addSaveButton() {
         var notesInput = document.getElementById("notesInput");
         var saveButtonPlaceholder = document.getElementById("saveButtonPlaceholder");
 
@@ -576,7 +603,7 @@
                 });
             });
         }
-    }
+    } {% endcomment %}
     function getCookie(name) {
         var cookieValue = null;
         if (document.cookie && document.cookie !== '') {

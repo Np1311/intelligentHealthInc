@@ -107,7 +107,7 @@
                     </div>
                 </div>
             </div>
-            <span id = 'buttonSpan'></span>
+            <span id = 'buttonSpan'></span> 
         </div>
     </div>
     <table class="table table-hover">
@@ -170,8 +170,10 @@
                             {{ record.status }}
                         {% elif record.status == 'EMERGENCY' %}
                             <span style="color: red;">{{ record.status }}</span>
-                        {% else %}
+                        {% elif record.status == 'In Progress' %}
                             <span style="color: #EE9322;">{{ record.status }}</span>
+                        {% else %}
+                            <span style="color: #28c842;">{{ record.status }}</span>
                         {% endif %}
                     </td>
                     {% if 'medicalTech' in path %}
@@ -211,6 +213,12 @@
             addButton.innerHTML = '<button type="button" id="add" class="btn btn-info"><i class="fa fa-plus" style="margin-right: 5px;"></i><i class="fa fa-user"></i></button>';
             addButton.addEventListener("click", function() {
                 window.location.href = "{% url 'register' %}";
+            });
+            
+        }else{
+            addButton.innerHTML = '<button type="button" id="add" class="btn btn-info"><i class="fa fa-plus" style="margin-right: 5px;"></i><i class="fa-solid fa-notes-medical"></i></button>';
+            addButton.addEventListener("click", function() {
+                window.location.href = "{% url 'create_templates' %}";
             });
             
         }

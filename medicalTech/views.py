@@ -18,6 +18,7 @@ import io
 import zipfile
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from radiologistDoctor.form import ImageFindingsForm
 # Create your views here.
 
 @csrf_protect
@@ -132,25 +133,32 @@ def get_data(request, record_id):
 
         try:
             image_record = Image_Record.objects.get(record_id=record)
-            image_available = True
+            predictions_value = image_record.prediction
+            data_available = bool(image_record.examination)  # Simplify data availability check
+            image_available = bool(image_record.image)  # Simplify image availability check
 
-            if image_record.image:  # Check if image data is not empty
+            if image_available:
                 dicom_file = DicomViewer(io.BytesIO(image_record.image))
                 image_record.image_data = dicom_file.generate_image()
-            else:
-                image_available = False
-                image_record = None
 
         except Image_Record.DoesNotExist:
             image_available = False
+
+        if "radiologistDoctor" in path:
+            image_form = ImageFindingsForm(
+                predictions_value=predictions_value,
+                data=data_available,instance=image_record
+            )
+        else:
+            image_form = None 
 
         context = {
             'record': record,
             'image_available': image_available,
             'image_record': image_record,
-            'path': path
+            'path': path,
+            'image_form': image_form,  # Add the form to the context
         }
-
         return render(request, 'patient_detail.html', context)
     except RadiologyRecord.DoesNotExist:
         return render(request, 'record_not_found.html')

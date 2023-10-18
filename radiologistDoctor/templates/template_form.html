@@ -1,0 +1,157 @@
+{% extends 'logout.html' %}
+{% block content%}
+
+{%load static %}
+
+<head>
+    <title>View Image</title>
+    
+    <style>
+        
+        .content {
+            display: flex;
+            flex-direction: column; 
+            align-items: center; 
+            padding-top: 100px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px; 
+        }
+        .container-wrap {
+            background-color: #e3ecfa;
+            padding: 10px 80px 10px 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .form-group {
+            padding-bottom: 20px;
+        }
+        .submitButton {
+            background-color: #276fbf;
+            color: #fff;
+            border: none;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 20px;
+            margin-bottom: 10px;
+            width: 40%;
+        }
+
+       
+        
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+
+</head>
+<body>
+    <div class="content">
+        <div class="title">Create Template</div>
+        <div class="container-wrap">
+            <form method="post" >
+                {% csrf_token %}
+                
+                {{ form.non_field_errors }}
+                
+                <div class="form-group">
+                    <label for="{{ form.template_name.id_for_label }}">Template Name:</label>
+                    </br>
+                    {{ form.template_name }}
+                    {{ form.template_name.errors }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.template.id_for_label }}">Template:</label>
+                    </br>
+                    {{ form.template }}
+                    {{ form.template.errors }}
+                </div>
+                
+                <button class="submitButton"type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+    {% comment %} <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            
+            var checkbox = document.querySelector('input[type="checkbox"]');
+            var updateButton = document.getElementById('update-button');
+            var predictions = '';
+            var notesInput = document.getElementById('system-predictions-note');
+            var backButton = document.getElementById('back-button');
+            var changed = false;
+            
+            notesInput.addEventListener('input', function() {
+                notes = notesInput.value; 
+                var changed = true;
+            });
+            
+            updateButton.addEventListener('click', function() {
+                
+                if (checkbox.checked) {
+                    
+                    predictions = "Positive";
+                    console.log(predictions);
+                } else {
+                    predictions = "Negative";
+                    console.log(predictions);
+                }
+
+                if (changed == false ) {
+                    alert("Note is not changed yet");
+                }
+                var formData = new FormData();
+                formData.append('notes', notes);
+                formData.append('predictions', predictions);
+
+                for (const pair of formData.entries()) {
+                    console.log(pair[0], pair[1]);
+                }
+                $.ajax({
+                    url: "{% url 'save_update' image_data.record_id %}",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        "X-CSRFToken": getCookie("csrftoken")
+                    },
+                    success: function (response) {
+                       window.location.href = "{% url 'radiologistDoctorHome' %}" 
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle error here
+                        console.error(error);
+                    }
+                });
+            });
+            backButton.addEventListener("click", function() {
+                window.location.href = "{% url 'radiologistDoctorHome' %}" 
+            });
+        });
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script> {% endcomment %}
+</body>
+
+{% endblock %} 
