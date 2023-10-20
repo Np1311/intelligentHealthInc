@@ -183,9 +183,9 @@ def emergency(request, record_id):
     RadiologyRecord.emergency(record_id)
     return redirect('medical_tech_home')
 
-def pending(request, record_id):
+def cancelEmergency(request, record_id):
     
-    RadiologyRecord.pending(record_id)
+    RadiologyRecord.cancelEmergency(record_id)
     return redirect('medical_tech_home')
 
 def update_request_time(request):
@@ -369,3 +369,21 @@ def delete_file(request, record_id):
         return JsonResponse({'message': 'File deleted successfully'})
     else:
         return JsonResponse({'message': 'Invalid request method'}, status=400)
+    
+def update_record_status(request):
+    if request.method == 'POST':
+        record_id = request.POST.get('record_id')
+        new_status = request.POST.get('new_status')
+
+        try:
+            record = RadiologyRecord.objects.get(record_id=record_id)
+            record.status = new_status
+            record.save()
+
+            
+            return JsonResponse({'success': True})
+        except RadiologyRecord.DoesNotExist:
+           
+            return JsonResponse({'success': False, 'message': 'Record does not exist'})
+
+    return JsonResponse({'success': False, 'message': 'Invalid HTTP method'})
