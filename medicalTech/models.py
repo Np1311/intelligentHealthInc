@@ -62,11 +62,11 @@ class RadiologyRecord(models.Model):
         except cls.DoesNotExist:
             raise ValueError(f"Record with id {id} not found")
     @classmethod
-    def pending(cls, id):
+    def cancelEmergency(cls, id):
         try:
             record = cls.objects.get(record_id=id)
             # Assuming you want to update the request_time to the current datetime
-            record.status = 'pending'
+            record.status = 'Registered'
             record.save()
         except cls.DoesNotExist:
             raise ValueError(f"Record with id {id} not found")
@@ -214,9 +214,10 @@ class Image_Record(models.Model):
         return RadiologyRecord.objects.select_related('image_record').annotate(
             status_order=models.Case(
                 models.When(status='EMERGENCY', then=models.Value(0)),
-                models.When(status='pending', then=models.Value(1)),
-                models.When(status='in progress', then=models.Value(2)),
-                default=models.Value(3),
+                models.When(status='Queueing', then=models.Value(1)),
+                models.When(status='Registered', then=models.Value(2)),
+                models.When(status='In Progress', then=models.Value(3)),
+                default=models.Value(4),
                 output_field=models.IntegerField()
             ),
             request_time_order=models.F('request_time')

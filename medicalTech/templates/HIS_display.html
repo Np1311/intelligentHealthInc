@@ -481,6 +481,19 @@
             }
             return cookieValue;
         }
+        document.getElementById("searchInput").addEventListener("keyup", function() {
+            var query = this.value.toLowerCase();
+            var rows = document.querySelectorAll("#table tr");
+            
+            rows.forEach(function(row) {
+                var text = row.textContent.toLowerCase();
+                if (text.includes(query)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
     </script>
     
 </body>

@@ -467,14 +467,14 @@
                 const prediction = document.getElementById('prediction').textContent;
                 
                 const formattedDateTime = formatDateTime(timestamp);
-                console.log(formattedTimestamp)
+                console.log(formattedDateTime)
                 const formData = new FormData();
     
                 if (selectedFile) {
                     formData.append("dicom_file", selectedFile);
                     formData.append("filename", selectedFile.name);
                     formData.append("prediction", prediction);
-                    formData.append("timestamp", formattedTimestamp);
+                    formData.append("timestamp", formattedDateTime);
                 }
     
                 formData.append("notes", notes);

@@ -85,6 +85,24 @@
     .hidden {
         display: none !important;
     }
+
+    .EMERGENCY {
+        color: red;
+    }
+    .Queueing{
+        color: blue;
+    }
+
+    .in-progress {
+        color: #EE9322;
+    }
+    .Completed{
+        color: #28c842;
+    }
+    .statusSelect {
+        border: none;
+    }
+    
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -168,25 +186,17 @@
                     <td>{{record.senderDoctor}}</td>
                     <td>{{record.indications}}</td>
                     <td class="status">
-                        {% if record.status == 'Registered' %}
-                            {{ record.status }}
-                        {% elif record.status == 'EMERGENCY' %}
-                            <span style="color: red;">{{ record.status }}</span>
-                        {% elif record.status == 'In Progress' %}
-                            <span style="color: #EE9322;">{{ record.status }}</span>
-                        {% else %}
-                            <span style="color: #28c842;">{{ record.status }}</span>
-                        {% endif %}
-                        {% comment %} <select id="statusSelect" data-record-id="{{ record.id }}">
-                            <option value="Registered">Registered</option>
-                            <option value="EMERGENCY">EMERGENCY</option>
-                            <option value="In Progress">In Progress</option>
-                            <option value="Other">Other</option>
-                        </select> {% endcomment %}
+                        <select class="statusSelect {% if record.status == 'In Progress' %}in-progress {% else %}{{ record.status }}{% endif %}" data-record-id="{{ record.record_id }}">
+                            <option value="Registered" {% if record.status == 'Registered' %}selected{% endif %}>Registered</option>
+                            <option value="Queueing" {% if record.status == 'Queueing' %}selected{% endif %}>Queueing</option>
+                            <option value="In Progress" {% if record.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                            <option value="Completed" {% if record.status == 'Completed' %}selected{% endif %}>Completed</option>
+                            <option value="EMERGENCY" {% if record.status == 'EMERGENCY' %}selected{% endif %} disabled>EMERGENCY</option>
+                        </select>
                     </td>
                     {% if 'medicalTech' in path %}
                         <td> 
-                            {%if record.status == 'Registered'%}
+                            {%if record.status == 'Registered' or record.status == 'Queueing'%}
                                 <a href="{% url 'emergency' record.record_id %}">
                                     <button type="button" class="btn btn-secondary" id='emergency' >Emergency</button>
                                 </a>
@@ -321,5 +331,65 @@
     }
     
 
-   
+    $(document).ready(function () {
+        $(".statusSelect").change(function () {
+            var selectedStatus = $(this).val();
+            var recordId = $(this).data("record-id");
+            var $statusSelect = $(this);
+
+            // Remove any existing status class
+            $statusSelect.removeClass("Registered EMERGENCY in-progress Queueing");
+            
+            // Add the appropriate class based on the selected status
+            
+            if (selectedStatus === "Registered") {
+                $(this).addClass("Registered");
+            } else if (selectedStatus === "In Progress") {
+                $(this).addClass("in-progress");
+            } else if (selectedStatus === "Completed") {
+                $(this).addClass("Completed");
+            } else if (selectedStatus === "Queueing"){
+                $(this).addClass("Queueing");
+            }
+            // Send the selected status to the Django view using AJAX
+            $.ajax({
+                url: "{% url 'updateRecordStatus' %}",
+                method: "POST",
+                data: {
+                    record_id: recordId,
+                    new_status: selectedStatus
+                },
+                headers: {
+                    "X-CSRFToken": getCookie("csrftoken")  
+                },
+                success: function (response) {
+                    if (response.success) {
+                        // Update the displayed status
+                        alert("Status updated successfully");
+                        location.reload();
+                    } else {
+                        alert("Failed to update status");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Handle errors
+                    console.error(error);
+                }
+            });
+        });
+    });
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
 </script>

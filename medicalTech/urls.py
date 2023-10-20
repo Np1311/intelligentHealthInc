@@ -9,12 +9,14 @@ urlpatterns = [
     path('update_request_time/', views.update_request_time, name='update_request'),
     path('patient/<str:record_id>/', views.get_data, name='get_data'),
     path('emergency/<str:record_id>/', views.emergency,name='emergency'),
-    path('registered/<str:record_id>/', views.pending,name='Registered'),
+    path('registered/<str:record_id>/', views.cancelEmergency,name='Registered'),
     path('patient/viewImage/<str:record_id>/', views.display_image, name='viewImage'),
     path('patient/save_image/<str:record_id>/', views.save_image, name='save_image_record'),
     path('patient/update/<str:record_id>/', views.update_image, name='update_image_record'),
     path('download_images/', views.download_images, name='download_images'),
     path('delete_images/', views.delete_images, name='delete_images'),
     path('delete_files/<str:record_id>', views.delete_file, name='delete_files'),
+    path('update_record_status', views.update_record_status, name='updateRecordStatus'),
 ]
+
 
