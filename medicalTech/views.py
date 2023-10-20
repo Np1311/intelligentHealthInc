@@ -92,6 +92,9 @@ def add_patient(request):
             
             age = calculate_age(date_of_birth)
 
+
+            senderDoctor = get_random_doctor_name()
+            indications = 'fever, cough, nausea, shortness of breath, and diarrhea'
             # Create and save a new RadiologyRecord instance
             record = RadiologyRecord(
                 record_id=generate_unique_id(),  # You need to define this function
@@ -101,7 +104,9 @@ def add_patient(request):
                 age=age,
                 nationality=nationality,
                 gender=gender,
-                area=area
+                area=area,
+                senderDoctor=senderDoctor,
+                indications=indications
             )
             record.save()
 
@@ -124,6 +129,16 @@ def get_record(request):
     path = request.path 
 
     return render(request, 'medical_home.html', {'records': records, 'path': path})
+
+def get_random_doctor_name():
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT DoctorName FROM Doctors ORDER BY RAND() LIMIT 1")
+        random_doctor_name = cursor.fetchone()
+    
+    if random_doctor_name:
+        return random_doctor_name[0]
+    else:
+        return None
 
 def get_data(request, record_id):
     path = request.path 
@@ -220,6 +235,8 @@ def save_image(request, record_id):
         notes = request.POST.get("notes")
         image_filename = request.POST.get("filename")
         prediction = request.POST.get("prediction")
+        prediction = prediction.strip()
+        timestamp = request.POST.get("timestamp")
         if prediction is not None:
             prediction = prediction.strip()
         # binary_data = dicom_file.read() if dicom_file else None  # Read binary data if dicom_file is provided
@@ -231,8 +248,9 @@ def save_image(request, record_id):
             if dicom_file:
                 binary_data = dicom_file.read() 
                 # Create a new Image_Record instance with DICOM file
-                image_record = Image_Record(record_id=record, image=binary_data, notes=notes, image_filename=image_filename, prediction= prediction)
-                record.status = 'in_progress'
+                image_record = Image_Record(record_id=record, image=binary_data, notes=notes, image_filename=image_filename, prediction= prediction, upload_date=timestamp)
+                if record.status != 'EMERGENCY':
+                    record.status = 'In Progress'
                 record.save()
                 # patient_record = RadiologyRecord(record_id=record,status='in_progress')
             else:
@@ -260,6 +278,11 @@ def update_image(request, record_id):
         dicom_file = request.FILES.get('dicom_file', None)
         notes = request.POST.get("notes")
         image_filename = request.POST.get("filename")
+        prediction = request.POST.get("prediction")
+        prediction = prediction.strip()
+        timestamp = request.POST.get("timestamp")
+
+
         # binary_data = dicom_file.read() if dicom_file else None  # Read binary data if dicom_file is provided
 
         try:
@@ -271,6 +294,8 @@ def update_image(request, record_id):
                 # Create a new Image_Record instance with DICOM file
                 image_record.image_filename = image_filename
                 image_record.image = binary_data
+                image_record.prediction = prediction
+                image_record.upload_date = timestamp
                 image_record.notes = notes
             else:
                 # Create a new Image_Record instance without DICOM file

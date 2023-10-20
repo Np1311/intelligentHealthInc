@@ -26,9 +26,8 @@ class UpdateTemplateForm(forms.ModelForm):
 class ImageFindingsForm(forms.ModelForm):
     class Meta:
         model = Image_Record
-        fields = ['examination', 'indications', 'findings', 'impressions']
+        fields = ['examination', 'findings', 'impressions']
     examination = forms.CharField(label='Examination', initial='CHEST (PA)')
-    indications = forms.CharField(label='Indications', initial='No Indications')
     findings = forms.CharField(label='Findings', widget=forms.Textarea, initial='')
     impressions = forms.CharField(label='Impressions', initial='Normal')
 
@@ -37,7 +36,6 @@ class ImageFindingsForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if data:
             self.fields['examination'].initial = instance.examination
-            self.fields['indications'].initial = instance.indications
             self.fields['findings'].initial = instance.findings
             self.fields['impressions'].initial = instance.impressions
         # Check the condition to set the initial value
@@ -46,5 +44,4 @@ class ImageFindingsForm(forms.ModelForm):
                 # Fetch the initial value from the database
                 covid_19_template = findingsTemplate.objects.get(template_name='Covid-19')
                 self.fields['findings'].initial = covid_19_template.template
-                self.fields['indications'].initial = 'a _-year-old _ presenting with fever, cough, nausea, and diarrhea for _ weeks/days'
                 self.fields['impressions'].initial ='Covid-19 Positive'
