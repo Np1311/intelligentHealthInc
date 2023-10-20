@@ -123,7 +123,8 @@
             <th scope="col">Date of Birth</th>
             <th scope="col">Modality</th>
             <th scope="col">Request Time</th>
-            <th scope="col">Notes</th>
+            <th scope="col">Sender</th>
+            <th scope="col">Indications</th>
             <th scope="col">Status</th>
             {% if 'medicalTech' in path %}
             <th scope="col"></th>
@@ -164,9 +165,10 @@
                             </form>
                         </div>
                     </td>
-                    <td>{{record.image_record.notes}}</td>
-                    <td>
-                        {% if record.status == 'pending' %}
+                    <td>{{record.senderDoctor}}</td>
+                    <td>{{record.indications}}</td>
+                    <td class="status">
+                        {% if record.status == 'Registered' %}
                             {{ record.status }}
                         {% elif record.status == 'EMERGENCY' %}
                             <span style="color: red;">{{ record.status }}</span>
@@ -175,16 +177,22 @@
                         {% else %}
                             <span style="color: #28c842;">{{ record.status }}</span>
                         {% endif %}
+                        {% comment %} <select id="statusSelect" data-record-id="{{ record.id }}">
+                            <option value="Registered">Registered</option>
+                            <option value="EMERGENCY">EMERGENCY</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Other">Other</option>
+                        </select> {% endcomment %}
                     </td>
                     {% if 'medicalTech' in path %}
                         <td> 
-                            {%if record.status == 'pending'%}
+                            {%if record.status == 'Registered'%}
                                 <a href="{% url 'emergency' record.record_id %}">
                                     <button type="button" class="btn btn-secondary" id='emergency' >Emergency</button>
                                 </a>
                             {%elif record.status == 'EMERGENCY'%}
-                                <a href="{% url 'pending' record.record_id %}">
-                                    <button type="button" class="btn btn-warning" id='pending' >Cancel Emergency</button>
+                                <a href="{% url 'Registered' record.record_id %}">
+                                    <button type="button" class="btn btn-warning" id='Registered' >Cancel Emergency</button>
                                 </a>
 
                             {% else %}
@@ -252,7 +260,7 @@
         if (path.includes("medicalTech")) {
             rows.forEach(row => {
                 row.addEventListener("click", event => {
-                    if (!event.target.classList.contains("btn") && !event.target.closest(".request-time-cell") && !event.target.classList.contains("rowCheckbox")) {
+                    if (!event.target.classList.contains("btn") && !event.target.closest(".request-time-cell") && !event.target.classList.contains("rowCheckbox")&& !event.target.closest(".status")) {
                         window.location.href = row.dataset.href;
                     }
                 });

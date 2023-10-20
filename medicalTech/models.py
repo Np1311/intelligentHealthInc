@@ -20,6 +20,10 @@ class RadiologyRecord(models.Model):
     # Imaging study details
     modality = models.CharField(max_length=50, default='CXR')
     request_time = models.DateTimeField(null=True)
+
+    senderDoctor = models.CharField(max_length=255, default=None)
+    indications = models.TextField(null=True)
+
     
     # Additional information
     
@@ -185,11 +189,9 @@ class Image_Record(models.Model):
 
     notes = models.TextField(blank=True)
 
-    upload_date = models.DateTimeField(auto_now_add=True)
+    upload_date = models.DateTimeField(null=True)
 
     examination = models.CharField(max_length=255, null=True)
-
-    indications = models.CharField(max_length=255, null=True)
 
     findings = models.TextField(blank=True)
 

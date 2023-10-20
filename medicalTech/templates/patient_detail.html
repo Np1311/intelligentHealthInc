@@ -188,7 +188,7 @@
             <p><strong>Date of Birth:</strong> </br>{{ record.date_of_birth }}</p>
             <p><strong>Modality:</strong> </br>{{ record.modality }}</p>
             <p><strong>Gender:</strong> </br>{{ record.gender }}</p>
-            <p><strong>Status:</strong> </br>{{ record.status }}</p>
+            <p><strong>Sender Doctor:</strong> </br>{{ record.senderDoctor }}</p>
         </div>
     </div>
     <div class="section wide-section" >
@@ -198,6 +198,10 @@
             <h3 class="appointment-title">Request Time:</h3>
             <div class="appointment-info">
                 <p style='font-size:18px;'><strong>{{ record.request_time }}</strong></p>
+            </div>
+            <h3 class="appointment-title">Indications:</h3>
+            <div class="appointment-info" style='width: 110%; text-align:center'>
+                <p style='font-size:18px;'><strong>{{ record.indications }}</strong></p>
             </div>
         </div>
          {% comment %} <p><strong>Request Time:</strong> </br><span style='font-size:18px;'>{{ record.request_time }}</span></p> {% endcomment %}
@@ -237,7 +241,6 @@
                 
             {% else %}
                 <span id="imageContainer"></span>
-                <span id='timestamp'>TIMESTAMP:</span>
             {% endif %}
             <div class='load-prediction'>
                 {% if image_available %}
@@ -259,7 +262,7 @@
         {% if image_available %}
             <span id='timestamp'>TIMESTAMP: {{ image_record.upload_date }}</span>
         {% else %}
-            <span id='timestamp'>TIMESTAMP:</span>
+            <span id='timestamp'style='display: none;'></span>
         {% endif %}      
     </div>
     <div class="section section4">
@@ -331,10 +334,23 @@
             console.error("Error running the model:", error);
         }
     } {% endcomment %}
+    function formatDateTime(date) {
+        var parsedTimestamp = new Date(date);
+        var year = parsedTimestamp.getFullYear();
+        var month = (parsedTimestamp.getMonth() + 1).toString().padStart(2, '0');
+        var day = parsedTimestamp.getDate().toString().padStart(2, '0');
+        var hours = parsedTimestamp.getHours().toString().padStart(2, '0');
+        var minutes = parsedTimestamp.getMinutes().toString().padStart(2, '0');
+        var seconds = parsedTimestamp.getSeconds().toString().padStart(2, '0');
+        var formattedTimestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        return formattedTimestamp
+    }
+
     $(document).ready(function () {
         const fileInput = document.getElementById('fileInput');
         const imageName = document.getElementById('imageName');
         
+        var timestamp ;
     
         fileInput.addEventListener('change',  (event) => {
             const selectedFile = event.target.files[0];
@@ -343,6 +359,7 @@
             if (selectedFile) {
                 imageName.innerHTML = `<i class="fa-regular fa-file-image"></i><span style='margin-left: 10px;'>${selectedFile.name}</span>`;
                 $("#loadingMessage").show();
+                $('#timestamp').hide();
                 imageContainer.innerHTML = '';
                 prediction.innerHTML = '';
                 rerunButton.style.display = 'none';
@@ -375,7 +392,11 @@
                             $("#imageContainer").html(plotHtml);
                             //$("#imageContainer").html('<img src="data:image/png;base64,' + plotHtml + '" alt="Image" />');*
                             $("#loadingMessage").hide();
-                    
+                            var currentTimestamp = new Date();
+                            var formattedDateTime = currentTimestamp.toString().split(" GMT")[0];
+                            $('#timestamp').html('TIMESTAMP: '+formattedDateTime);
+                            $('#timestamp').show();
+                            timestamp = formattedDateTime;
                             var preprocess_image = response.preprocess_image;
                             async function runModel(modelPath) {
                                 try {
@@ -444,12 +465,16 @@
                     notes = 'Image Taken, No Notes'
                 } 
                 const prediction = document.getElementById('prediction').textContent;
+                
+                const formattedDateTime = formatDateTime(timestamp);
+                console.log(formattedTimestamp)
                 const formData = new FormData();
     
                 if (selectedFile) {
                     formData.append("dicom_file", selectedFile);
                     formData.append("filename", selectedFile.name);
                     formData.append("prediction", prediction);
+                    formData.append("timestamp", formattedTimestamp);
                 }
     
                 formData.append("notes", notes);
@@ -476,6 +501,7 @@
                     },
                     error: function (xhr, status, error, response) {
                         // Handle error here
+                        console.error(error);
                         alert('No file selected');
                     }
                 });
@@ -486,11 +512,15 @@
             updateButton.addEventListener('click', () => {
                 const selectedFile = fileInput.files[0];
                 const notes = document.getElementById('notesInput').value;
+                const prediction = document.getElementById('prediction').textContent;
+                const formattedDateTime = formatDateTime(timestamp);
                 const formData = new FormData();
     
                 if (selectedFile) {
                     formData.append("dicom_file", selectedFile);
                     formData.append("filename", selectedFile.name);
+                    formData.append("prediction", prediction);
+                    formData.append("timestamp", formattedDateTime);
                 }
     
                 formData.append("notes", notes);
@@ -625,6 +655,7 @@
         var rerunButton = document.getElementById("rerun-button");
         var notesInput = document.getElementById("notesInput");
         var fileInput = document.getElementById("fileInput");
+        var timestamp = document.getElementById("timestamp");
     
         // Reset the content to its original state
         imageName.innerHTML = '<i class="fa-regular fa-file-image"></i><span style=\'margin-left: 10px;\'>No file selected</span>';
@@ -632,6 +663,8 @@
         prediction.innerHTML = '';
         rerunButton.style.display = 'none';
         fileInput.value = '';  
+        timestamp.innerHTML = '';
+
         $.ajax({
             url: "{% url 'delete_files' record.record_id %}",
             type: "GET",
