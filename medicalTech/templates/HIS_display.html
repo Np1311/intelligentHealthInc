@@ -481,17 +481,24 @@
             }
             return cookieValue;
         }
-        document.getElementById("searchInput").addEventListener("keyup", function() {
-            var query = this.value.toLowerCase();
-            var rows = document.querySelectorAll("#table tr");
-            
-            rows.forEach(function(row) {
-                var text = row.textContent.toLowerCase();
-                if (text.includes(query)) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                }
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.getElementById("searchInput");
+            const tableRows = document.querySelectorAll("#table-id tbody tr");
+        
+            searchInput.addEventListener("input", function () {
+                const searchTerm = searchInput.value.toLowerCase();
+        
+                tableRows.forEach(function (row) {
+                    const rowData = Array.from(row.children).map((cell) =>
+                        cell.textContent.toLowerCase()
+                    );
+        
+                    if (rowData.some((cellText) => cellText.includes(searchTerm))) {
+                        row.style.display = "table-row";
+                    } else {
+                        row.style.display = "none";
+                    }
+                });
             });
         });
     </script>
