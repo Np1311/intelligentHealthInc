@@ -12,6 +12,13 @@
         <button type="button" class="btn btn-danger btn-sm" id="confirmDeleteButton">Confirm</button>
         <button type="button" class="btn btn-secondary btn-sm mr-2" id="cancelDeleteButton">Cancel</button>
     </div>
+    <div class="alert alert-success" id="alert" style="display: none;">
+        <span id='success'></span>
+    </div>
+    <div class="alert alert-danger" id="permissionAlert" style="display: none;">
+        <strong>Permission Denied:</strong> <span id='permissionMessage'></span>
+    </div>
+    
     
     <table class="table table-hover">
         <thead id='table'>
@@ -19,6 +26,7 @@
                 <th scope="col">ID</th>
                 <th scope="col">Template Name</th>
                 <th scope="col">Template</th>
+                <th scope="col">Creator</th>
                 <th scope="col"></th>
             </tr>
         </thead>
@@ -28,9 +36,10 @@
                     <td>{{ template.id }}</td>
                     <td>{{ template.template_name }}</td>
                     <td class='template-column'>{{ template.template }}</td>
+                    <td>{{template.doctor}}</td>
                     <td>
                         <a href="{% url 'update_template' template.id %}">
-                            <button type="button" class="btn btn-sm btn-rounded" style="background-color: #37B54A !important; color: #000;">
+                            <button type="button" class="btn btn-sm btn-rounded" style="background-color: #37B54A !important; color: #000;" >
                                 Update
                             </button>
                         </a>
@@ -40,6 +49,7 @@
                         </button>
 
                     </td>
+
                 </tr>
             {% empty %}
                 <tr>
@@ -76,13 +86,21 @@
             success: function (data) {
                 // Update the message span content
                 if (data.success){
-                    $("#message").html(data.message);
+                    $("#success").html(data.message);
+                    $("#alert").show();
 
                     // Fade out the message after 5 seconds
                     setTimeout(function () {
-                        $("#message").fadeOut("slow");
-                    }, 5000);
+                        $("#alert").fadeOut("slow");
+                    }, 2000);
                     location.reload();
+                }else{
+                    $("#permissionMessage").html(data.message);
+                    $("#permissionAlert").show();
+                    // Fade out the message after 5 seconds
+                    setTimeout(function () {
+                        $("#permissionAlert").fadeOut("slow");
+                    }, 2000);
                 }
             },
             error: function () {

@@ -10,6 +10,7 @@ from systemAdmin.models import profile
 from django.contrib.auth.decorators import login_required
 from .form import *
 from django.views.decorators.http import require_http_methods
+from django.http import HttpResponse
 
 @csrf_protect
 def login_user(request):
@@ -26,6 +27,8 @@ def login_user(request):
                 if user_profile.role == 'radiologyDoctor':
                    
                     login(request, user)
+                    request.session['username'] = username
+                    request.session['role'] = user_profile.role
 
                     if next_url is not None:
                         return redirect(next_url)
@@ -123,15 +126,23 @@ def createTemplates(request):
     if request.method == 'POST':
         form = FindingsTemplateForm(request.POST)
         if form.is_valid():
-            form.save()
+            template = form.save(commit=False)
+            if 'username' in request.session:
+                user = request.session.get('username')
+            else :
+                user = 'Guest'
+            template.doctor = user  # Assuming there's a 'user' field in your FindingsTemplate model
+            template.save()
             return redirect('radiologistDoctorHome')  # Redirect to a success page or wherever you want
     else:
         form = FindingsTemplateForm()
 
-    return render(request, 'template_form.html', {'form': form})
+    return render(request, 'template_form.html', {'form': form, 'user': user})
 
 def updateTemplate(request, id):
     template_instance = get_object_or_404(findingsTemplate, id=id)
+    permission_denied = template_instance.doctor != request.session.get('user')
+   
     
     if request.method == 'POST':
         form = UpdateTemplateForm(request.POST, instance=template_instance)
@@ -141,12 +152,12 @@ def updateTemplate(request, id):
     else:
         form = UpdateTemplateForm(instance=template_instance)
 
-    return render(request, 'template_form.html', {'form': form})
+    return render(request, 'template_form.html', {'form': form,'permission_denied': permission_denied})
 
 @require_http_methods(["GET"])
 def deleteTemplate(request, id):
-    
-    deletion_result, alert_message = findingsTemplate.deleteTemplateById(id)
+    user = request.session.get('user')
+    deletion_result, alert_message = findingsTemplate.deleteTemplateById(id,user)
 
     response_data = {
         'success': deletion_result,
@@ -160,20 +171,22 @@ def updateImageFindings(request, record_id):
         # Get the predictions and form data from the request
         predictions = request.POST.get('predictions')
         examination = request.POST.get('examination')
-        indications = request.POST.get('indications')
         findings = request.POST.get('findings')
         impressions = request.POST.get('impressions')
-
+        if 'username' in request.session:
+            user = request.session.get('username')
+        else :
+            user = 'Guest'
         # Perform the update operation in your model
         try:
             image_record = Image_Record.objects.get(record_id=record_id)
             radiology_record = RadiologyRecord.objects.get(record_id=record_id)
             image_record.predictions = predictions
             image_record.examination = examination
-            image_record.indications = indications
             image_record.findings = findings
             image_record.impressions = impressions
-            radiology_record.status = 'completed'
+            image_record.radiologyDoctor = user
+            radiology_record.status = 'Completed'
             image_record.save()
             radiology_record.save()
             response_data = {

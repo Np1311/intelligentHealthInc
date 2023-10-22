@@ -2,6 +2,16 @@
 
 {%block navlink%}
 <ul class="navbar-nav ms-auto">
+    {% if user %}
+        <li class="nav-item active">
+            <span style='font-size:20px;'>{{ user }}</span>
+        </li>
+
+    {% else %}
+        <li class="nav-item active">
+            <span>Guest</span>
+        </li>
+    {% endif %}
     <li class="nav-item active">
         <a class="nav-link" id='logout' href="{% url 'logout' %}">Logout</a>
     </li>

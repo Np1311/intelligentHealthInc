@@ -116,6 +116,7 @@ def createAccount_view(request):
 
 
 def logout_user(request):
+    request.session.clear()
     logout(request)
     return redirect(reverse('home'))
 

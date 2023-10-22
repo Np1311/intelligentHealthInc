@@ -54,6 +54,12 @@
 </head>
 <body>
     <div class="content">
+        {% if permission_denied %}
+            <div class="alert alert-danger" id="permissionAlert" >
+                <strong>Permission Denied:</strong> You are not allowed to change the template
+            </div>
+        {% endif %}
+        
         <div class="title">Create Template</div>
         <div class="container-wrap">
             <form method="post" >
@@ -75,7 +81,12 @@
                     {{ form.template.errors }}
                 </div>
                 
-                <button class="submitButton"type="submit">Submit</button>
+                <button class="submitButton"type="submit" {% if permission_denied %} disabled style = 'display :none;'{% endif %}>Submit</button>
+                {% if permission_denied %}
+                    <a href="{% url 'radiologistDoctorHome' %}">
+                        <button class="btn btn-danger" type="button" > Back </button>
+                    </a>
+                {% endif %}
             </form>
         </div>
     </div>

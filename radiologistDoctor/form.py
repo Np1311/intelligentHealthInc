@@ -28,20 +28,22 @@ class ImageFindingsForm(forms.ModelForm):
         model = Image_Record
         fields = ['examination', 'findings', 'impressions']
     examination = forms.CharField(label='Examination', initial='CHEST (PA)')
-    findings = forms.CharField(label='Findings', widget=forms.Textarea, initial='')
+    findings = forms.CharField(label='Findings', widget=forms.Textarea)
     impressions = forms.CharField(label='Impressions', initial='Normal')
 
-    def __init__(self, *args, predictions_value=None,data = None, **kwargs):
-        instance = kwargs.get('instance')
+    def __init__(self, *args, predictions_value=None,data = None,initial_data = None,instance = None, **kwargs):
+        
         super().__init__(*args, **kwargs)
+        
         if data:
             self.fields['examination'].initial = instance.examination
             self.fields['findings'].initial = instance.findings
             self.fields['impressions'].initial = instance.impressions
-        # Check the condition to set the initial value
+        
         else:
             if predictions_value == 'Positive':
                 # Fetch the initial value from the database
-                covid_19_template = findingsTemplate.objects.get(template_name='Covid-19')
-                self.fields['findings'].initial = covid_19_template.template
-                self.fields['impressions'].initial ='Covid-19 Positive'
+                
+                self.fields['findings'].initial = initial_data.get('findings')
+                self.fields['impressions'].initial = initial_data.get('impressions')
+                

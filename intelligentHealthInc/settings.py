@@ -88,18 +88,18 @@ pymysql.install_as_MySQLdb()
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'fyp',
-        'USER': 'master',
-        'PASSWORD': 'hdforsure100%',
-        'HOST': 'fyp-database.mysql.database.azure.com',
-        'PORT': '3306',   
         # 'ENGINE': 'django.db.backends.mysql',
         # 'NAME': 'fyp',
-        # 'USER': 'root',
-        # 'PASSWORD': 'password',
-        # 'HOST': 'localhost',
-        # 'PORT': '3306',
+        # 'USER': 'master',
+        # 'PASSWORD': 'hdforsure100%',
+        # 'HOST': 'fyp-database.mysql.database.azure.com',
+        # 'PORT': '3306',   
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'fyp',
+        'USER': 'root',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 
@@ -149,11 +149,16 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_AGE = 1800
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 
 SESSION_COOKIE_SECURE = True
 
 CSRF_COOKIE_SECURE = True
 
 CSRF_TRUSTED_ORIGINS = ['https://*.intelligenthealthinc.azurewebsites.net/.com','https://*.127.0.0.1']
+
+
 
 # django_heroku.settings(locals())

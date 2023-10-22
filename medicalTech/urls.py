@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from django.contrib.auth.decorators import permission_required
 
 urlpatterns = [
     path('home/', views.get_record, name='medical_tech_home'),
