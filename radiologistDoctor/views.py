@@ -123,14 +123,15 @@ def get_record(request):
     
 
 def createTemplates(request):
+    if 'username' in request.session:
+        user = request.session.get('username')
+    else :
+        user = 'Guest'
     if request.method == 'POST':
         form = FindingsTemplateForm(request.POST)
         if form.is_valid():
             template = form.save(commit=False)
-            if 'username' in request.session:
-                user = request.session.get('username')
-            else :
-                user = 'Guest'
+            
             template.doctor = user  # Assuming there's a 'user' field in your FindingsTemplate model
             template.save()
             return redirect('radiologistDoctorHome')  # Redirect to a success page or wherever you want
