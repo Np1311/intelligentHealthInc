@@ -181,11 +181,6 @@
                                     {{ image_form.examination }}
                                 </div>
                     
-                                <div class="form-group">
-                                    {{ image_form.indications.label_tag }}
-                                </br>
-                                    {{ image_form.indications }}
-                                </div>
                     
                                 <div class="form-group">
                                     {{ image_form.findings.label_tag }}
@@ -210,47 +205,50 @@
             </div>
            
     <script>
+        
         document.addEventListener("DOMContentLoaded", function() {
             
             var checkbox = document.querySelector('input[type="checkbox"]');
-            var updateButton = document.getElementById('update-button');
+            var updateStatus = document.getElementById('update-button');
             var predictions = '';
             var notesInput = document.getElementById('system-predictions-note');
             var backButton = document.getElementById('back-button');
             var findingsInput = document.getElementById('{{ image_form.findings.id_for_label }}');
-            var indicationInput = document.getElementById('{{ image_form.indications.id_for_label }}');
             var impressionsInput = document.getElementById('{{ image_form.impressions.id_for_label }}');
             var initialFindingsValue = findingsInput.value;
-            var initialIndicationsValue = indicationInput.value;
             var initialImpressionsValue = impressionsInput.value;
             function updatePredictions() {
                 if (checkbox.checked) {
                     predictions = "Positive";
                     console.log(predictions);
                     findingsInput.value = initialFindingsValue;
-                    indicationInput.value = initialIndicationsValue;
                     impressionsInput.value = initialImpressionsValue;
                 } else {
                     predictions = "Negative";
                     console.log(predictions);
                     // Clear the findings input when the checkbox is unchecked
                     findingsInput.value = '';
-                    indicationInput.value = '';
                     impressionsInput.value = 'Normal';
                 }
             }
         
             // Update predictions on checkbox change
             checkbox.addEventListener('change', updatePredictions);
-            updateButton.addEventListener('click', function() {
+            updateStatus.addEventListener('click', function() {
                 // Perform AJAX request to update the server
+                if (checkbox.checked) {
+                    predictions = "Positive";
+                }else {
+                    predictions = "Negative";
+                }
                 var formData = new FormData();
                 formData.append('predictions', predictions);
                 formData.append('examination', document.getElementById('{{ image_form.examination.id_for_label }}').value);
-                formData.append('indications', indicationInput.value);
                 formData.append('findings', findingsInput.value);
                 formData.append('impressions', impressionsInput.value);
-    
+                for (const pair of formData.entries()) {
+                    console.log(pair[0], pair[1]);
+                }
                 fetch("{% url 'update_image_findings' record.record_id %}", {
                     method: "POST",
                     body: formData,

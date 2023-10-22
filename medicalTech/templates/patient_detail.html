@@ -261,8 +261,12 @@
         </div>  
         {% if image_available %}
             <span id='timestamp'>TIMESTAMP: {{ image_record.upload_date }}</span>
+            
+            <span id='user'>TAKEN BY: {{ image_record.medTech }}</span>
+            
         {% else %}
             <span id='timestamp'style='display: none;'></span>
+            <span id='user'style='display: none;'>TAKEN BY: {{ user }}</span>
         {% endif %}      
     </div>
     <div class="section section4">
@@ -396,6 +400,7 @@
                             var formattedDateTime = currentTimestamp.toString().split(" GMT")[0];
                             $('#timestamp').html('TIMESTAMP: '+formattedDateTime);
                             $('#timestamp').show();
+                            $('#user').show();
                             timestamp = formattedDateTime;
                             var preprocess_image = response.preprocess_image;
                             async function runModel(modelPath) {

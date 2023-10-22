@@ -19,6 +19,8 @@ import zipfile
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from radiologistDoctor.form import ImageFindingsForm
+from radiologistDoctor.models import findingsTemplate
+
 # Create your views here.
 
 @csrf_protect
@@ -33,9 +35,11 @@ def login_user(request):
         if user is not None:
             try:
                 user_profile = profile.objects.get(account=user.id)  # Assuming 'account' is the ForeignKey in Profile
-                if user_profile.role == 'medicalTech':
+                if request.session.get('role') == 'medicalTech' or user_profile.role == 'medicalTech'  :
                    
                     login(request, user)
+                    request.session['username'] = username
+                    request.session['role'] = user_profile.role
 
                     if next_url is not None:
                         return redirect(next_url)
@@ -127,8 +131,12 @@ def generate_unique_id():
 def get_record(request):
     records = Image_Record.records_with_images()
     path = request.path 
+    if 'username' in request.session:
+        user = request.session.get('username')
+    else :
+        user = 'Guest'
 
-    return render(request, 'medical_home.html', {'records': records, 'path': path})
+    return render(request, 'medical_home.html', {'records': records, 'path': path, 'user': user})
 
 def get_random_doctor_name():
     with connection.cursor() as cursor:
@@ -149,9 +157,8 @@ def get_data(request, record_id):
         try:
             image_record = Image_Record.objects.get(record_id=record)
             predictions_value = image_record.prediction
-            data_available = bool(image_record.examination)  # Simplify data availability check
-            image_available = bool(image_record.image)  # Simplify image availability check
-
+            data_available = bool(image_record.examination or image_record.findings or image_record.impression)  
+            image_available = bool(image_record.image)  
             if image_available:
                 dicom_file = DicomViewer(io.BytesIO(image_record.image))
                 image_record.image_data = dicom_file.generate_image()
@@ -160,14 +167,27 @@ def get_data(request, record_id):
             image_available = False
 
         if "radiologistDoctor" in path:
+            covid_19_template = findingsTemplate.objects.get(template_name='Covid-19')
+
+            initial_data = {
+                'findings': covid_19_template.template,
+                'impressions': 'Covid-19 Positive',
+            }
             image_form = ImageFindingsForm(
                 predictions_value=predictions_value,
-                data=data_available,instance=image_record
+                data=data_available,instance=image_record, initial_data = initial_data
             )
+            # image_form = ImageFindingsForm(predictions_value=predictions_value,initial_data = initial_data)
         else:
             image_form = None 
 
+        # if 'username' in request.session:
+        #     user = request.session.get('username')
+        # else :
+        #     user = 'Guest'
+        
         context = {
+            
             'record': record,
             'image_available': image_available,
             'image_record': image_record,
@@ -239,6 +259,10 @@ def save_image(request, record_id):
         timestamp = request.POST.get("timestamp")
         if prediction is not None:
             prediction = prediction.strip()
+        if 'username' in request.session:
+            user = request.session.get('username')
+        else :
+            user = 'Guest'
         # binary_data = dicom_file.read() if dicom_file else None  # Read binary data if dicom_file is provided
 
         try:
@@ -248,7 +272,7 @@ def save_image(request, record_id):
             if dicom_file:
                 binary_data = dicom_file.read() 
                 # Create a new Image_Record instance with DICOM file
-                image_record = Image_Record(record_id=record, image=binary_data, notes=notes, image_filename=image_filename, prediction= prediction, upload_date=timestamp)
+                image_record = Image_Record(record_id=record, image=binary_data, notes=notes, image_filename=image_filename, prediction= prediction, upload_date=timestamp, medTech=user)
                 if record.status != 'EMERGENCY':
                     record.status = 'In Progress'
                 record.save()
@@ -282,7 +306,10 @@ def update_image(request, record_id):
         prediction = prediction.strip()
         timestamp = request.POST.get("timestamp")
 
-
+        if 'username' in request.session:
+            user = request.session.get('username')
+        else :
+            user = 'Guest'
         # binary_data = dicom_file.read() if dicom_file else None  # Read binary data if dicom_file is provided
 
         try:
@@ -297,6 +324,7 @@ def update_image(request, record_id):
                 image_record.prediction = prediction
                 image_record.upload_date = timestamp
                 image_record.notes = notes
+                image_record.medTech = user
             else:
                 # Create a new Image_Record instance without DICOM file
                 image_record.notes = notes

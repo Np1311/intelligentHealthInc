@@ -2,6 +2,8 @@ from django.db import models
 from django.db import transaction
 from collections import Counter
 from datetime import timedelta,datetime
+
+
 # Create your models here.
 class RadiologyRecord(models.Model):
     # Unique ID that starts with CXR
@@ -196,6 +198,10 @@ class Image_Record(models.Model):
     findings = models.TextField(blank=True)
 
     impressions = models.CharField(max_length=255, null=True)
+
+    medTech = models.CharField(max_length=255, null=True)
+
+    radiologyDoctor = models.CharField(max_length=255, null=True)
     @classmethod
     def get_records(cls, id):
         image_records = cls.objects.get(record_id=id)
