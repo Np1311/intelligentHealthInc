@@ -3,6 +3,8 @@ services:
     name: intelligentHealthInc
     
     runtime: python
+    region: Singapore # optional (defaults to oregon)
+    plan: Free
     buildCommand: "./build.sh"
     startCommand: "gunicorn intelligentHealthInc.wsgi:application"
     envVars:
