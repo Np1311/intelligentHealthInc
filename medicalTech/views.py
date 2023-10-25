@@ -232,11 +232,12 @@ def display_image(request, record_id):
 
         if dicom_file:
             
-            context = DicomViewer(dicom_file)
+            contex = DicomViewer(dicom_file)
             
-            image_data = context.generate_image() 
-            
-            preprocess_image = context.preprocess_image()
+
+            # Get the generated image data
+            image_data = contex.generate_image()
+            preprocess_image = contex.preprocess_image()
             
             # prediction = 0
 

@@ -165,10 +165,6 @@
         text-decoration: underline;
         margin-bottom: 40px; /* Add some space below the title */
     }
-    #imageContainer{
-        max-width:600px;
-        max-height: auto;
-    }
     
     @media (max-width: 768px) {
         /* Adjust the layout for smaller screens */
@@ -241,11 +237,10 @@
         <div class="image-prediction-container">
             <span id="loadingMessage" style="display: none;">Loading DICOM Image...</span>
             {% if image_available %}
-                {% comment %} <span id="imageContainer">{{ image_record.image_data|safe }}</span> {% endcomment %}
-                <img id="imageContainer" src="data:image/png;base64,{{image_record.image_data}}"></img>
+                <span id="imageContainer">{{ image_record.image_data|safe }}</span>
+                
             {% else %}
-                {% comment %} <span id="imageContainer"></span> {% endcomment %}
-                <img id="imageContainer"></img>
+                <span id="imageContainer"></span>
             {% endif %}
             <div class='load-prediction'>
                 {% if image_available %}
@@ -323,7 +318,6 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-
 <script>
     {% comment %} async function runModel(preprocess_image) {
         try {
@@ -359,7 +353,6 @@
     $(document).ready(function () {
         const fileInput = document.getElementById('fileInput');
         const imageName = document.getElementById('imageName');
-        const imageContainer = document.getElementById('imageContainer');
         
         var timestamp ;
     
@@ -371,20 +364,18 @@
                 imageName.innerHTML = `<i class="fa-regular fa-file-image"></i><span style='margin-left: 10px;'>${selectedFile.name}</span>`;
                 $("#loadingMessage").show();
                 $('#timestamp').hide();
-                imageContainer.src = '';
+                imageContainer.innerHTML = '';
                 prediction.innerHTML = '';
                 rerunButton.style.display = 'none';
-                
 
                 console.log('Selected file:', selectedFile.name);
                 console.log('File size:', selectedFile.size, 'bytes');
                 console.log('File type:', selectedFile.type);
 
-               
                 var formData = new FormData();
                 formData.append("dicom_file", selectedFile);
 
-               $.ajax({
+                $.ajax({
                     url: "{% url 'viewImage' record.record_id%}",
                     type: "POST",
                     data: formData,
@@ -399,11 +390,11 @@
                             console.log(response); 
                             
                            
-                            //var plotHtml = response.image_data;
+                            var plotHtml = response.image_data;
+                    
                             
-                            //$("#imageContainer").html(plotHtml);
+                            $("#imageContainer").html(plotHtml);
                             //$("#imageContainer").html('<img src="data:image/png;base64,' + plotHtml + '" alt="Image" />');*
-                            imageContainer.src = "data:image/png;base64," + response.image_data;
                             $("#loadingMessage").hide();
                             var currentTimestamp = new Date();
                             var formattedDateTime = currentTimestamp.toString().split(" GMT")[0];
@@ -412,7 +403,7 @@
                             $('#user').show();
                             timestamp = formattedDateTime;
                             var preprocess_image = response.preprocess_image;
-                            async function runModel(modelPath) {
+                            /*async function runModel(modelPath) {
                                 try {
                                     console.log('Running')
                                     const tensor = tf.tensor(preprocess_image);
@@ -448,7 +439,7 @@
                                 }
                             }
                            
-                            runModel('/static/tfjs_model/model.json');
+                            runModel('/static/tfjs_model/model.json');*/
 
                            
                             

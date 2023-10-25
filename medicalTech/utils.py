@@ -12,7 +12,6 @@ import mpld3
 import tempfile
 import base64
 import os
-from io import BytesIO
 
 
 class DicomViewer:
@@ -46,21 +45,11 @@ class DicomViewer:
         fig, ax = plt.subplots()
         ax.imshow(self.dataset.pixel_array, cmap=plt.cm.gray)
         ax.axis('off')
-        fig.patch.set_alpha(0)
 
-        # plot_html = mpld3.fig_to_html(fig)
-        # plt.close(fig)
-        buf = BytesIO()
-        fig.savefig(buf, format='png', dpi=300)
-        image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8').replace('\n', '')
-        buf.close()
+        plot_html = mpld3.fig_to_html(fig)
+        plt.close(fig)
 
-        return image_base64
-    
-    def dicom_image_view(self):
-        pixel_data = self.dataset.pixel_array.tolist()
-        
-        return pixel_data
+        return plot_html
         # # Create a temporary file to save the image
         # with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as temp_file:
         #     temp_file_path = temp_file.name
