@@ -157,7 +157,7 @@ def get_data(request, record_id):
         try:
             image_record = Image_Record.objects.get(record_id=record)
             predictions_value = image_record.prediction
-            data_available = bool(image_record.examination or image_record.findings or image_record.impression)  
+            data_available = bool(image_record.examination or image_record.findings or image_record.impressions)  
             image_available = bool(image_record.image)  
             if image_available:
                 dicom_file = DicomViewer(io.BytesIO(image_record.image))
