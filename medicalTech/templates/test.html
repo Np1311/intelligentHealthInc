@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pixel Array Display</title>
+  <style>
+    canvas {
+      border: 1px solid black;
+      cursor: grab;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="pixelCanvas" width="400" height="400"></canvas>
+
+  <script>
+    const canvas = document.getElementById("pixelCanvas");
+    const ctx = canvas.getContext("2d");
+
+    const pixelArray = [
+      [18497, 18572, 19071, /* ... */, 25307, 25307, 25307],
+      [18226, 18579, 18878, /* ... */, 25315, 25315, 25315],
+      [18257, 18649, 19162, /* ... */, 25324, 25325, 25325],
+      /* ... */
+      [25522, 24461, 23948, /* ... */, 25136, 25136, 25136],
+      [25296, 24403, 23673, /* ... */, 25136, 25136, 25136],
+      [25214, 24555, 23260, /* ... */, 25136, 25136, 25136]
+    ];
+
+    let zoom = 1;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    function drawPixelArray() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let y = 0; y < pixelArray.length; y++) {
+        for (let x = 0; x < pixelArray[y].length; x++) {
+          const color = pixelArray[y][x];
+          ctx.fillStyle = `rgb(${color}, ${color}, ${color})`;
+          ctx.fillRect(x * zoom + offsetX, y * zoom + offsetY, zoom, zoom);
+        }
+      }
+    }
+
+    function zoomIn() {
+      zoom *= 1.2;
+      drawPixelArray();
+    }
+
+    function zoomOut() {
+      zoom /= 1.2;
+      drawPixelArray();
+    }
+
+    let isDragging = false;
+    let startX, startY;
+
+    canvas.addEventListener("mousedown", (e) => {
+      isDragging = true;
+      startX = e.clientX - canvas.getBoundingClientRect().left;
+      startY = e.clientY - canvas.getBoundingClientRect().top;
+      canvas.style.cursor = "grabbing";
+    });
+
+    canvas.addEventListener("mouseup", () => {
+      isDragging = false;
+      canvas.style.cursor = "grab";
+    });
+
+    canvas.addEventListener("mousemove", (e) => {
+        if (!isDragging) return;
+
+        const endX = e.clientX - canvas.getBoundingClientRect().left;
+        const endY = e.clientY - canvas.getBoundingClientRect().top;
+
+        offsetX += endX - startX;
+        offsetY += endY - startY;
+
+        startX = endX;
+        startY = endY;
+        drawPixelArray();
+    });
+    drawPixelArray();
+  </script>
+</body>
+</html>
