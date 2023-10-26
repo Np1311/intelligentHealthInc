@@ -75,33 +75,26 @@ class RadiologyRecord(models.Model):
         
     @classmethod
     def positive_record(self, from_date, to_date):
-        print(from_date)
-        print(to_date)
+       
         if (from_date and to_date ):
             image_records = Image_Record.objects.filter(
                 prediction='Positive',
                 upload_date__range=[from_date, to_date],
             )
             
-            
-            print(image_records)
             positive_record_ids = image_records.values('record_id')
-
-            # cls.filtered_records = cls.objects.filter(
-            #     record_id__in=positive_record_ids,
-            # )
 
             self.filtered_records = Image_Record.records_with_images().filter(
                 record_id__in=positive_record_ids,
             )       
 
-            print(self.filtered_records)
+           
             return self.filtered_records
         else:
             image_records = Image_Record.objects.filter(
                 prediction='Positive',
             )
-            print(image_records)
+            
             positive_record_ids = image_records.values('record_id')
 
             self.filtered_records = Image_Record.records_with_images().filter(
