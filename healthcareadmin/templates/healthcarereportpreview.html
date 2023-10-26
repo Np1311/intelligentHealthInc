@@ -82,7 +82,7 @@
     <div id="reportContainer">
         <div class="report-container" id="covidCasesReport">
             <h2>Total COVID-19 Cases Report</h2>
-            <p id="covidCasesReportCanvas"></p>
+            <p id="covidCasesReportCanvas"> {{data.total_covid}}</p>
         </div>
         <div class="report-container" id="demographicAreaReport">
             <h2>Demographic Report in Area</h2>
@@ -104,7 +104,22 @@
 
     <script>
         $(document).ready(function () {
-            
+            var ageDataString = "{{ data.age_data | safe }}";
+            var correctedAgeData = ageDataString.replace(/'/g, '"');
+            var ageData = JSON.parse(correctedAgeData);
+
+            var areaDataString = "{{ data.area_data | safe }}";
+            var correctedAreaData = areaDataString.replace(/'/g, '"');
+            var areaData = JSON.parse(correctedAreaData);
+
+            var nationalityDataString = "{{ data.nationality_data | safe }}";
+            var correctedNationalityData = nationalityDataString.replace(/'/g, '"');
+            var nationalityData = JSON.parse(correctedNationalityData);
+
+            var visitDataString = "{{ data.visit_data | safe }}";
+            var correctedVisitData = visitDataString.replace(/'/g, '"');
+            var visitData = JSON.parse(correctedVisitData);
+
             $('#generateButton').click(function () {
                 
                 const selectedFromDate = $('#fromDate').val();
@@ -124,48 +139,12 @@
                         
                         console.log('AJAX request succeeded');
                         console.log(data);
-                        function generateChart(datas, chartTitle, chartId, chartType) {
-                            var ctx = document.getElementById(chartId).getContext('2d');
-                            if (chartType === 'pie') {
-                                
-                                var backgroundColors = datas.labels.map(function (_, index) {
-                                    var transparency = 0.5; 
-                                    var randomColor = 'rgba(' + Math.floor(Math.random() * 256) + ',' +
-                                                               Math.floor(Math.random() * 256) + ',' +
-                                                               Math.floor(Math.random() * 256) + ',' +
-                                                               transparency + ')';
-                                    return randomColor;
-                                });
-                            } else {
-                                var backgroundColors = 'rgba(75, 192, 192, 0.2)';
-                            }
                         
-                            new Chart(ctx, {
-                                type: chartType,
-                                data: {
-                                    labels: datas.labels,
-                                    datasets: [{
-                                        label: chartTitle,
-                                        data: datas.data,
-                                        backgroundColor: backgroundColors,
-                                        borderColor: 'rgba(75, 192, 192, 1)',
-                                        borderWidth: 1
-                                    }]
-                                },
-                                options: {
-                                    scales: {
-                                        y: {
-                                            beginAtZero: true
-                                        }
-                                    }
-                                }
-                            });
-                        }
 
-                        var ageData = data.age_data;
-                        var areaData = data.area_data;
-                        var nationalityData = data.nationality_data;
-                        var visitData = data.visit_data;
+                        ageData = data.age_data;
+                        areaData = data.area_data;
+                        nationalityData = data.nationality_data;
+                        visitData = data.visit_data;
                         var totalCovid = data.total_covid;
 
                         generateChart(ageData, 'Patient Ages', 'patientAgesChartCanvas', 'pie');
@@ -184,9 +163,63 @@
                     }
                 });
             });
-                       
+            function generateChart(datas, chartTitle, chartId, chartType) {
+                var ctx = document.getElementById(chartId).getContext('2d');
+                if (window.myCharts && window.myCharts[chartId]) {
+                    window.myCharts[chartId].destroy();
+                }
+            
+                if (chartType === 'pie') {
+                    
+                    var backgroundColors = datas.labels.map(function (_, index) {
+                        var transparency = 0.5; 
+                        var randomColor = 'rgba(' + Math.floor(Math.random() * 256) + ',' +
+                                                   Math.floor(Math.random() * 256) + ',' +
+                                                   Math.floor(Math.random() * 256) + ',' +
+                                                   transparency + ')';
+                        return randomColor;
+                    });
+                } else {
+                    var backgroundColors = 'rgba(75, 192, 192, 0.2)';
+                }
+            
+                window.myCharts = window.myCharts || {};
+                window.myCharts[chartId] = new Chart(ctx, {
+                    type: chartType,
+                    data: {
+                        labels: datas.labels,
+                        datasets: [{
+                            label: chartTitle,
+                            data: datas.data,
+                            backgroundColor: backgroundColors,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+            generateChart(ageData, 'Patient Ages', 'patientAgesChartCanvas', 'pie');
+            generateChart(areaData, 'Demographic by Area', 'demographicAreaChartCanvas', 'bar');
+            generateChart(nationalityData,  'Demographic by Nationality', 'demographicNationalityChartCanvas', 'bar');
+            generateChart(visitData, 'Patient Visits Over Time', 'patientVisitsChartCanvas', 'line');
+
         });
-        
+
+        const reloadInterval = 600000;
+
+        function reloadPage() {
+        location.reload();
+        }
+
+        // Schedule the page reload
+        setTimeout(reloadPage, reloadInterval);
     </script>
 </body>
 

@@ -74,20 +74,44 @@ class RadiologyRecord(models.Model):
             raise ValueError(f"Record with id {id} not found")
         
     @classmethod
-    def positive_record(cls, from_date, to_date):
-        image_records = Image_Record.objects.filter(
-            prediction='Positive'
-        )
+    def positive_record(self, from_date, to_date):
+        print(from_date)
+        print(to_date)
+        if (from_date and to_date ):
+            image_records = Image_Record.objects.filter(
+                prediction='Positive',
+                upload_date__range=[from_date, to_date],
+            )
+            
+            
+            print(image_records)
+            positive_record_ids = image_records.values('record_id')
 
-        positive_record_ids = image_records.values('record_id')
+            # cls.filtered_records = cls.objects.filter(
+            #     record_id__in=positive_record_ids,
+            # )
 
-        cls.filtered_records = cls.objects.filter(
-            record_id__in=positive_record_ids,
-            request_time__date__range=[from_date, to_date],
-        )
+            self.filtered_records = Image_Record.records_with_images().filter(
+                record_id__in=positive_record_ids,
+            )       
 
-        return cls.filtered_records
-    
+            print(self.filtered_records)
+            return self.filtered_records
+        else:
+            image_records = Image_Record.objects.filter(
+                prediction='Positive',
+            )
+            print(image_records)
+            positive_record_ids = image_records.values('record_id')
+
+            self.filtered_records = Image_Record.records_with_images().filter(
+                record_id__in=positive_record_ids,
+            )       
+
+            print(self.filtered_records)
+
+            return self.filtered_records
+        
     def area_data(self):
         
         if self.filtered_records is not None:
@@ -141,17 +165,34 @@ class RadiologyRecord(models.Model):
             }
         else:
             return[]
+        
     def visit_data(self, from_date, to_date):
         if self.filtered_records is not None:
             visit_data = list(self.filtered_records.values_list('request_time', flat=True))
             visit_counts = {}
 
-            current_date = from_date
-            while current_date <= to_date:
-                next_week_start = current_date + timedelta(days=(7 - current_date.weekday()))
-                week_label = f"{current_date.strftime('%d-%m-%Y')} to {next_week_start.strftime('%d-%m-%Y')}"
-                visit_counts[week_label] = 0
-                current_date = next_week_start
+            if from_date is None or to_date is None:
+                # If from_date or to_date is None, use the date range from filtered records
+                if visit_data:
+                    min_date = min(visit_data).date()
+                    max_date = max(visit_data).date()
+                    current_date = min_date
+
+                    while current_date <= max_date:
+                        next_week_start = current_date + timedelta(days=(7 - current_date.weekday()))
+                        week_label = f"{current_date.strftime('%d-%m-%Y')} to {next_week_start.strftime('%d-%m-%Y')}"
+                        visit_counts[week_label] = 0
+                        current_date = next_week_start
+                else:
+                    return []
+
+            else:
+                current_date = from_date
+                while current_date <= to_date:
+                    next_week_start = current_date + timedelta(days=(7 - current_date.weekday()))
+                    week_label = f"{current_date.strftime('%d-%m-%Y')} to {next_week_start.strftime('%d-%m-%Y')}"
+                    visit_counts[week_label] = 0
+                    current_date = next_week_start
 
             for visit_time in visit_data:
                 visit_time = visit_time.date()  # Extract only the date part
@@ -161,7 +202,7 @@ class RadiologyRecord(models.Model):
                     if week_start <= visit_time < week_end:
                         visit_counts[week_label] += 1
                         break
-        
+
             labels = list(visit_counts.keys())
             data = list(visit_counts.values())
 
@@ -170,7 +211,8 @@ class RadiologyRecord(models.Model):
                 'data': data
             }
         else:
-            return[]
+            return []
+
         
     def total_covid_data(self):
         if self.filtered_records is not None:
