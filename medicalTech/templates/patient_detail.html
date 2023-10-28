@@ -315,6 +315,9 @@
     {% endif %}
     
 </div>
+<div class="alert alert-danger" role="alert"  id="errorAlert" style="display: none;">
+    <span id ='errorMessage'></span>
+</div>
 <div>
     <button data-href="{% if 'medicalTech' in path %}{% url 'medical_tech_home' %}{% else %}{% url 'radiologistDoctorHome' %}{% endif %}" id= 'backButton'class="back-button">Back</button>
     {% if image_available %}
@@ -391,7 +394,7 @@
                 prediction.innerHTML = '';
                 rerunButton.style.display = 'none';
                 timestampSpan.innerHTML = '';
-                userSpan.innerHTML = '';
+                
 
                 
 
@@ -530,7 +533,15 @@
                     },
                     success: function (response) {
                         console.log(response);  // Log the entire response object for debugging
-                        window.location.href = "{% url 'medical_tech_home'%}";
+                        if (response.message.includes("File size exceeded")) {
+                            $("#errorMessage").html(response.message);
+                            $("#errorAlert").show();
+                            setTimeout(function () {
+                                $("#errorAlert").fadeOut("slow");
+                            }, 5000);
+                        }else{
+                            window.location.href = "{% url 'medical_tech_home'%}";
+                        }
                     },
                     error: function (xhr, status, error, response) {
                         // Handle error here

@@ -158,7 +158,7 @@
                     <span> {{ image_data.image|safe }}</span>
                 </div>
             </div> {% endcomment %}
-    
+        {% if predictions_available %}
             <div class="main-content">
                 <div class="toggle-switch">
                     <span class="toggle-label">COVID-19 Negative</span>
@@ -194,7 +194,7 @@
                                     {{ image_form.impressions }}
                                 </div>
 
-                           
+                        
                     </div>
                 
                     <div class="button-group">
@@ -203,6 +203,8 @@
                 </form>
                 {% endif %}
             </div>
+        {% endif %}
+            
            
     <script>
         
