@@ -6,6 +6,7 @@ class FindingsTemplateForm(forms.ModelForm):
     class Meta:
         model = findingsTemplate
         fields = ['template_name', 'template']
+    template_name = forms.CharField(label = 'Template Name',initial='Covid-19')
 
 class UpdateTemplateForm(forms.ModelForm):
     class Meta:

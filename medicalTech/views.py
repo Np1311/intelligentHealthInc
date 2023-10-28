@@ -149,7 +149,11 @@ def get_random_doctor_name():
         return None
 
 def get_data(request, record_id):
-    path = request.path 
+    path = request.path
+    if 'username' in request.session:
+        user = request.session.get('username')
+    else :
+        user = 'Guest' 
     try:
         record = RadiologyRecord.objects.get(record_id=record_id)
         image_record = None  # Initialize image_record variable
@@ -164,24 +168,32 @@ def get_data(request, record_id):
             if image_available:
                 dicom_file = DicomViewer(io.BytesIO(image_record.image))
                 image_record.image_data = dicom_file.generate_image()
+
             if predictions_available:
                 predictions_value = image_record.prediction
-
-
-            print(predictions_value)
-            print(predictions_available)
+            else:
+                predictions_value = None
 
         except Image_Record.DoesNotExist:
             image_available = False
             predictions_available = False
+            predictions_value = None
+            data_available = None
 
         if "radiologistDoctor" in path:
-            covid_19_template = findingsTemplate.objects.get(template_name='Covid-19')
+            try :
+                covid_19_template = findingsTemplate.objects.get(doctor=user)
 
-            initial_data = {
-                'findings': covid_19_template.template,
-                'impressions': 'Covid-19 Positive',
-            }
+                initial_data = {
+                    'findings': covid_19_template.template,
+                    'impressions': 'Covid-19 Positive',
+                }
+            except findingsTemplate.DoesNotExist:
+                initial_data = {
+                    'findings': '',
+                    'impressions': 'Covid-19 Positive',
+                }
+
             image_form = ImageFindingsForm(
                 predictions_value=predictions_value,
                 data=data_available,instance=image_record, initial_data = initial_data
@@ -273,36 +285,42 @@ def save_image(request, record_id):
         else :
             user = 'Guest'
         # binary_data = dicom_file.read() if dicom_file else None  # Read binary data if dicom_file is provided
+        file_size = dicom_file.size
+        file_size_mb = file_size / (1024 * 1024)
+        print(file_size_mb)
+        if file_size_mb < 15:
+            try:
+                # Get the corresponding RadiologyRecord instance
+                record = RadiologyRecord.objects.get(record_id=record_id)
 
-        try:
-            # Get the corresponding RadiologyRecord instance
-            record = RadiologyRecord.objects.get(record_id=record_id)
+                if dicom_file:
+                    binary_data = dicom_file.read() 
+                    # Create a new Image_Record instance with DICOM file
+                    image_record = Image_Record(record_id=record, image=binary_data, notes=notes, image_filename=image_filename, prediction= prediction, upload_date=timestamp, medTech=user)
+                    if record.status != 'EMERGENCY':
+                        record.status = 'In Progress'
+                    record.save()
+                    # patient_record = RadiologyRecord(record_id=record,status='in_progress')
+                else:
+                    # Create a new Image_Record instance without DICOM file
+                    image_record = Image_Record(record_id=record, notes=notes)
+                    # patient_record = RadiologyRecord(record_id=record,status='in_progress')
 
-            if dicom_file:
-                binary_data = dicom_file.read() 
-                # Create a new Image_Record instance with DICOM file
-                image_record = Image_Record(record_id=record, image=binary_data, notes=notes, image_filename=image_filename, prediction= prediction, upload_date=timestamp, medTech=user)
-                if record.status != 'EMERGENCY':
-                    record.status = 'In Progress'
-                record.save()
-                # patient_record = RadiologyRecord(record_id=record,status='in_progress')
-            else:
-                # Create a new Image_Record instance without DICOM file
-                image_record = Image_Record(record_id=record, notes=notes)
-                # patient_record = RadiologyRecord(record_id=record,status='in_progress')
+                image_record.save()
+                
+                # patient_record.save()
 
-            image_record.save()
-            
-            # patient_record.save()
-
-            response_data = {"message": "Image and data saved successfully"}
+                response_data = {"message": "Image and data saved successfully"}
+                return JsonResponse(response_data)
+            except RadiologyRecord.DoesNotExist:
+                response_data = {"message": "Record with the provided ID not found"}
+                return JsonResponse(response_data, status=400)
+            except Exception as e:
+                response_data = {"message": str(e)}
+                return JsonResponse(response_data, status=500)
+        else:
+            response_data={"message":"File size exceeded"}
             return JsonResponse(response_data)
-        except RadiologyRecord.DoesNotExist:
-            response_data = {"message": "Record with the provided ID not found"}
-            return JsonResponse(response_data, status=400)
-        except Exception as e:
-            response_data = {"message": str(e)}
-            return JsonResponse(response_data, status=500)
     else:
         return JsonResponse({}, status=405)
     
