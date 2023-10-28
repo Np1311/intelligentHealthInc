@@ -26,6 +26,8 @@ def login_user(request):
                 if user_profile.role == 'healthcareAdmin':
                    
                     login(request, user)
+                    request.session['username'] = username
+                    request.session['role'] = user_profile.role
 
                     if next_url is not None:
                         return redirect(next_url)
