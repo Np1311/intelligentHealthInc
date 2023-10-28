@@ -156,15 +156,24 @@ def get_data(request, record_id):
 
         try:
             image_record = Image_Record.objects.get(record_id=record)
-            predictions_value = image_record.prediction
+            
             data_available = bool(image_record.examination or image_record.findings or image_record.impressions)  
             image_available = bool(image_record.image)  
+            predictions_available = bool(image_record.prediction)
+
             if image_available:
                 dicom_file = DicomViewer(io.BytesIO(image_record.image))
                 image_record.image_data = dicom_file.generate_image()
+            if predictions_available:
+                predictions_value = image_record.prediction
+
+
+            print(predictions_value)
+            print(predictions_available)
 
         except Image_Record.DoesNotExist:
             image_available = False
+            predictions_available = False
 
         if "radiologistDoctor" in path:
             covid_19_template = findingsTemplate.objects.get(template_name='Covid-19')
@@ -192,7 +201,8 @@ def get_data(request, record_id):
             'image_available': image_available,
             'image_record': image_record,
             'path': path,
-            'image_form': image_form,  # Add the form to the context
+            'image_form': image_form,
+            'predictions_available':predictions_available,  # Add the form to the context
         }
         return render(request, 'patient_detail.html', context)
     except RadiologyRecord.DoesNotExist:
@@ -390,7 +400,7 @@ def delete_file(request, record_id):
 
         # Delete the file and filename
         image_record.image = None
-        image_record.image_filename = "None"
+        # image_record.image_filename = "None"
         image_record.save()
 
         return JsonResponse({'message': 'File deleted successfully'})

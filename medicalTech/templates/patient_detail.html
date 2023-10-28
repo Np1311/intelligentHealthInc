@@ -139,8 +139,8 @@
     }
     
     #imageContainer,
-    .prediction, .load-prediction {
-        display: inline-blockn !important;
+    .load-prediction {
+        display: inline-block !important;
         font-size: 24px;
         font-weight: bold;
         font-color black;
@@ -254,13 +254,21 @@
                         <span id="prediction">{{image_record.prediction}}</span>
                         <br>
                         <button id='rerun-button' style='display: block;'>Re-run</button> 
-                    {% comment %} {% else %}
-                        <button id='updateStatus-button' data-href= '{% url "update_status" record.record_id %}' >Update Status</button> {% endcomment %}
+                    
                     {% endif %}
+
                 {% else %}
-                    <span id="prediction" style="display: none;"></span>
-                    <button id='rerun-button' style='display: none;'>Re-run</button>
+                    {% if predictions_available %}
+                        <span id="prediction">{{image_record.prediction}}</span>
+                        
+                    {% else %}
+                        <span id="prediction" style="display: none;"></span>
+                        </br>
+                        <button id='rerun-button' style='display: none;'>Re-run</button>
+                    {% endif %}
                 {% endif %}
+
+               
             </div>
             
         </div>  
@@ -355,11 +363,19 @@
         var formattedTimestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         return formattedTimestamp
     }
+    var prediction = document.getElementById("prediction").textContent;
+    var circleColor = prediction == 'Negative' ? "red" : "#28c842";
+    var circleIcon = '<i class="fa-solid fa-circle" style="color: ' + circleColor + ';"></i>';
+    $("#prediction").html(circleIcon + ' ' + prediction);
+    console.log(prediction);
 
     $(document).ready(function () {
+            
         const fileInput = document.getElementById('fileInput');
         const imageName = document.getElementById('imageName');
         const imageContainer = document.getElementById('imageContainer');
+        const timestampSpan = document.getElementById('timestamp');
+        const userSpan = document.getElementById('user');
         
         var timestamp ;
     
@@ -374,6 +390,9 @@
                 imageContainer.src = '';
                 prediction.innerHTML = '';
                 rerunButton.style.display = 'none';
+                timestampSpan.innerHTML = '';
+                userSpan.innerHTML = '';
+
                 
 
                 console.log('Selected file:', selectedFile.name);
@@ -579,10 +598,7 @@
         }
     }
 
-    var prediction = document.getElementById("prediction").textContent;
-    var circleColor = prediction == 'Negative' ? "red" : "#28c842";
-    var circleIcon = '<i class="fa-solid fa-circle" style="color: ' + circleColor + ';"></i>';
-    $(".load-prediction #prediction").html(circleIcon + ' ' + prediction);
+    
 
     const updateButton = document.getElementById('updateStatus-button');
     updateButton.addEventListener('click', function() {
@@ -603,51 +619,13 @@
     const rerunButton = document.getElementById('rerun-button');
 
   
-    rerunButton.addEventListener('click', function() {
+        rerunButton.addEventListener('click', function() {
         
         console.log('Button clicked!');
     });
 
 
-    {% comment %} function addSaveButton() {
-        var notesInput = document.getElementById("notesInput");
-        var saveButtonPlaceholder = document.getElementById("saveButtonPlaceholder");
-
-        // Check if the content of the textarea has changed
-        if (notesInput.value.trim() !== "") {
-            // If there are changes, add the "Save" button to the placeholder span
-            saveButtonPlaceholder.innerHTML = '<button class="update-save-button" id="saveNotes">Save</button>';
-            var saveButton = document.getElementById("saveNotes");
-            saveButton.addEventListener("click", function() {
-                let notes = notesInput.value;
-                console.log(notes);
-                const formData = new FormData();
-                formData.append("notes", notes);
-                $.ajax({
-                    url: "{% url 'save_notes' record.record_id %}",
-                    type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    headers: {
-                        "X-CSRFToken": getCookie("csrftoken")
-                    },
-                    beforeSend: function () {
-                        //$('#loading-spinner').show();
-                        alert('Please wait. Your request is being processed...');
-                    },
-                    success: function (response) {
-                        console.log(response);  // Log the entire response object for debugging
-                        window.location.href = "{% url 'radiologistDoctorHome'%}";
-                    },
-                    error: function (xhr, status, error, response) {
-                        // Handle error here
-                        console.error(response);
-                    }
-                });
-            });
-        }
-    } {% endcomment %}
+    
     function getCookie(name) {
         var cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -697,7 +675,7 @@
         });
         
     }
-
+    
 </script>
 
 {% endblock %} 

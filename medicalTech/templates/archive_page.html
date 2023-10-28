@@ -141,46 +141,14 @@
                     link.download = "downloaded_files.zip";
                     link.click();
                 },
-                error: function() {
-                    // Handle error
-                    console.log("Error downloading zip file");
+                error: function(xhr, status, error) {
+                    console.error("AJAX Error:", status, error);
+                    console.log(xhr.responseText);
                 }
             });
         });
     });
-    {% comment %} $(document).ready(function () {
-        $("#deleteButton").click(function () {
-            var selectedIds = [];
-
-            $(".rowCheckbox:checked").each(function () {
-                selectedIds.push($(this).data("record-id"));
-            });
-
-            console.log(selectedIds);
-            $.ajax({
-                type: "POST",
-                url: "{% url 'delete_images' %}",
-                data: JSON.stringify(selectedIds),
-                contentType: "application/json",
-                headers: {
-                    "X-CSRFToken": getCookie("csrftoken")
-                },
-                success: function (data) {
-                    $("#message").html(data);
-                    setTimeout(function () {
-                        $("#message").fadeOut("slow");
-                    }, 5000);
-                    if (data.includes("Successfully deleted")) {
-                        location.reload();
-                    }
-                },
-                error: function () {
-                    // Handle error
-                    console.log("e");
-                }
-            });
-        });
-    }); {% endcomment %}
+  
 
     $(document).ready(function () {
         $("#deleteButton").click(function () {

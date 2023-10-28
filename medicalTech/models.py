@@ -270,10 +270,8 @@ class Image_Record(models.Model):
         message = ""
         try:
             with transaction.atomic():
-               
-                RadiologyRecord.objects.filter(record_id__in=record_ids).delete()
-                
-                cls.objects.filter(record_id__in=record_ids).delete()
+                queryset =  cls.objects.filter(record_id__in=record_ids)
+                queryset.update(image=None)
                 message = f"Successfully deleted record(s)."
         except Exception as e:
             message = f"Error deleting records: {str(e)}"
