@@ -3,7 +3,7 @@
 
 {% block content %}
 <head>
-    <title>HOME</title>
+    <title>Healthcare Admin . Home</title>
     
     <style>
         .content{
@@ -191,7 +191,7 @@
             </form>
         </div>
         <table>
-            <thead>
+            <thead id ='table'>
                 <tr>
                     <th>Patient Name</th>
                     <th>Age</th>
@@ -201,7 +201,7 @@
                     <th>Area</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id ='table'>
                 {% for patient in patients %}
                 <tr>
                     <td>{{ patient.patient_name }}</td>
