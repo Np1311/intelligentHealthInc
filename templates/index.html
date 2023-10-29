@@ -391,7 +391,7 @@
     </div>
 
     <div class="overlay"></div>
-
+    {% if 'systemAdmin' in path %}
     <script type="text/javascript">
       $(document).ready(function () {
         $("#sidebar").mCustomScrollbar({
@@ -417,5 +417,6 @@
           history.back(); // Go back to the previous page
         });
     </script>
+    {% endif %}
   </body>
 </html>
