@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import pymysql
 from pathlib import Path
 import os
 # import django_heroku
@@ -55,7 +56,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware', 
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'intelligentHealthInc.urls'
@@ -81,25 +82,24 @@ WSGI_APPLICATION = 'intelligentHealthInc.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-import pymysql
 
-pymysql.version_info = (1, 4, 13, "final", 0) 
+pymysql.version_info = (1, 4, 13, "final", 0)
 pymysql.install_as_MySQLdb()
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'fyp',
-        'USER': 'master',
-        'PASSWORD': 'hdforsure100%',
-        'HOST': 'fyp-database.mysql.database.azure.com',
-        'PORT': '3306',   
         # 'ENGINE': 'django.db.backends.mysql',
         # 'NAME': 'fyp',
-        # 'USER': 'root',
-        # 'PASSWORD': 'password',
-        # 'HOST': 'localhost',
+        # 'USER': 'master',
+        # 'PASSWORD': 'hdforsure100%',
+        # 'HOST': 'fyp-database.mysql.database.azure.com',
         # 'PORT': '3306',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'fyp',
+        'USER': 'root',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 
@@ -142,7 +142,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage' 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # Default primary key field type
@@ -157,8 +157,8 @@ SESSION_COOKIE_SECURE = True
 
 CSRF_COOKIE_SECURE = True
 
-CSRF_TRUSTED_ORIGINS = ['https://*.intelligenthealthinc.azurewebsites.net/.com','https://*.127.0.0.1']
-
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.intelligenthealthinc.azurewebsites.net/.com', 'https://*.127.0.0.1']
 
 
 # django_heroku.settings(locals())

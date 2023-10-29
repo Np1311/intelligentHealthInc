@@ -1,61 +1,59 @@
-{% extends 'index.html' %}
-
-{%block menu%}
+{% extends 'index.html' %} {%block menu%}
 <ul class="components">
-    <li class="{% if '/systemAdmin/profile' in request.path %}active{% endif %}">
-        <a href="{% url 'profile' %}">System Admin</a>
-    </li>
-    <li class="{% if '/systemAdmin/medicalTech' in request.path %}active{% endif %}">
-        <a href="{% url 'medicalTech' %}">Medical Technician</a>
-    </li>
-    <li class="{% if '/systemAdmin/healthcareAdmin' in request.path %}active{% endif %}">
-        <a href="{% url 'healthcareAdmin' %}">Hospital Admin</a>
-    </li>
-    <li class="{% if '/systemAdmin/radiologyDoctor' in request.path %}active{% endif %}">
-        <a href="{% url 'radiologyDoctor' %}">Radiology Doctor</a>
-    </li>
+  <li class="{% if '/systemAdmin/profile' in request.path %}active{% endif %}">
+    <a href="{% url 'profile' %}">System Admin</a>
+  </li>
+  <li
+    class="{% if '/systemAdmin/medicalTech' in request.path %}active{% endif %}"
+  >
+    <a href="{% url 'medicalTech' %}">Medical Technician</a>
+  </li>
+  <li
+    class="{% if '/systemAdmin/healthcareAdmin' in request.path %}active{% endif %}"
+  >
+    <a href="{% url 'healthcareAdmin' %}">Healthcare Admin</a>
+  </li>
+  <li
+    class="{% if '/systemAdmin/radiologyDoctor' in request.path %}active{% endif %}"
+  >
+    <a href="{% url 'radiologyDoctor' %}">Radiology Doctor</a>
+  </li>
 </ul>
-{%endblock%}
 
-{% block role %}
-{% if '/systemAdmin/profile' in request.path %}
-    <span>System Admin</span>
-{% endif %}
-{% if 'medicalTech' in request.path %}
-    <h3 >Medical Technician</h3>
-{% endif %}
-{% if 'healthcareAdmin' in request.path %}
-    <h3 >Healthcare Admin</h3>
-{% endif %}
-{% if 'radiologyDoctor' in request.path %}
-    <h3 >Radiology Doctor</h3>
-{% endif %}
-{%endblock%}
-
-{%block navlink%}
+{%endblock%} {% block role %} {% if '/systemAdmin/profile' in request.path %}
+<span>System Admin</span>
+{% endif %} {% if 'medicalTech' in request.path %}
+<h3>Medical Technician</h3>
+{% endif %} {% if 'healthcareAdmin' in request.path %}
+<h3>Healthcare Admin</h3>
+{% endif %} {% if 'radiologyDoctor' in request.path %}
+<h3>Radiology Doctor</h3>
+{% endif %} {%endblock%} {%block navlink%}
 <ul class="navbar-nav ms-auto">
-{% if '/createAccount' in request.path or '/createProfile' in request.path%}
-    <li class="nav-item active home-link">
-        <a class="nav-link" href="{%url 'createProfile'%}">Profile</a>
-    </li>
-    <li class="nav-item active">
-        <a class="nav-link" id='account' href="{% url 'createAccount' %}">Account</a>
-    </li>
+  {% if '/createAccount' in request.path or '/createProfile' in request.path%}
+  <li class="nav-item active home-link">
+    <a class="nav-link" href="{%url 'createProfile'%}">Profile</a>
+  </li>
+  <li class="nav-item active">
+    <a class="nav-link" id="account" href="{% url 'createAccount' %}"
+      >Account</a
+    >
+  </li>
 
-    <li class="nav-item active">
-        <a class="nav-link" id='backButton' href="">Back</a>
-    </li>
-{% else %}
-    <li class="nav-item active home-link">
-        <a class="nav-link" id='profile'href="{% url 'profile' %}">Profile</a>
-    </li>
-    <li class="nav-item active">
-        <a class="nav-link" id='account' href="{% url 'view_account' %}">Account</a>
-    </li>
+  <li class="nav-item active">
+    <a class="nav-link" id="backButton" href="">Back</a>
+  </li>
+  {% else %}
+  <li class="nav-item active home-link">
+    <a class="nav-link" id="profile" href="{% url 'profile' %}">Profile</a>
+  </li>
+  <li class="nav-item active">
+    <a class="nav-link" id="account" href="{% url 'view_account' %}">Account</a>
+  </li>
 
-    <li class="nav-item active">
-        <a class="nav-link" id='logout' href="{% url 'logout' %}">Logout</a>
-    </li>
-{% endif %}
+  <li class="nav-item active">
+    <a class="nav-link" id="logout" href="{% url 'logout' %}">Logout</a>
+  </li>
+  {% endif %}
 </ul>
 {%endblock%}

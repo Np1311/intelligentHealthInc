@@ -1,30 +1,11 @@
 {% extends 'logout.html' %}
 {% block content%}
-{% comment %} <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patient Detail</title>
-</head>
-<body>
-    <h1>Record Details</h1>
-    <p><strong>Record ID:</strong> {{ record.record_id }}</p>
-    <p><strong>Patient Name:</strong> {{ record.patient_name }}</p>
-    <p><strong>Patient ID:</strong> {{ record.patient_id }}</p>
-    <p><strong>Age:</strong> {{ record.age }}</p>
-    <p><strong>Date of Birth:</strong> {{ record.date_of_birth }}</p>
-    <p><strong>Modality:</strong> {{ record.modality }}</p>
-    <p><strong>Request Time:</strong> {{ record.request_time }}</p>
-    <p><strong>Notes:</strong> {{ record.notes }}</p>
-    <p><strong>Status:</strong> {{ record.status }}</p>
-</body>
-</html>  {% endcomment %}
-
 
 {%load static %}
 <meta charset="UTF-8">
 
 <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+<title>Patient Information . {{record.record_id}}</title>
 <style>
     .container-full {
         position: relative;
@@ -177,13 +158,9 @@
         }
     }
 </style>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
-<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
 
 <div class="container-full">
     <div class="section sectionOne">
-        <a href='#'><i class="fa-regular fa-pen-to-square" style='float:right; margin-right: 10px;'></i></a>
         <div class="grid-container">
             <p><strong>Record ID:</strong> </br>{{ record.record_id }}</p>
             <p><strong>Patient Name:</strong> </br>{{ record.patient_name }}</p>
@@ -208,7 +185,6 @@
                 <p style='font-size:18px;'><strong>{{ record.indications }}</strong></p>
             </div>
         </div>
-         {% comment %} <p><strong>Request Time:</strong> </br><span style='font-size:18px;'>{{ record.request_time }}</span></p> {% endcomment %}
     </div>
     <div class="section wide-section section3" >
        
@@ -241,10 +217,8 @@
         <div class="image-prediction-container">
             <span id="loadingMessage" style="display: none;">Loading DICOM Image...</span>
             {% if image_available %}
-                {% comment %} <span id="imageContainer">{{ image_record.image_data|safe }}</span> {% endcomment %}
                 <img id="imageContainer" src="data:image/png;base64,{{image_record.image_data}}"></img>
             {% else %}
-                {% comment %} <span id="imageContainer"></span> {% endcomment %}
                 <img id="imageContainer"></img>
             {% endif %}
             <div class='load-prediction'>
@@ -332,29 +306,11 @@
     <span id='saveButtonPlaceholder'></span>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
 
 <script>
-    {% comment %} async function runModel(preprocess_image) {
-        try {
-            const tensor = tf.tensor(preprocess_image);
-    
-            // Load the model asynchronously
-            const model = await tf.loadLayersModel('/static/tfjs_model/model.json');
-    
-            // Make predictions
-            const predictions = model.predict(tensor);
-    
-            // Convert predictions to a synchronous array
-            const predictionsArray = await predictions.array();
-            console.log(predictions);
-            console.log(predictionsArray);
-    
-        } catch (error) {
-            console.error("Error running the model:", error);
-        }
-    } {% endcomment %}
+   
     function formatDateTime(date) {
         var parsedTimestamp = new Date(date);
         var year = parsedTimestamp.getFullYear();
@@ -420,11 +376,6 @@
                         try {
                             console.log(response); 
                             
-                           
-                            //var plotHtml = response.image_data;
-                            
-                            //$("#imageContainer").html(plotHtml);
-                            //$("#imageContainer").html('<img src="data:image/png;base64,' + plotHtml + '" alt="Image" />');*
                             imageContainer.src = "data:image/png;base64," + response.image_data;
                             $("#loadingMessage").hide();
                             var currentTimestamp = new Date();
@@ -432,6 +383,7 @@
                             $('#timestamp').html('TIMESTAMP: '+formattedDateTime);
                             $('#timestamp').show();
                             $('#user').show();
+
                             timestamp = formattedDateTime;
                             var preprocess_image = response.preprocess_image;
                             async function runModel(modelPath) {

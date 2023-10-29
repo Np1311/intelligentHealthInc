@@ -9,8 +9,8 @@ from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_protect
 
 
-
 from .models import profile  # Import your Profile model
+
 
 @csrf_protect
 def login_user(request):
@@ -23,83 +23,99 @@ def login_user(request):
 
         if user is not None:
             try:
-                user_profile = profile.objects.get(account=user.id)  # Assuming 'account' is the ForeignKey in Profile
+                # Assuming 'account' is the ForeignKey in Profile
+                user_profile = profile.objects.get(account=user.id)
                 if user_profile.role == 'systemAdmin':
-                   
+
                     login(request, user)
 
                     if next_url is not None:
                         return redirect(next_url)
                     else:
                         return redirect('profile')
-                    
+
                 else:
-                    messages.error(request, "You don't have the required role.")
+                    messages.error(
+                        request, "You don't have the required role.")
                     return redirect('login')
             except profile.DoesNotExist:
                 messages.error(request, "Invalid credentials.")
                 return redirect('login')
         else:
-            messages.error(request, "Invalid credentials or Your Account is Suspended.")
+            messages.error(
+                request, "Invalid credentials or Your Account is Suspended.")
             return redirect('login')
     else:
         return render(request, 'login.html', {})
-    
+
+
 @login_required(login_url='login')
 # Create your views here.
 def profile_view(request):
     profiles = profile.objects.filter(role='systemAdmin')
 
     for prof in profiles:
-            try:
-                user = User.objects.get(id=prof.account_id)
-                prof.accountStatus = user.is_active
-            except User.DoesNotExist:
-                prof.is_active = False
+        try:
+            user = User.objects.get(id=prof.account_id)
+            prof.accountStatus = user.is_active
+        except User.DoesNotExist:
+            prof.is_active = False
 
-    return render(request, 'profile.html', {'profiles': profiles})
+    title = 'System Administrator'
+
+    return render(request, 'profile.html', {'profiles': profiles, 'title': title})
 
 
 @login_required(login_url='login')
 def medicalTech_profile(request):
     profiles = profile.objects.filter(role='medicalTech')
     for prof in profiles:
-            try:
-                user = User.objects.get(id=prof.account_id)
-                prof.accountStatus = user.is_active
-            except User.DoesNotExist:
-                prof.is_active = False
+        try:
+            user = User.objects.get(id=prof.account_id)
+            prof.accountStatus = user.is_active
+        except User.DoesNotExist:
+            prof.is_active = False
 
-    return render(request, 'profile.html', {'profiles': profiles})
+    title = 'Medical Technician'
+
+    return render(request, 'profile.html', {'profiles': profiles, 'title': title})
+
 
 @login_required(login_url='login')
 def healthcareAdmin_profile(request):
     profiles = profile.objects.filter(role='healthcareAdmin')
     for prof in profiles:
-            try:
-                user = User.objects.get(id=prof.account_id)
-                prof.accountStatus = user.is_active
-            except User.DoesNotExist:
-                prof.is_active = False
+        try:
+            user = User.objects.get(id=prof.account_id)
+            prof.accountStatus = user.is_active
+        except User.DoesNotExist:
+            prof.is_active = False
 
-    return render(request, 'profile.html', {'profiles': profiles})
+    title = 'Healthcare Administrator'
+
+    return render(request, 'profile.html', {'profiles': profiles, 'title': title})
+
 
 @login_required(login_url='login')
 def radiologyDoctor_profile(request):
     profiles = profile.objects.filter(role='radiologyDoctor')
     for prof in profiles:
-            try:
-                user = User.objects.get(id=prof.account_id)
-                prof.accountStatus = user.is_active
-            except User.DoesNotExist:
-                prof.is_active = False
-    return render(request, 'profile.html', {'profiles': profiles})
+        try:
+            user = User.objects.get(id=prof.account_id)
+            prof.accountStatus = user.is_active
+        except User.DoesNotExist:
+            prof.is_active = False
+    title = 'Radiology Doctor'
+
+    return render(request, 'profile.html', {'profiles': profiles, 'title': title})
+
 
 @login_required(login_url='login')
 def systemAdmin_account(request):
     accounts = User.objects.all()
 
     return render(request, 'account.html', {'accounts': accounts})
+
 
 @csrf_protect
 def createAccount_view(request):
@@ -111,7 +127,7 @@ def createAccount_view(request):
     else:
         form = CreateAccountForm()
         return render(request, 'forms.html', {'form': form})
-    
+
     return render(request, 'forms.html', {'form': form})
 
 
@@ -119,6 +135,7 @@ def logout_user(request):
     request.session.clear()
     logout(request)
     return redirect(reverse('home'))
+
 
 @csrf_protect
 def create_profile(request):
@@ -145,16 +162,17 @@ def create_profile(request):
             'last_name': latest_user.last_name,
         }
         form = CreateProfileForm(initial=initial_data)
-        
+
     return render(request, 'forms.html', {
         'form': form,
         'latest_user': latest_user,
     })
 
+
 @csrf_protect
 def update_profile(request, pk):
     current_profile = profile.objects.get(id=pk)
-    
+
     if request.method == 'POST':
         form = update_profile_form(request.POST, instance=current_profile)
         if form.is_valid():
@@ -171,11 +189,12 @@ def update_profile(request, pk):
 
     else:
         form = update_profile_form(instance=current_profile)
-    
+
     return render(request, 'forms.html', {'form': form})
 
+
 @csrf_protect
-def update_account(request,pk):
+def update_account(request, pk):
 
     current_account = User.objects.get(id=pk)
 
@@ -187,17 +206,19 @@ def update_account(request,pk):
     else:
         form = Update_Account_Form(instance=current_account)
         return render(request, 'forms.html', {'form': form})
-    
+
     return render(request, 'forms.html', {'form': form})
 
+
 @csrf_protect
-def suspend_account(request,pk):
+def suspend_account(request, pk):
     account = User.objects.get(id=pk)
     account.is_active = False
     account.save()
     return redirect('view_account')
 
-def unsuspend_account(request,pk):
+
+def unsuspend_account(request, pk):
     account = User.objects.get(id=pk)
     account.is_active = True
     account.save()
@@ -205,7 +226,7 @@ def unsuspend_account(request,pk):
 
 
 @csrf_protect
-def suspend_profile(request,pk):
+def suspend_profile(request, pk):
     current_profile = profile.objects.get(id=pk)
     current_profile.status = 'suspend'
     current_profile.save()
@@ -217,8 +238,9 @@ def suspend_profile(request,pk):
         return redirect('radiologyDoctor')
     else:
         return redirect('profile')
-    
-def unsuspend_profile(request,pk):
+
+
+def unsuspend_profile(request, pk):
     current_profile = profile.objects.get(id=pk)
     current_profile.status = 'active'
     current_profile.save()
@@ -230,8 +252,8 @@ def unsuspend_profile(request,pk):
         return redirect('radiologyDoctor')
     else:
         return redirect('profile')
-    
-def specific_account(request,pk):
+
+
+def specific_account(request, pk):
     acc = User.objects.filter(id=pk)
     return render(request, 'account.html', {'accounts': acc, 'pk': pk})
-    

@@ -142,7 +142,7 @@ def createTemplates(request):
 
 def updateTemplate(request, id):
     template_instance = get_object_or_404(findingsTemplate, id=id)
-    permission_denied = template_instance.doctor != request.session.get('user')
+    permission_denied = template_instance.doctor != request.session.get('username')
    
     
     if request.method == 'POST':
@@ -157,7 +157,7 @@ def updateTemplate(request, id):
 
 @require_http_methods(["GET"])
 def deleteTemplate(request, id):
-    user = request.session.get('user')
+    user = request.session.get('username')
     deletion_result, alert_message = findingsTemplate.deleteTemplateById(id,user)
 
     response_data = {

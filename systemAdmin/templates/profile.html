@@ -1,6 +1,7 @@
 {% extends 'menu.html' %}
 
 {% block content %}
+<title>Profile . {{title}}</title>
 <style>
     .container-fluid-table {
         margin-left: 50px;
@@ -108,7 +109,6 @@
    
     
 </style>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 
 <div class="container-fluid-table">
@@ -184,19 +184,6 @@
                                 Update
                             </button>
                         </a>
-                        {% if profile.status == 'active' %}
-                            <a href="{% url 'suspendProfile' profile.id %}">
-                                <button type="button" class="btn btn-sm btn-rounded" style="background-color: #dc3545 !important;color:#000;">
-                                    Suspend
-                                </button>
-                            </a>
-                        {% else %}
-                            <a href="{% url 'unsuspendProfile' profile.id %}">
-                                <button type="button" class="btn btn-sm btn-rounded btn-warning" style="color:#000;">
-                                    Unsuspend
-                                </button>
-                            </a>
-                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}

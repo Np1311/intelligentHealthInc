@@ -1,213 +1,230 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   
-    
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="icon" href="{% static 'logo.ico'%}" type="image/x-icon" />
+
     <title>HOME</title>
 
-    <link rel="stylesheet"  href="{% static 'bootstrap.min.css' %}">
-    <link href="https://fonts.cdnfonts.com/css/kollektif" rel="stylesheet">
-    
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}" />
+    <link href="https://fonts.cdnfonts.com/css/kollektif" rel="stylesheet" />
+
     <!-- Font Awesome JS -->
-    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
-    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+    <script
+      defer
+      src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js"
+      integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      defer
+      src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js"
+      integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY"
+      crossorigin="anonymous"
+    ></script>
 
     <style>
-        @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
-        body {
-            font-family: 'alata', sans-serif !important;
-            background-image: url('{% static 'background.png'%}'); /* Replace with the actual path to your image */
-            background-size: cover; /* Cover the entire .table element */
-            background-position: center;
-            background-repeat: repeat;
-            background-attachment: fixed;
-            color:#333333;
-        }
+      @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+      body {
+          font-family: 'alata', sans-serif !important;
+          background-image: url('{% static 'background.png'%}'); /* Replace with the actual path to your image */
+          background-size: cover; /* Cover the entire .table element */
+          background-position: center;
+          background-repeat: repeat;
+          background-attachment: fixed;
+          color:#333333;
+      }
 
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 2;
-        
-            padding: 15px 10px;
-            background: #E3ECFA !important;
-            border: none;
-            border-radius: 0;
-            margin-bottom: 40px;
-            box-shadow: 1px 3px 3px rgba(0, 0, 0, 0.3);
-            height: 120px !important;
-            padding-left: 40px;
-        }
+      .navbar {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          position: fixed;
+          top: 0;
+          width: 100%;
+          z-index: 2;
 
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-        }
+          padding: 15px 10px;
+          background: #E3ECFA !important;
+          border: none;
+          border-radius: 0;
+          margin-bottom: 40px;
+          box-shadow: 1px 3px 3px rgba(0, 0, 0, 0.3);
+          height: 120px !important;
+          padding-left: 40px;
+      }
 
-        .logo {
-            margin-left: 30px;
-            width: 80px;
-            height: auto;
-        }
+      .navbar-brand {
+          display: flex;
+          align-items: center;
+      }
 
-        .IntelligentHealthInc {
-            margin-left: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
+      .logo {
+          margin-left: 30px;
+          width: 80px;
+          height: auto;
+      }
 
-        .navbar-nav {
-            display: flex;
-            align-items: center;
+      .IntelligentHealthInc {
+          margin-left: 10px;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+      }
 
-        }
+      .navbar-nav {
+          display: flex;
+          align-items: center;
 
-        .navbar-nav li {
-            margin: 0 10px;
-        }
-        .nav-item {
-            
-            color:#004AAD;
-            font-size:24px;
-        }
-        .nav-link{
-            text-shadow: 0.5px 0.5px 4px rgba(0, 0, 0, 0.3);
-            color:#004AAD !important;
-        }
+      }
 
-        .centered-h3 {
-            text-align: center;
-            margin: 0;
-            font-size: 28px; /* Adjust the font size as needed */
-            font-weight: 400;
-            font-family: 'Kollektif Regular', sans-serif;
-            word-wrap: break-word;
-            color: #004AAD;
-            padding-left: 10px;
-        }
-        
-        #sidebarCollapse{
-            height: 60px;
-            color:#333333;
-            font-size: 18px;
-            background-color: #44AEE7;
-        }
-        /* ---------------------------------------------------
-            CONTENT STYLE
-        ----------------------------------------------------- */
+      .navbar-nav li {
+          margin: 0 10px;
+      }
+      .nav-item {
 
-        #content {
-            width: 100%;
-            {% comment %} min-height: 100vh; {% endcomment %}
-            transition: all 0.3s;
-            position: absolute;
-            top: 0;
-            right: 0;
-        }
-        .content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        .title {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            
-        }
-    
-        .title pre {
-            text-align: center;
-            font-size:40px;
-            font-family: "Alata",sans-serif;
-            color: #004AAD;
-        }
-        .inline {
-            display: flex;
-            align-items: center;
-            font-size: 24px;
-            color: #67B4C6;
-            gap: 73px;
-            white-space: nowrap; /* Prevents wrapping to the next line */
-            
-        }
-        
-        .inline a {
-            position: relative;
-            text-decoration: none;
-        }
-        .inline a:after {    
-            background: none repeat scroll 0 0 transparent;
-            bottom: 0;
-            content: "";
-            display: block;
-            height: 2px;
-            left: 50%;
-            position: absolute;
-            background: #004AAD;
-            transition: width 0.3s ease 0s, left 0.3s ease 0s;
-            width: 0;
-        }
-        .inline a:hover:after { 
-            width: 100%; 
-            left: 0; 
-        }
-        
+          color:#004AAD;
+          font-size:24px;
+      }
+      .nav-link{
+          text-shadow: 0.5px 0.5px 4px rgba(0, 0, 0, 0.3);
+          color:#004AAD !important;
+      }
+
+      .centered-h3 {
+          text-align: center;
+          margin: 0;
+          font-size: 28px; /* Adjust the font size as needed */
+          font-weight: 400;
+          font-family: 'Kollektif Regular', sans-serif;
+          word-wrap: break-word;
+          color: #004AAD;
+          padding-left: 10px;
+      }
+
+      #sidebarCollapse{
+          height: 60px;
+          color:#333333;
+          font-size: 18px;
+          background-color: #44AEE7;
+      }
+      /* ---------------------------------------------------
+          CONTENT STYLE
+      ----------------------------------------------------- */
+
+      #content {
+          width: 100%;
+          {% comment %} min-height: 100vh; {% endcomment %}
+          transition: all 0.3s;
+          position: absolute;
+          top: 0;
+          right: 0;
+      }
+      .content {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+      }
+      .title {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+      }
+
+      .title pre {
+          text-align: center;
+          font-size:40px;
+          font-family: "Alata",sans-serif;
+          color: #004AAD;
+      }
+      .inline {
+          display: flex;
+          align-items: center;
+          font-size: 24px;
+          color: #67B4C6;
+          gap: 73px;
+          white-space: nowrap; /* Prevents wrapping to the next line */
+
+      }
+
+      .inline a {
+          position: relative;
+          text-decoration: none;
+      }
+      .inline a:after {
+          background: none repeat scroll 0 0 transparent;
+          bottom: 0;
+          content: "";
+          display: block;
+          height: 2px;
+          left: 50%;
+          position: absolute;
+          background: #004AAD;
+          transition: width 0.3s ease 0s, left 0.3s ease 0s;
+          width: 0;
+      }
+      .inline a:hover:after {
+          width: 100%;
+          left: 0;
+      }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body>
     <div class="wrapper">
-        <!-- Page Content  -->
-        <div id="content">
+      <!-- Page Content  -->
+      <div id="content">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <div class="navbar-brand">
+            <img class="logo" src="{% static 'logo.png' %}" alt="Logo" />
+            <div class="IntelligentHealthInc">
+              <span class="centered-h3" style="font-weight: 550"
+                >INTELLIGENT</span
+              >
+              <span class="centered-h3" style="font-size: 12px"
+                >HEALTH INC.</span
+              >
+            </div>
+          </div>
 
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <div class="navbar-brand">
-                    <img class="logo" src="{% static 'logo.png' %}" alt="Logo">
-                    <div class="IntelligentHealthInc">
-                        <span class="centered-h3" style='font-weight: 550;' >INTELLIGENT</span>
-                        <span class="centered-h3" style="font-size: 12px;">HEALTH INC.</span>
-                    </div>
-                </div>
-                
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                    
-
-                    <ul class="navbar-nav ms-auto" style='margin-right:100px'>
-                        <li class="nav-item">
-                            <span><i class="fa-solid fa-phone fa-shake"></i> +65 7377 0922</span>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link">Contact Us</a>
-                        </li>
-                    </ul>
-                </div>
-            </nav> 
-        </div>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ms-auto" style="margin-right: 100px">
+              <li class="nav-item">
+                <span
+                  ><i class="fa-solid fa-phone fa-shake"></i> +65 7377
+                  0922</span
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link">Contact Us</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
     </div>
-    <div class='content'>
-        <div class="title">
-            <pre>
+    <div class="content">
+      <div class="title">
+        <pre>
 Detect Your Patient’s
 COVID-19 Health Status
 Through Artificial Intelligence
-            </pre>
-        </div>
-        <div class="inline">
-            <a href='{% url "medical_tech_home"%}'>Medical Technician</a>
-            <a href='{% url "radiologistDoctorHome" %}'>Radiologist Doctor</a>
-            <a href='{% url "healthcareAdminHome"%}'>Healthcare Admin</a> 
-        </div>
+            </pre
+        >
+      </div>
+      <div class="inline">
+        <a href='{% url "medical_tech_home"%}'>Medical Technician</a>
+        <a href='{% url "radiologistDoctorHome" %}'>Radiologist Doctor</a>
+        <a href='{% url "healthcareAdminHome"%}'>Healthcare Admin</a>
+      </div>
     </div>
-</body>
+  </body>
 </html>

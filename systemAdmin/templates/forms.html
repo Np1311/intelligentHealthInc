@@ -1,6 +1,11 @@
 {% extends 'menu.html' %}
 
 {% block content %}
+{% if 'createAccount' in path%}
+<title>Create Account</title>
+{% else %}
+<title>Create Profile</title>
+{% endif %}
 <style>
 	
 	#createButton, #nextButton {

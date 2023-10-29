@@ -1,396 +1,423 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   
-    
-    <title>HOME</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <link rel="stylesheet"  href="{% static 'bootstrap.min.css' %}">
-    <link href="https://fonts.cdnfonts.com/css/kollektif" rel="stylesheet">
-    
+    {% comment %}
+    <title>HOME</title>
+    {% endcomment %}
+    <link rel="icon" href="{% static 'logo.ico'%}" type="image/x-icon" />
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}" />
+    <link href="https://fonts.cdnfonts.com/css/kollektif" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
     <!-- Font Awesome JS -->
-    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
-    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+    <script
+      defer
+      src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js"
+      integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      defer
+      src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js"
+      integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY"
+      crossorigin="anonymous"
+    ></script>
 
     <style>
-        @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
-        body {
-            font-family: 'alata', sans-serif !important;
-            background-image: url('{% static 'background.png'%}'); /* Replace with the actual path to your image */
-            background-size: cover; /* Cover the entire .table element */
-            background-position: center;
-            background-repeat: repeat;
-            background-attachment: fixed;
-            color:#333333;
-        }
+      @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+      body {
+          font-family: 'alata', sans-serif !important;
+          background-image: url('{% static 'background.png'%}'); /* Replace with the actual path to your image */
+          background-size: cover; /* Cover the entire .table element */
+          background-position: center;
+          background-repeat: repeat;
+          background-attachment: fixed;
+          color:#333333;
+      }
 
-        
-        a,
-        a:hover,
-        a:focus {
-            color: inherit;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
 
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: fixed !important;
-            top: 0;
-            width: 100%;
-            z-index: 2;
-        
-            padding: 15px 10px;
-            background: #E3ECFA !important;
-            border: none;
-            border-radius: 0;
-            margin-bottom: 40px;
-            box-shadow: 1px 3px 3px rgba(0, 0, 0, 0.3);
-            height: 120px !important;
-            padding-left: 40px;
-        }
+      a,
+      a:hover,
+      a:focus {
+          color: inherit;
+          text-decoration: none;
+          transition: all 0.3s;
+      }
 
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-        }
+      .navbar {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          position: fixed !important;
+          top: 0;
+          width: 100%;
+          z-index: 2;
 
-        .logo {
-            margin-left: 30px;
-            width: 80px;
-            height: auto;
-        }
+          padding: 15px 10px;
+          background: #E3ECFA !important;
+          border: none;
+          border-radius: 0;
+          margin-bottom: 40px;
+          box-shadow: 1px 3px 3px rgba(0, 0, 0, 0.3);
+          height: 120px !important;
+          padding-left: 40px;
+      }
 
-        .IntelligentHealthInc {
-            margin-left: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
+      .navbar-brand {
+          display: flex;
+          align-items: center;
+      }
 
-        .role {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            flex-grow: 7;
-            margin: auto;
-            font-size: 32px !important;
-            font-weight: 500;
-            color: black !important;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); 
-        }
+      .logo {
+          margin-left: 30px;
+          width: 80px;
+          height: auto;
+      }
 
-        .navbar-nav {
-            display: flex;
-            align-items: center;
+      .IntelligentHealthInc {
+          margin-left: 10px;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+      }
 
-        }
+      .role {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
+          flex-grow: 7;
+          margin: auto;
+          font-size: 32px !important;
+          font-weight: 500;
+          color: black !important;
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      }
 
-        .navbar-nav li {
-            margin: 0 10px;
-        }
+      .navbar-nav {
+          display: flex;
+          align-items: center;
 
-        .navbar-nav .nav-link {
-            color: black;
-            text-decoration: none;
-        }
+      }
 
-        .centered-h3 {
-            text-align: center;
-            margin: 0;
-            font-size: 28px; /* Adjust the font size as needed */
-            font-weight: 400;
-            font-family: 'Kollektif Regular', sans-serif;
-            word-wrap: break-word;
-            color: #004AAD;
-            padding-left: 10px;
-        }
-        
-        .content {
-           
-            padding: 20px;
-            position: relative;
-            overflow-y: scroll;
-            z-index: 1;
-            padding-top: 150px;
-        }
-        
-        #sidebarCollapse{
-            height: 60px;
-            color:#333333;
-            font-size: 18px;
-            background-color: #44AEE7;
-        }
-        
+      .navbar-nav li {
+          margin: 0 10px;
+      }
 
-        /* ---------------------------------------------------
-            SIDEBAR STYLE
-        ----------------------------------------------------- */
+      .navbar-nav .nav-link {
+          color: black;
+          text-decoration: none;
+      }
 
-        #sidebar {
-            width: 250px;
-            position: fixed;
-            top: 0;
-            left: -250px;
-            height: 100vh;
-            z-index: 999;
-            background: #fff;
-            color: #276FBF;
-            transition: all 0.3s;
-            overflow-y: scroll;
-            box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
-        }
+      .centered-h3 {
+          text-align: center;
+          margin: 0;
+          font-size: 28px; /* Adjust the font size as needed */
+          font-weight: 400;
+          font-family: 'Kollektif Regular', sans-serif;
+          word-wrap: break-word;
+          color: #004AAD;
+          padding-left: 10px;
+      }
 
-        #sidebar.active {
-            left: 0;
-        }
+      .content {
 
-        #dismiss {
-            width: 35px;
-            height: 35px;
-            line-height: 35px;
-            text-align: center;
-            background: #BFDDFF;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-            -webkit-transition: all 0.3s;
-            -o-transition: all 0.3s;
-            transition: all 0.3s;
-            color: #000;
-        }
+          padding: 20px;
+          position: relative;
+          overflow-y: scroll;
+          z-index: 1;
+          padding-top: 150px;
+      }
 
-        #dismiss:hover {
-            background: #fff;
-            color: #000;
-        }
+      #sidebarCollapse{
+          height: 60px;
+          color:#333333;
+          font-size: 18px;
+          background-color: #44AEE7;
+      }
 
-        .overlay {
-            display: none;
-            position: fixed;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 998;
-            opacity: 0;
-            transition: all 0.5s ease-in-out;
-        }
-        .overlay.active {
-            display: block;
-            opacity: 1;
-        }
 
-        #sidebar .sidebar-header {
-            padding: 20px;
-            background: #E3ECFA;
-            
-        }
+      /* ---------------------------------------------------
+          SIDEBAR STYLE
+      ----------------------------------------------------- */
 
-        #sidebar ul.components {
-            padding: 20px 0;
-            
-        }
+      #sidebar {
+          width: 250px;
+          position: fixed;
+          top: 0;
+          left: -250px;
+          height: 100vh;
+          z-index: 999;
+          background: #fff;
+          color: #276FBF;
+          transition: all 0.3s;
+          overflow-y: scroll;
+          box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
+      }
 
-        #sidebar ul li a {
-            padding: 10px;
-            font-size: 1.3em;
-            display: block;
-        }
+      #sidebar.active {
+          left: 0;
+      }
 
-        #sidebar ul li a:hover {
-            color: #276FBF;
-            background: #E3ECFA;
-        }
+      #dismiss {
+          width: 35px;
+          height: 35px;
+          line-height: 35px;
+          text-align: center;
+          background: #BFDDFF;
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          cursor: pointer;
+          -webkit-transition: all 0.3s;
+          -o-transition: all 0.3s;
+          transition: all 0.3s;
+          color: #000;
+      }
 
-        #sidebar ul li.active>a,
-        a[aria-expanded="true"] {
-            color: #333333;
-            background: #E3ECFA;
-        }
+      #dismiss:hover {
+          background: #fff;
+          color: #000;
+      }
 
-        a[data-toggle="collapse"] {
-            position: relative;
-        }
+      .overlay {
+          display: none;
+          position: fixed;
+          width: 100vw;
+          height: 100vh;
+          background: rgba(0, 0, 0, 0.7);
+          z-index: 998;
+          opacity: 0;
+          transition: all 0.5s ease-in-out;
+      }
+      .overlay.active {
+          display: block;
+          opacity: 1;
+      }
 
-        ul ul a {
-            font-size: 0.9em !important;
-            padding-left: 30px !important;
-            background: #44AEE7;
-        }
+      #sidebar .sidebar-header {
+          padding: 20px;
+          background: #E3ECFA;
 
-        
-        /* ---------------------------------------------------
-            CONTENT STYLE
-        ----------------------------------------------------- */
+      }
 
-        #content {
-            width: 100%;
-            {% comment %} min-height: 100vh; {% endcomment %}
-            transition: all 0.3s;
-            position: absolute;
-            top: 0;
-            right: 0;
-        }
-        
-        .nav-link {
-            font-size: 18px; /* Adjust the font size to your preference */
-        }
+      #sidebar ul.components {
+          padding: 20px 0;
 
-        
-        
-        /* Ensure the hover effect works on touch devices */
-        @media (hover: hover) {
+      }
 
-            /* Show the dropdown menu on hover */
-            .navbar .dropdown:hover .dropdown-menu {
-                display: block;
-            }
+      #sidebar ul li a {
+          padding: 10px;
+          font-size: 1.3em;
+          display: block;
+      }
 
-            /* Change background color of "Account" and "Profile" when hovering */
-            
-        }
-        #logout:hover, #backButton:hover {
-            color: #FF0000 !important;
-        }
-        #account:hover{
-            color: #276FBF !important;
-        }
-        #profile:hover{
-            color: #276FBF !important;
-        } 
-        {% if 'profile' in request.path or 'createProfile' in request.path%}
+      #sidebar ul li a:hover {
+          color: #276FBF;
+          background: #E3ECFA;
+      }
+
+      #sidebar ul li.active>a,
+      a[aria-expanded="true"] {
+          color: #333333;
+          background: #E3ECFA;
+      }
+
+      a[data-toggle="collapse"] {
+          position: relative;
+      }
+
+      ul ul a {
+          font-size: 0.9em !important;
+          padding-left: 30px !important;
+          background: #44AEE7;
+      }
+
+
+      /* ---------------------------------------------------
+          CONTENT STYLE
+      ----------------------------------------------------- */
+
+      #content {
+          width: 100%;
+          {% comment %} min-height: 100vh; {% endcomment %}
+          transition: all 0.3s;
+          position: absolute;
+          top: 0;
+          right: 0;
+      }
+
+      .nav-link {
+          font-size: 18px; /* Adjust the font size to your preference */
+      }
+
+
+
+      /* Ensure the hover effect works on touch devices */
+      @media (hover: hover) {
+
+          /* Show the dropdown menu on hover */
+          .navbar .dropdown:hover .dropdown-menu {
+              display: block;
+          }
+
+          /* Change background color of "Account" and "Profile" when hovering */
+
+      }
+      #logout:hover, #backButton:hover {
+          color: #FF0000 !important;
+      }
+      #account:hover{
+          color: #276FBF !important;
+      }
+      #profile:hover{
+          color: #276FBF !important;
+      }
+      {% if 'profile' in request.path or 'createProfile' in request.path%}
         .nav-item.active.home-link a.nav-link {
-            color: #276FBF !important; 
-        } 
-        {% endif %}
-        
-        
-        {% if 'account' in request.path or 'createAccount' in request.path%}
-            #account {
-                color: #276FBF !important;
-            }
-        {% endif %}
-
-        .components {
-            margin-top: 50px;
+            color: #276FBF !important;
         }
+      {% endif %}
 
-        #navbarResponsive{
-            margin-right: 80px;
-        }
 
-        .container-fluid {
-            margin-right: 80px;
-            margin-left: 20px;
-        }
+      {% if 'account' in request.path or 'createAccount' in request.path%}
+          #account {
+              color: #276FBF !important;
+          }
+      {% endif %}
 
-        .nav-link{
-            color: #000000 !important;
-            font-size: 20px;
-        }
+      .components {
+          margin-top: 50px;
+      }
+
+      #navbarResponsive{
+          margin-right: 80px;
+      }
+
+      .container-fluid {
+          margin-right: 80px;
+          margin-left: 20px;
+      }
+
+      .nav-link{
+          color: #000000 !important;
+          font-size: 20px;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="wrapper">
-        <!-- Sidebar  -->
-        <nav id="sidebar">
-            <div id="dismiss">
-                <i class="fas fa-arrow-left"></i>
-            </div>
+      <!-- Sidebar  -->
+      <nav id="sidebar">
+        <div id="dismiss">
+          <i class="fas fa-arrow-left"></i>
+        </div>
 
-            <div class="sidebar-header" >
-                <div class="IntelligentHealthInc" style='padding-left: 0px !important;' > 
-                    <span class="centered-h3" style='font-weight: 550;font-size: 20px;' >INTELLIGENT</span>
-                    <span class="centered-h3" style="font-size: 10px;">HEALTH INC.</span>
-                </div>
-            </div>
+        <div class="sidebar-header">
+          <div
+            class="IntelligentHealthInc"
+            style="padding-left: 0px !important"
+          >
+            <span class="centered-h3" style="font-weight: 550; font-size: 20px"
+              >INTELLIGENT</span
+            >
+            <span class="centered-h3" style="font-size: 10px">HEALTH INC.</span>
+          </div>
+        </div>
 
-            
-            {%block menu%}
-            {%endblock%}
-            
+        {%block menu%} {%endblock%}
+      </nav>
+
+      <!-- Page Content  -->
+      <div id="content">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <div class="navbar-brand">
+            {%if 'systemAdmin' in request.path%}
+            <button type="button" id="sidebarCollapse" class="btn btn-info">
+              <i class="fas fa-solid fa-list"></i><span> Menu</span>
+            </button>
+            {%endif%}
+            <img class="logo" src="{% static 'logo.png' %}" alt="Logo" />
+            <div class="IntelligentHealthInc">
+              <span class="centered-h3" style="font-weight: 550"
+                >INTELLIGENT</span
+              >
+              <span class="centered-h3" style="font-size: 12px"
+                >HEALTH INC.</span
+              >
+            </div>
+          </div>
+
+          <div class="role">{%block role%} {%endblock%}</div>
+
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+            {%block navlink%} {%endblock%}
+          </div>
         </nav>
 
-        <!-- Page Content  -->
-        <div id="content">
-
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <div class="navbar-brand">
-                    {%if 'systemAdmin' in request.path%}
-                        <button type="button" id="sidebarCollapse" class="btn btn-info">
-                            <i class="fas fa-solid fa-list"></i><span> Menu</span>
-                        </button>
-                    {%endif%}
-                    <img class="logo" src="{% static 'logo.png' %}" alt="Logo">
-                    <div class="IntelligentHealthInc">
-                        <span class="centered-h3" style='font-weight: 550;' >INTELLIGENT</span>
-                        <span class="centered-h3" style="font-size: 12px;">HEALTH INC.</span>
-                    </div>
-                </div>
-                
-                <div class="role">
-                    {%block role%}
-                    {%endblock%}
-                </div>
-            
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                    
-
-                    {%block navlink%}
-                    {%endblock%}
-                    
-                </div>
-                
-            </nav>
-
-            <div class='content'>
-                {%block content%}
-                {% endblock %}
-            </div>
-        </div>
+        <div class="content">{%block content%} {% endblock %}</div>
+      </div>
     </div>
 
     <div class="overlay"></div>
     <!-- jQuery CDN - Slim version (=without AJAX) -->
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js" crossorigin="anonymous"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.7.0.min.js"
+      crossorigin="anonymous"
+    ></script>
     <!-- Popper.JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+      integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+      crossorigin="anonymous"
+    ></script>
     <!-- Bootstrap JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+      integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+      crossorigin="anonymous"
+    ></script>
     <!-- jQuery Custom Scroller CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
 
     <script type="text/javascript">
-        $(document).ready(function () {
-            $("#sidebar").mCustomScrollbar({
-                theme: "minimal"
-            });
-
-            $('#dismiss, .overlay').on('click', function () {
-                $('#sidebar').removeClass('active');
-                $('.overlay').removeClass('active');
-            });
-
-            $('#sidebarCollapse').on('click', function () {
-                $('#sidebar').addClass('active');
-                $('.overlay').addClass('active');
-                $('.collapse.in').toggleClass('in');
-                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
-            });
+      $(document).ready(function () {
+        $("#sidebar").mCustomScrollbar({
+          theme: "minimal",
         });
-        document.getElementById('backButton').addEventListener('click', function(event) {
-            event.preventDefault(); // Prevent the default link behavior
-            history.back(); // Go back to the previous page
+
+        $("#dismiss, .overlay").on("click", function () {
+          $("#sidebar").removeClass("active");
+          $(".overlay").removeClass("active");
+        });
+
+        $("#sidebarCollapse").on("click", function () {
+          $("#sidebar").addClass("active");
+          $(".overlay").addClass("active");
+          $(".collapse.in").toggleClass("in");
+          $("a[aria-expanded=true]").attr("aria-expanded", "false");
+        });
+      });
+      document
+        .getElementById("backButton")
+        .addEventListener("click", function (event) {
+          event.preventDefault(); // Prevent the default link behavior
+          history.back(); // Go back to the previous page
         });
     </script>
-</body>
+  </body>
 </html>
