@@ -90,7 +90,7 @@
         </thead>
         <tbody id ='archiveTable'>
             {% for record in records %}
-                {% if record.image_record.image_filename%}
+                {% if record.image_record.image_filename%}<!--need to check-->
                     <tr>
                         <td><input type="checkbox" class="rowCheckbox" data-record-id="{{ record.record_id }}"></td>
                         <td>{{ record.record_id }}</td>
@@ -159,11 +159,12 @@
                     "X-CSRFToken": getCookie("csrftoken") 
                 },
                 success: function(data) {
-                    var blob = new Blob([data]);
+                    /*var blob = new Blob([data]);
                     var link = document.createElement('a');
                     link.href = window.URL.createObjectURL(blob);
                     link.download = "downloaded_files.zip";
-                    link.click();
+                    link.click();*/
+                    console.log(data);
                 },
                 error: function(xhr, status, error) {
                     console.error("AJAX Error:", status, error);

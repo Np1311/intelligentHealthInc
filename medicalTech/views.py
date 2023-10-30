@@ -6,10 +6,10 @@ from systemAdmin.models import profile
 from django.contrib.auth.decorators import login_required
 from django.db import connection
 import json
-from django.http import JsonResponse,HttpResponse,FileResponse
+from django.http import JsonResponse, HttpResponse, FileResponse
 from .models import *
 from datetime import datetime
-from django.views.decorators.csrf import csrf_protect,csrf_exempt
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from dateutil import parser
 import uuid
 from django.urls import reverse
@@ -23,6 +23,7 @@ from radiologistDoctor.models import findingsTemplate
 
 # Create your views here.
 
+
 @csrf_protect
 def login_user(request):
     next_url = request.GET.get('next')
@@ -34,9 +35,10 @@ def login_user(request):
 
         if user is not None:
             try:
-                user_profile = profile.objects.get(account=user.id)  # Assuming 'account' is the ForeignKey in Profile
-                if request.session.get('role') == 'medicalTech' or user_profile.role == 'medicalTech'  :
-                   
+                # Assuming 'account' is the ForeignKey in Profile
+                user_profile = profile.objects.get(account=user.id)
+                if request.session.get('role') == 'medicalTech' or user_profile.role == 'medicalTech':
+
                     login(request, user)
                     request.session['username'] = username
                     request.session['role'] = user_profile.role
@@ -45,21 +47,20 @@ def login_user(request):
                         return redirect(next_url)
                     else:
                         return redirect('medical_tech_home')
-                    
+
                 else:
-                    messages.error(request, "You don't have the required role.")
+                    messages.error(
+                        request, "You don't have the required role.")
                     return redirect('medical_tech_login')
             except profile.DoesNotExist:
                 messages.error(request, "Invalid credentials.")
                 return redirect('medical_tech_login')
         else:
-            messages.error(request, "Invalid credentials or Your Account is Suspended.")
+            messages.error(
+                request, "Invalid credentials or Your Account is Suspended.")
             return redirect('medical_tech_login')
     else:
         return render(request, 'login.html', {})
-
-
-
 
 
 def get_patient(request):
@@ -72,6 +73,7 @@ def get_patient(request):
 
     # Pass the retrieved data to the template for rendering
     return render(request, 'HIS_display.html', {'his_data': his_data})
+
 
 @csrf_protect
 def add_patient(request):
@@ -93,9 +95,8 @@ def add_patient(request):
             except ValueError:
                 # If parsing fails, handle the error (you might want to log or handle it differently)
                 return JsonResponse({'message': 'Invalid date format'}, status=400)
-            
-            age = calculate_age(date_of_birth)
 
+            age = calculate_age(date_of_birth)
 
             senderDoctor = get_random_doctor_name()
             indications = 'fever, cough, nausea, shortness of breath, and diarrhea'
@@ -118,51 +119,59 @@ def add_patient(request):
 
     return JsonResponse({'message': 'Invalid request'}, status=400)
 
+
 def calculate_age(date_of_birth):
     today = datetime.today().date()
-    age = today.year - date_of_birth.year - ((today.month, today.day) < (date_of_birth.month, date_of_birth.day))
+    age = today.year - date_of_birth.year - \
+        ((today.month, today.day) < (date_of_birth.month, date_of_birth.day))
     return age
+
 
 def generate_unique_id():
     unique_id = f"CXR{uuid.uuid4().int % 100000:05d}"
     return unique_id
 
+
 @login_required(login_url='medical_tech_login')
 def get_record(request):
     records = Image_Record.records_with_images()
-    path = request.path 
+    path = request.path
     if 'username' in request.session:
         user = request.session.get('username')
-    else :
+    else:
         user = 'Guest'
 
     return render(request, 'medical_home.html', {'records': records, 'path': path, 'user': user})
 
+
 def get_random_doctor_name():
     with connection.cursor() as cursor:
-        cursor.execute("SELECT DoctorName FROM Doctors ORDER BY RAND() LIMIT 1")
+        cursor.execute(
+            "SELECT DoctorName FROM Doctors ORDER BY RAND() LIMIT 1")
         random_doctor_name = cursor.fetchone()
-    
+
     if random_doctor_name:
         return random_doctor_name[0]
     else:
         return None
 
+
 def get_data(request, record_id):
     path = request.path
     if 'username' in request.session:
         user = request.session.get('username')
-    else :
-        user = 'Guest' 
+    else:
+        user = 'Guest'
     try:
         record = RadiologyRecord.objects.get(record_id=record_id)
         image_record = None  # Initialize image_record variable
 
         try:
             image_record = Image_Record.objects.get(record_id=record)
-            
-            data_available = bool(image_record.examination or image_record.findings or image_record.impressions)  
-            image_available = bool(image_record.image)  
+
+            data_available = bool(
+                image_record.examination or image_record.findings or image_record.impressions)
+            image_available = bool(image_record.image)
             predictions_available = bool(image_record.prediction)
 
             if image_available:
@@ -181,7 +190,7 @@ def get_data(request, record_id):
             data_available = None
 
         if "radiologistDoctor" in path:
-            try :
+            try:
                 covid_19_template = findingsTemplate.objects.get(doctor=user)
 
                 initial_data = {
@@ -196,39 +205,42 @@ def get_data(request, record_id):
 
             image_form = ImageFindingsForm(
                 predictions_value=predictions_value,
-                data=data_available,instance=image_record, initial_data = initial_data
+                data=data_available, instance=image_record, initial_data=initial_data
             )
             # image_form = ImageFindingsForm(predictions_value=predictions_value,initial_data = initial_data)
         else:
-            image_form = None 
+            image_form = None
 
         # if 'username' in request.session:
         #     user = request.session.get('username')
         # else :
         #     user = 'Guest'
-        
+
         context = {
-            
+
             'record': record,
             'image_available': image_available,
             'image_record': image_record,
             'path': path,
             'image_form': image_form,
-            'predictions_available':predictions_available,  # Add the form to the context
+            'predictions_available': predictions_available,  # Add the form to the context
         }
         return render(request, 'patient_detail.html', context)
     except RadiologyRecord.DoesNotExist:
         return render(request, 'record_not_found.html')
-    
+
+
 def emergency(request, record_id):
-    
+
     RadiologyRecord.emergency(record_id)
     return redirect('medical_tech_home')
 
+
 def cancelEmergency(request, record_id):
-    
+
     RadiologyRecord.cancelEmergency(record_id)
     return redirect('medical_tech_home')
+
 
 def update_request_time(request):
     if request.method == 'POST':
@@ -237,15 +249,14 @@ def update_request_time(request):
 
         try:
             record = RadiologyRecord.objects.get(record_id=record_id)
-            new_request_time = timezone.make_aware(timezone.datetime.strptime(new_request_time_str, '%Y-%m-%dT%H:%M'))
-            
+            new_request_time = timezone.make_aware(
+                timezone.datetime.strptime(new_request_time_str, '%Y-%m-%dT%H:%M'))
+
             record.request_time = new_request_time
             record.save()
             return JsonResponse({'success': True})
         except RadiologyRecord.DoesNotExist:
             return JsonResponse({'success': False})
-
-    
 
 
 def display_image(request, record_id):
@@ -253,23 +264,25 @@ def display_image(request, record_id):
         dicom_file = request.FILES.get("dicom_file")
 
         if dicom_file:
-            
+
             context = DicomViewer(dicom_file)
-            
-            image_data = context.generate_image() 
-            
+
+            image_data = context.generate_image()
+
             preprocess_image = context.preprocess_image()
-            
+
             # prediction = 0
 
-            response_data = {"image_data": image_data, "record_id": record_id, "preprocess_image": preprocess_image}
+            response_data = {"image_data": image_data,
+                             "record_id": record_id, "preprocess_image": preprocess_image}
             return JsonResponse(response_data)
         else:
             response_data = {"message": "File upload failed"}
             return JsonResponse(response_data, status=400)
     else:
         return JsonResponse({}, status=405)
-    
+
+
 def save_image(request, record_id):
     if request.method == "POST":
         dicom_file = request.FILES.get("dicom_file")
@@ -282,7 +295,7 @@ def save_image(request, record_id):
             prediction = prediction.strip()
         if 'username' in request.session:
             user = request.session.get('username')
-        else :
+        else:
             user = 'Guest'
         # binary_data = dicom_file.read() if dicom_file else None  # Read binary data if dicom_file is provided
         file_size = dicom_file.size
@@ -294,9 +307,10 @@ def save_image(request, record_id):
                 record = RadiologyRecord.objects.get(record_id=record_id)
 
                 if dicom_file:
-                    binary_data = dicom_file.read() 
+                    binary_data = dicom_file.read()
                     # Create a new Image_Record instance with DICOM file
-                    image_record = Image_Record(record_id=record, image=binary_data, notes=notes, image_filename=image_filename, prediction= prediction, upload_date=timestamp, medTech=user)
+                    image_record = Image_Record(record_id=record, image=binary_data, notes=notes,
+                                                image_filename=image_filename, prediction=prediction, upload_date=timestamp, medTech=user)
                     if record.status != 'EMERGENCY':
                         record.status = 'In Progress'
                     record.save()
@@ -307,23 +321,26 @@ def save_image(request, record_id):
                     # patient_record = RadiologyRecord(record_id=record,status='in_progress')
 
                 image_record.save()
-                
+
                 # patient_record.save()
 
-                response_data = {"message": "Image and data saved successfully"}
+                response_data = {
+                    "message": "Image and data saved successfully"}
                 return JsonResponse(response_data)
             except RadiologyRecord.DoesNotExist:
-                response_data = {"message": "Record with the provided ID not found"}
+                response_data = {
+                    "message": "Record with the provided ID not found"}
                 return JsonResponse(response_data, status=400)
             except Exception as e:
                 response_data = {"message": str(e)}
                 return JsonResponse(response_data, status=500)
         else:
-            response_data={"message":"File size exceeded"}
+            response_data = {"message": "File size exceeded"}
             return JsonResponse(response_data)
     else:
         return JsonResponse({}, status=405)
-    
+
+
 def update_image(request, record_id):
     if request.method == "POST":
         dicom_file = request.FILES.get('dicom_file', None)
@@ -335,16 +352,16 @@ def update_image(request, record_id):
 
         if 'username' in request.session:
             user = request.session.get('username')
-        else :
+        else:
             user = 'Guest'
         # binary_data = dicom_file.read() if dicom_file else None  # Read binary data if dicom_file is provided
 
         try:
             # Get the corresponding RadiologyRecord instance
-            #record = RadiologyRecord.objects.get(record_id=record_id)
+            # record = RadiologyRecord.objects.get(record_id=record_id)
             image_record = Image_Record.get_records(record_id)
             if dicom_file:
-                binary_data = dicom_file.read() 
+                binary_data = dicom_file.read()
                 # Create a new Image_Record instance with DICOM file
                 image_record.image_filename = image_filename
                 image_record.image = binary_data
@@ -361,42 +378,57 @@ def update_image(request, record_id):
             response_data = {"message": "Image and data saved successfully"}
             return JsonResponse(response_data)
         except RadiologyRecord.DoesNotExist:
-            response_data = {"message": "Record with the provided ID not found"}
+            response_data = {
+                "message": "Record with the provided ID not found"}
             return JsonResponse(response_data, status=400)
         except Exception as e:
             response_data = {"message": str(e)}
             return JsonResponse(response_data, status=500)
     else:
         return JsonResponse({}, status=405)
-    
+
+
+# def download_images(request):
+#     if request.method == 'POST':
+#         try:
+#             selected_ids_json = request.body.decode('utf-8')
+#             selected_ids = json.loads(selected_ids_json)
+
+#             buffer = io.BytesIO()
+
+#             with zipfile.ZipFile(buffer, 'w') as zipf:
+#                 for record_id in selected_ids:
+#                     record = get_object_or_404(
+#                         Image_Record, record_id=record_id)
+#                     zipf.writestr(f'{record.image_filename}', record.image)
+
+#             buffer.seek(0)
+
+#             response = FileResponse(
+#                 buffer, content_type='application/zip', as_attachment=True)
+#             response['Content-Disposition'] = 'attachment; filename="images.zip'
+
+#             return response
+#         except (json.JSONDecodeError, ValueError):
+#             return HttpResponse(status=400, content="Invalid or missing data in the request body")
+#     else:
+#         return HttpResponse(status=405, content="Method not allowed")
 
 def download_images(request):
     if request.method == 'POST':
         try:
-           
             selected_ids_json = request.body.decode('utf-8')
             selected_ids = json.loads(selected_ids_json)
 
-            
-            buffer = io.BytesIO()
-
-           
-            with zipfile.ZipFile(buffer, 'w') as zipf:
-                for record_id in selected_ids:
-                    record = get_object_or_404(Image_Record, pk=record_id)
-                    zipf.writestr(f'{record.image_filename}', record.image)
-
-            buffer.seek(0)
-
-            response = FileResponse(buffer.read(), content_type='application/zip')
-            response['Content-Disposition'] = 'attachment; filename="images.zip"'
-
-            return response
-        except json.JSONDecodeError:
-            return HttpResponse(status=400, content="Invalid JSON data in the request body")
+            for ids in selected_ids:
+                print(ids)
+            return HttpResponse(status=200, content='sucessfully')
+        except (json.JSONDecodeError, ValueError):
+            return HttpResponse(status=400, content="Invalid or missing data in the request body")
     else:
         return HttpResponse(status=405, content="Method not allowed")
-    
+
+
 def delete_images(request):
     if request.method == "POST":
         try:
@@ -410,7 +442,7 @@ def delete_images(request):
             return HttpResponse(status=400, content="Invalid JSON data in the request body")
     else:
         return HttpResponse(status=405, content="Method not allowed")
-        
+
 
 def delete_file(request, record_id):
     if request.method == 'GET':
@@ -424,7 +456,8 @@ def delete_file(request, record_id):
         return JsonResponse({'message': 'File deleted successfully'})
     else:
         return JsonResponse({'message': 'Invalid request method'}, status=400)
-    
+
+
 def update_record_status(request):
     if request.method == 'POST':
         record_id = request.POST.get('record_id')
@@ -435,10 +468,9 @@ def update_record_status(request):
             record.status = new_status
             record.save()
 
-            
             return JsonResponse({'success': True})
         except RadiologyRecord.DoesNotExist:
-           
+
             return JsonResponse({'success': False, 'message': 'Record does not exist'})
 
     return JsonResponse({'success': False, 'message': 'Invalid HTTP method'})
