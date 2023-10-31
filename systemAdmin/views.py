@@ -52,6 +52,7 @@ def login_user(request):
 @login_required(login_url='login')
 # Create your views here.
 def profile_view(request):
+    path = request.path
     profiles = profile.objects.filter(role='systemAdmin')
 
     for prof in profiles:
@@ -63,11 +64,12 @@ def profile_view(request):
 
     title = 'System Administrator'
 
-    return render(request, 'profile.html', {'profiles': profiles, 'title': title})
+    return render(request, 'profile.html', {'profiles': profiles, 'title': title, 'path': path})
 
 
 @login_required(login_url='login')
 def medicalTech_profile(request):
+    path = request.path
     profiles = profile.objects.filter(role='medicalTech')
     for prof in profiles:
         try:
@@ -78,11 +80,12 @@ def medicalTech_profile(request):
 
     title = 'Medical Technician'
 
-    return render(request, 'profile.html', {'profiles': profiles, 'title': title})
+    return render(request, 'profile.html', {'profiles': profiles, 'title': title, 'path': path})
 
 
 @login_required(login_url='login')
 def healthcareAdmin_profile(request):
+    path = request.path
     profiles = profile.objects.filter(role='healthcareAdmin')
     for prof in profiles:
         try:
@@ -93,11 +96,12 @@ def healthcareAdmin_profile(request):
 
     title = 'Healthcare Administrator'
 
-    return render(request, 'profile.html', {'profiles': profiles, 'title': title})
+    return render(request, 'profile.html', {'profiles': profiles, 'title': title, 'path': path})
 
 
 @login_required(login_url='login')
 def radiologyDoctor_profile(request):
+    path = request.path
     profiles = profile.objects.filter(role='radiologyDoctor')
     for prof in profiles:
         try:
@@ -107,14 +111,15 @@ def radiologyDoctor_profile(request):
             prof.is_active = False
     title = 'Radiology Doctor'
 
-    return render(request, 'profile.html', {'profiles': profiles, 'title': title})
+    return render(request, 'profile.html', {'profiles': profiles, 'title': title, 'path': path})
 
 
 @login_required(login_url='login')
 def systemAdmin_account(request):
+    path = request.path
     accounts = User.objects.all()
 
-    return render(request, 'account.html', {'accounts': accounts})
+    return render(request, 'account.html', {'accounts': accounts, 'path': path})
 
 
 @csrf_protect

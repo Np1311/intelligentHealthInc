@@ -410,13 +410,15 @@
           $("a[aria-expanded=true]").attr("aria-expanded", "false");
         });
       });
+    </script>
+    {% endif %}
+    <script>
       document
         .getElementById("backButton")
         .addEventListener("click", function (event) {
-          event.preventDefault(); // Prevent the default link behavior
+          event.preventDefault();
           history.back(); // Go back to the previous page
         });
     </script>
-    {% endif %}
   </body>
 </html>
