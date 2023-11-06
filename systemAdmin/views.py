@@ -9,9 +9,6 @@ from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_protect
 
 
-from .models import profile  # Import your Profile model
-
-
 @csrf_protect
 def login_user(request):
     next_url = request.GET.get('next')
@@ -23,7 +20,7 @@ def login_user(request):
 
         if user is not None:
             try:
-                # Assuming 'account' is the ForeignKey in Profile
+
                 user_profile = profile.objects.get(account=user.id)
                 if user_profile.role == 'systemAdmin':
 
@@ -50,7 +47,6 @@ def login_user(request):
 
 
 @login_required(login_url='login')
-# Create your views here.
 def profile_view(request):
     path = request.path
     profiles = profile.objects.filter(role='systemAdmin')

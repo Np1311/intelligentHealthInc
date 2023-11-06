@@ -207,7 +207,7 @@ def get_data(request, record_id):
                 predictions_value=predictions_value,
                 data=data_available, instance=image_record, initial_data=initial_data
             )
-            # image_form = ImageFindingsForm(predictions_value=predictions_value,initial_data = initial_data)
+
         else:
             image_form = None
 
@@ -347,7 +347,8 @@ def update_image(request, record_id):
         notes = request.POST.get("notes")
         image_filename = request.POST.get("filename")
         prediction = request.POST.get("prediction")
-        prediction = prediction.strip()
+        if prediction is not None:
+            prediction = prediction.strip()
         timestamp = request.POST.get("timestamp")
 
         if 'username' in request.session:
@@ -417,14 +418,26 @@ def update_image(request, record_id):
 def download_images(request):
     if request.method == 'POST':
         try:
+
             selected_ids_json = request.body.decode('utf-8')
             selected_ids = json.loads(selected_ids_json)
 
-            for ids in selected_ids:
-                print(ids)
-            return HttpResponse(status=200, content='sucessfully')
-        except (json.JSONDecodeError, ValueError):
-            return HttpResponse(status=400, content="Invalid or missing data in the request body")
+            buffer = io.BytesIO()
+
+            with zipfile.ZipFile(buffer, 'w') as zipf:
+                for record_id in selected_ids:
+                    record = get_object_or_404(Image_Record, pk=record_id)
+                    zipf.writestr(f'{record.image_filename}', record.image)
+
+            buffer.seek(0)
+
+            response = FileResponse(
+                buffer.read(), content_type='application/zip')
+            response['Content-Disposition'] = 'attachment; filename="images.zip"'
+
+            return response
+        except json.JSONDecodeError:
+            return HttpResponse(status=400, content="Invalid JSON data in the request body")
     else:
         return HttpResponse(status=405, content="Method not allowed")
 

@@ -10,7 +10,7 @@ class profile (models.Model):
         ('active', 'Active'),
         ('suspend', 'Suspended'),
     )
-    role_choices =(
+    role_choices = (
         ('systemAdmin', 'System Admin'),
         ('medicalTech', 'Medical Technician'),
         ('healthcareAdmin', 'Healthcare Admin'),
@@ -22,7 +22,13 @@ class profile (models.Model):
     email = models.EmailField(max_length=100)
     dob = models.DateField()
     phone = PhoneNumberField(region='SG')
-    account = models.ForeignKey(User,on_delete=models.CASCADE, null=True)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='active')
-    role = models.CharField(max_length=50, choices=role_choices, default='systemAdmin')
+    account = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    status = models.CharField(
+        max_length=10, choices=STATUS_CHOICES, default='active')
+    role = models.CharField(
+        max_length=50, choices=role_choices, default='systemAdmin')
 
+    @classmethod
+    def filterProfileByRole(cls, role):
+        profiles = cls.objects.filter(role=role)
+        return profiles

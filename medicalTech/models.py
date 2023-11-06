@@ -169,6 +169,8 @@ class RadiologyRecord(models.Model):
                 'request_time', flat=True))
             visit_counts = {}
 
+            visit_data = [value for value in visit_data if value is not None]
+
             if from_date is None or to_date is None:
                 # If from_date or to_date is None, use the date range from filtered records
                 if visit_data:
@@ -187,6 +189,8 @@ class RadiologyRecord(models.Model):
 
             else:
                 current_date = from_date
+                # Include the end date in the range
+                to_date = to_date + timedelta(days=1)
                 while current_date <= to_date:
                     next_week_start = current_date + \
                         timedelta(days=(7 - current_date.weekday()))
