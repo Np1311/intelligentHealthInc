@@ -25,7 +25,7 @@ class RadiologyRecord(models.Model):
 
     senderDoctor = models.CharField(max_length=255, default=None)
     indications = models.TextField(null=True)
-
+    upload_time = models.DateTimeField(null=True)
     # Additional information
 
     # Status of the record
@@ -249,6 +249,8 @@ class Image_Record(models.Model):
     medTech = models.CharField(max_length=255, null=True)
 
     radiologyDoctor = models.CharField(max_length=255, null=True)
+
+    deletation_time = models.DateTimeField(null=True)
 
     @classmethod
     def get_records(cls, id):
