@@ -127,7 +127,7 @@ def updateImageFindings(request, record_id):
         try:
             image_record = Image_Record.objects.get(record_id=record_id)
             radiology_record = RadiologyRecord.objects.get(record_id=record_id)
-            image_record.predictions = predictions
+            image_record.prediction = predictions
             image_record.examination = examination
             image_record.findings = findings
             image_record.impressions = impressions
