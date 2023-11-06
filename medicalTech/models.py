@@ -25,7 +25,7 @@ class RadiologyRecord(models.Model):
 
     senderDoctor = models.CharField(max_length=255, default=None)
     indications = models.TextField(null=True)
-    upload_time = models.DateTimeField(null=True)
+    update_time = models.DateTimeField(null=True)
     # Additional information
 
     # Status of the record
