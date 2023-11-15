@@ -227,7 +227,7 @@
                     {% if 'medicalTech' in path %}
                         <span id="prediction">{{image_record.prediction}}</span>
                         <br>
-                        <button id='rerun-button' style='display: block;'>Re-run</button> 
+                        {% comment %} <button id='rerun-button' style='display: block;'>Re-run</button>  {% endcomment %}
                     
                     {% endif %}
 
@@ -237,8 +237,8 @@
                         
                     {% else %}
                         <span id="prediction" style="display: none;"></span>
-                        </br>
-                        <button id='rerun-button' style='display: none;'>Re-run</button>
+                        {% comment %} </br>
+                        <button id='rerun-button' style='display: none;'>Re-run</button> {% endcomment %}
                     {% endif %}
                 {% endif %}
 
@@ -348,7 +348,7 @@
                 $('#timestamp').hide();
                 imageContainer.src = '';
                 prediction.innerHTML = '';
-                rerunButton.style.display = 'none';
+                //rerunButton.style.display = 'none';
                 timestampSpan.innerHTML = '';
                 
 
@@ -415,7 +415,7 @@
                                     
                                     $("#prediction").show();
                             
-                                    $("#rerun-button").show();
+                                   // $("#rerun-button").show();
                             
                                 } catch (error) {
                                     console.error("Error running the model:", error);

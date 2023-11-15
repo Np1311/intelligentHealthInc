@@ -10,6 +10,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from systemAdmin.models import profile
 from django.contrib.auth.decorators import login_required
+from datetime import timedelta
 
 
 @csrf_protect
@@ -60,6 +61,7 @@ def home(request):
     if from_date_str and to_date_str:
         from_date = datetime.strptime(from_date_str, '%Y-%m-%d').date()
         to_date = datetime.strptime(to_date_str, '%Y-%m-%d').date()
+        to_date = to_date + timedelta(days=1)
         patients_list = RadiologyRecord.view_records().filter(
             Q(request_time__gte=from_date) &
             Q(request_time__lte=to_date)

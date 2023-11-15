@@ -253,6 +253,7 @@ def update_request_time(request):
                 timezone.datetime.strptime(new_request_time_str, '%Y-%m-%dT%H:%M'))
 
             record.request_time = new_request_time
+            record.update_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             record.save()
             return JsonResponse({'success': True})
         except RadiologyRecord.DoesNotExist:
@@ -291,6 +292,7 @@ def save_image(request, record_id):
         prediction = request.POST.get("prediction")
         prediction = prediction.strip()
         timestamp = request.POST.get("timestamp")
+
         if prediction is not None:
             prediction = prediction.strip()
         if 'username' in request.session:
@@ -350,7 +352,6 @@ def update_image(request, record_id):
         if prediction is not None:
             prediction = prediction.strip()
         timestamp = request.POST.get("timestamp")
-
         if 'username' in request.session:
             user = request.session.get('username')
         else:
@@ -463,6 +464,7 @@ def delete_file(request, record_id):
 
         # Delete the file and filename
         image_record.image = None
+        image_record.deletion_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         # image_record.image_filename = "None"
         image_record.save()
 

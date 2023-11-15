@@ -54,11 +54,13 @@ class RadiologyRecord(models.Model):
         return records
 
     @classmethod
-    def emergency(cls, id):
+    def emergency(cls, self, id):
         try:
             record = cls.objects.get(record_id=id)
             # Assuming you want to update the request_time to the current datetime
             record.status = 'EMERGENCY'
+
+            record.update_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             record.save()
         except cls.DoesNotExist:
             raise ValueError(f"Record with id {id} not found")
@@ -69,6 +71,7 @@ class RadiologyRecord(models.Model):
             record = cls.objects.get(record_id=id)
             # Assuming you want to update the request_time to the current datetime
             record.status = 'Registered'
+            record.update_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             record.save()
         except cls.DoesNotExist:
             raise ValueError(f"Record with id {id} not found")
@@ -250,7 +253,7 @@ class Image_Record(models.Model):
 
     radiologyDoctor = models.CharField(max_length=255, null=True)
 
-    deletation_time = models.DateTimeField(null=True)
+    deletion_time = models.DateTimeField(null=True)
 
     @classmethod
     def get_records(cls, id):
@@ -285,7 +288,8 @@ class Image_Record(models.Model):
         try:
             with transaction.atomic():
                 queryset = cls.objects.filter(record_id__in=record_ids)
-                queryset.update(image=None)
+                currentDatetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                queryset.update(image=None, deletion_time=currentDatetime)
                 message = f"Successfully deleted record(s)."
         except Exception as e:
             message = f"Error deleting records: {str(e)}"
