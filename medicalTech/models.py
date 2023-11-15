@@ -54,12 +54,11 @@ class RadiologyRecord(models.Model):
         return records
 
     @classmethod
-    def emergency(cls, self, id):
+    def emergency(cls, id):
         try:
             record = cls.objects.get(record_id=id)
             # Assuming you want to update the request_time to the current datetime
             record.status = 'EMERGENCY'
-
             record.update_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             record.save()
         except cls.DoesNotExist:
