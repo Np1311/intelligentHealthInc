@@ -172,6 +172,19 @@
           width: 100%;
           left: 0;
       }
+      #downloadApp {
+        background-color: transparent;
+        color: #004AAD;
+        font-size: 20px;
+        width: 170px;
+        border: 0px ;
+        padding: 5px;
+      }
+
+      #downloadApp option {
+        background-color: transparent;
+        color: #004AAD;
+      }
     </style>
     <link
       rel="stylesheet"
@@ -197,6 +210,13 @@
 
           <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ms-auto" style="margin-right: 100px">
+              <li class="nav-item">
+                <select id="downloadApp" onchange="handleDropdown(this)">
+                  <option value="" disabled selected>Download APP</option>
+                  <option value="MACOS">MAC OS</option>
+                  <option value="window">Window</option>
+                </select>
+              </li>
               <li class="nav-item">
                 <span
                   ><i class="fa-solid fa-phone fa-shake"></i> +65 7377
@@ -226,5 +246,22 @@ Through Artificial Intelligence
         <a href='{% url "healthcareAdminHome"%}'>Healthcare Admin</a>
       </div>
     </div>
+    <script>
+      function handleDropdown(element) {
+        var selectedValue = element.value;
+        if (selectedValue === "MACOS") {
+          window.open(
+            "https://dl.dropbox.com/scl/fi/2ln4v1zo7hjl4wqdwcwbq/IntelligentHealthInc.dmg?rlkey=voc4hqfmd4jpvzqiluneshez8&dl=0",
+            "_blank"
+          );
+        } else if (selectedValue === "window") {
+          window.open(
+            "https://dl.dropbox.com/scl/fi/bglyb1m72vtt93onqlm1j/IntelligentHealthInc.exe?rlkey=t6ecbcsk2s7txhnzodb4k8wc2&dl=0",
+            "_blank"
+          );
+        }
+        element.selectedIndex = 0;
+      }
+    </script>
   </body>
 </html>
