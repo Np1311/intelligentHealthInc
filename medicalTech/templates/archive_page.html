@@ -90,7 +90,7 @@
         </thead>
         <tbody id ='archiveTable'>
             {% for record in records %}
-                {% if record.image_record.image_filename%}
+                {% if record.image_record.image%}
                     <tr>
                         <td><input type="checkbox" class="rowCheckbox" data-record-id="{{ record.record_id }}"></td>
                         <td>{{ record.record_id }}</td>
