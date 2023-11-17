@@ -390,59 +390,6 @@ def update_image(request, record_id):
         return JsonResponse({}, status=405)
 
 
-# def download_images(request):
-#     if request.method == 'POST':
-#         try:
-#             selected_ids_json = request.body.decode('utf-8')
-#             selected_ids = json.loads(selected_ids_json)
-
-#             buffer = io.BytesIO()
-
-#             with zipfile.ZipFile(buffer, 'w') as zipf:
-#                 for record_id in selected_ids:
-#                     record = get_object_or_404(
-#                         Image_Record, record_id=record_id)
-#                     zipf.writestr(f'{record.image_filename}', record.image)
-
-#             buffer.seek(0)
-
-#             response = FileResponse(
-#                 buffer, content_type='application/zip', as_attachment=True)
-#             response['Content-Disposition'] = 'attachment; filename="images.zip'
-
-#             return response
-#         except (json.JSONDecodeError, ValueError):
-#             return HttpResponse(status=400, content="Invalid or missing data in the request body")
-#     else:
-#         return HttpResponse(status=405, content="Method not allowed")
-
-def download_images(request):
-    if request.method == 'POST':
-        try:
-
-            selected_ids_json = request.body.decode('utf-8')
-            selected_ids = json.loads(selected_ids_json)
-
-            buffer = io.BytesIO()
-
-            with zipfile.ZipFile(buffer, 'w') as zipf:
-                for record_id in selected_ids:
-                    record = get_object_or_404(Image_Record, pk=record_id)
-                    zipf.writestr(f'{record.image_filename}', record.image)
-
-            buffer.seek(0)
-
-            response = FileResponse(
-                buffer.read(), content_type='application/zip')
-            response['Content-Disposition'] = 'attachment; filename="images.zip"'
-
-            return response
-        except json.JSONDecodeError:
-            return HttpResponse(status=400, content="Invalid JSON data in the request body")
-    else:
-        return HttpResponse(status=405, content="Method not allowed")
-
-
 def delete_images(request):
     if request.method == "POST":
         try:

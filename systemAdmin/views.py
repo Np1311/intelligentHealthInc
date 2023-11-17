@@ -195,9 +195,9 @@ def update_profile(request, pk):
 
 
 @csrf_protect
-def update_account(request, pk):
+def update_account(request, accountID):
 
-    current_account = User.objects.get(id=pk)
+    current_account = User.objects.get(id=accountID)
 
     if request.method == 'POST':
         form = Update_Account_Form(request.POST, instance=current_account)
@@ -212,49 +212,20 @@ def update_account(request, pk):
 
 
 @csrf_protect
-def suspend_account(request, pk):
-    account = User.objects.get(id=pk)
+def suspend_account(request, accountID):
+    account = User.objects.get(id=accountID)
     account.is_active = False
     account.save()
     return redirect('view_account')
 
 
-def unsuspend_account(request, pk):
-    account = User.objects.get(id=pk)
+def unsuspend_account(request, accountID):
+    account = User.objects.get(id=accountID)
     account.is_active = True
     account.save()
     return redirect('view_account')
 
 
-@csrf_protect
-def suspend_profile(request, pk):
-    current_profile = profile.objects.get(id=pk)
-    current_profile.status = 'suspend'
-    current_profile.save()
-    if current_profile.role == 'medicalTech':
-        return redirect('medicalTech')
-    elif current_profile.role == 'healthcareAdmin':
-        return redirect('healthcareAdmin')
-    elif current_profile.role == 'radiologyDoctor':
-        return redirect('radiologyDoctor')
-    else:
-        return redirect('profile')
-
-
-def unsuspend_profile(request, pk):
-    current_profile = profile.objects.get(id=pk)
-    current_profile.status = 'active'
-    current_profile.save()
-    if current_profile.role == 'medicalTech':
-        return redirect('medicalTech')
-    elif current_profile.role == 'healthcareAdmin':
-        return redirect('healthcareAdmin')
-    elif current_profile.role == 'radiologyDoctor':
-        return redirect('radiologyDoctor')
-    else:
-        return redirect('profile')
-
-
-def specific_account(request, pk):
-    acc = User.objects.filter(id=pk)
-    return render(request, 'account.html', {'accounts': acc, 'pk': pk})
+def specific_account(request, accountID):
+    acc = User.objects.filter(id=accountID)
+    return render(request, 'account.html', {'accounts': acc, 'pk': accountID})
