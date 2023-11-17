@@ -202,7 +202,7 @@
                 {% if 'medicalTech' in path %}
                     <i class="fa-regular fa-file-image"></i>
                 {% endif %}
-                {% if image_available %}
+                {% if imageFilename_available %}
                     <span style='margin-left: 10px;'>{{ image_record.image_filename }}</span>
                 {% else %}
                     <span style='margin-left: 10px;'>No file selected</span>
@@ -578,15 +578,6 @@
         window.location.href = url;
         
     });
-
-    const rerunButton = document.getElementById('rerun-button');
-
-  
-        rerunButton.addEventListener('click', function() {
-        
-        console.log('Button clicked!');
-    });
-
 
     
     function getCookie(name) {

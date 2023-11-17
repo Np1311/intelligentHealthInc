@@ -172,6 +172,7 @@ def get_data(request, record_id):
             data_available = bool(
                 image_record.examination or image_record.findings or image_record.impressions)
             image_available = bool(image_record.image)
+            imageFilename_available = bool(image_record.image_filename)
             predictions_available = bool(image_record.prediction)
 
             if image_available:
@@ -220,6 +221,7 @@ def get_data(request, record_id):
 
             'record': record,
             'image_available': image_available,
+            'imageFilename_available': imageFilename_available,
             'image_record': image_record,
             'path': path,
             'image_form': image_form,
