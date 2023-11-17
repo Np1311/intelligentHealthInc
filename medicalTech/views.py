@@ -189,6 +189,7 @@ def get_data(request, record_id):
             predictions_available = False
             predictions_value = None
             data_available = None
+            imageFilename_available = False
 
         if "radiologistDoctor" in path:
             try:
