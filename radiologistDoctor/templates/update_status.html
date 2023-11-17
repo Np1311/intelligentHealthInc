@@ -1,37 +1,9 @@
-{% comment %} {% extends 'logout.html' %}
-{% block content%}
-
-{%load static %} {% endcomment %}
 
 <head>
    
     
     <style>
-{% comment %}         
-        .content {
-            display: flex;
-            flex-direction: column; 
-            align-items: center; 
-            padding-top: 100px;
-        }
-        
-        .title {
-            text-align: center;
-            font-size: 24px;
-            margin-bottom: 20px; 
-        }
-        
-        .container-wrap {
-            background-color: #e3ecfa;
-            padding: 10px 80px 10px 40px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-        }
 
-        .container-wrap .image-viewer-container {
-            flex-basis: 50%; 
-        } {% endcomment %}
         .main-content input:not(:checked) + .slider {
             background-color: red;
         }
@@ -42,15 +14,6 @@
             margin-top: 20px;
             
         }
-
-        {% comment %} .container-wrap .main-content {
-            flex: 1; 
-            display: flex;
-            flex-direction: column;
-        } {% endcomment %}
-
-        
-
         .main-content .toggle-label {
             margin: 0 10px 0 10px;
         }
@@ -152,12 +115,7 @@
 </head>
 <body>
     
-            {% comment %} <div class="image-viewer-container">
-                <div class="image-viewer">
-                    <div class="image-filename">{{ image_data.image_filename }}</div>
-                    <span> {{ image_data.image|safe }}</span>
-                </div>
-            </div> {% endcomment %}
+            
         {% if predictions_available %}
             <div class="main-content">
                 <div class="toggle-switch">
@@ -260,11 +218,9 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    // Update the DOM with the response content
-                    console.log(data); // Log the response to the console
-                    // Update the DOM with the response content, e.g., display a message
+                    
+                    console.log(data); 
                     alert(data.message);
-                    // Optionally, you can redirect to another page
                     window.location.href = "{% url 'radiologistDoctorHome' %}";
                 })
                 .catch(error => {
@@ -293,5 +249,3 @@
         });
     </script>
 </body>
-
-{% comment %} {% endblock %}  {% endcomment %}

@@ -153,7 +153,6 @@
 <body>
     <div class="content">
         
-        <!-- Add a div for the search container below the "Home" button -->
         <div class="inline">
             <div class="search-input-container">
                 <div class="input-group search-bar">
@@ -175,11 +174,9 @@
             </div>
         </div>
         
-        <!-- Add the "View Reports" button below the search bar -->
         <div class="filter-container" style="float: right; ">
            
             <form method="GET" action="{% url 'healthcareAdminHome' %}">
-                <!-- Group "From" and "To" date inputs together -->
                 <div class="date-filter">
                     <label for="fromDate">From:</label>
                     <input type="date" id="fromDate" name="fromDate">
@@ -215,7 +212,6 @@
             </tbody>
         </table>
 
-        <!-- Add this section to display left and right arrows for pagination -->
         <div class="pagination">
             <span class="step-links">
                 {% if patients.has_previous %}

@@ -90,7 +90,7 @@
         </thead>
         <tbody id ='archiveTable'>
             {% for record in records %}
-                {% if record.image_record.image_filename%}<!--need to check-->
+                {% if record.image_record.image_filename%}
                     <tr>
                         <td><input type="checkbox" class="rowCheckbox" data-record-id="{{ record.record_id }}"></td>
                         <td>{{ record.record_id }}</td>
@@ -110,8 +110,8 @@
     </table>
 </div>
 <span id='message'></span>
-{% comment %} <button type="button" class="btn btn-outline-primary" id="downloadButton">Download Selected</button> {% endcomment %}
 <button type="button" class="btn btn-outline-danger" id="deleteButton">Delete Selected</button>
+
 <script>
     $(document).ready(function () {
         $("#selectAllCheckbox").click(function () {

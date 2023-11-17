@@ -212,11 +212,6 @@ def get_data(request, record_id):
         else:
             image_form = None
 
-        # if 'username' in request.session:
-        #     user = request.session.get('username')
-        # else :
-        #     user = 'Guest'
-
         context = {
 
             'record': record,
@@ -274,8 +269,6 @@ def display_image(request, record_id):
 
             preprocess_image = context.preprocess_image()
 
-            # prediction = 0
-
             response_data = {"image_data": image_data,
                              "record_id": record_id, "preprocess_image": preprocess_image}
             return JsonResponse(response_data)
@@ -301,7 +294,6 @@ def save_image(request, record_id):
             user = request.session.get('username')
         else:
             user = 'Guest'
-        # binary_data = dicom_file.read() if dicom_file else None  # Read binary data if dicom_file is provided
         file_size = dicom_file.size
         file_size_mb = file_size / (1024 * 1024)
         print(file_size_mb)
@@ -312,21 +304,16 @@ def save_image(request, record_id):
 
                 if dicom_file:
                     binary_data = dicom_file.read()
-                    # Create a new Image_Record instance with DICOM file
                     image_record = Image_Record(record_id=record, image=binary_data, notes=notes,
                                                 image_filename=image_filename, prediction=prediction, upload_date=timestamp, medTech=user)
                     if record.status != 'EMERGENCY':
                         record.status = 'In Progress'
                     record.save()
-                    # patient_record = RadiologyRecord(record_id=record,status='in_progress')
                 else:
                     # Create a new Image_Record instance without DICOM file
                     image_record = Image_Record(record_id=record, notes=notes)
-                    # patient_record = RadiologyRecord(record_id=record,status='in_progress')
 
                 image_record.save()
-
-                # patient_record.save()
 
                 response_data = {
                     "message": "Image and data saved successfully"}
@@ -358,15 +345,12 @@ def update_image(request, record_id):
             user = request.session.get('username')
         else:
             user = 'Guest'
-        # binary_data = dicom_file.read() if dicom_file else None  # Read binary data if dicom_file is provided
 
         try:
             # Get the corresponding RadiologyRecord instance
-            # record = RadiologyRecord.objects.get(record_id=record_id)
             image_record = Image_Record.get_records(record_id)
             if dicom_file:
                 binary_data = dicom_file.read()
-                # Create a new Image_Record instance with DICOM file
                 image_record.image_filename = image_filename
                 image_record.image = binary_data
                 image_record.prediction = prediction
@@ -414,7 +398,6 @@ def delete_file(request, record_id):
         # Delete the file and filename
         image_record.image = None
         image_record.deletion_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        # image_record.image_filename = "None"
         image_record.save()
 
         return JsonResponse({'message': 'File deleted successfully'})

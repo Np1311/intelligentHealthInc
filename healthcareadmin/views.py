@@ -54,14 +54,16 @@ def login_user(request):
 
 @login_required(login_url='healthcareAdminLogin')
 def home(request):
-
+    # get data of starting date and end date from the website
     from_date_str = request.GET.get('fromDate')
     to_date_str = request.GET.get('toDate')
 
+    # Manipulate the data from the website to generate the data
     if from_date_str and to_date_str:
         from_date = datetime.strptime(from_date_str, '%Y-%m-%d').date()
         to_date = datetime.strptime(to_date_str, '%Y-%m-%d').date()
         to_date = to_date + timedelta(days=1)
+        # filter the data based on the date range
         patients_list = RadiologyRecord.view_records().filter(
             Q(request_time__gte=from_date) &
             Q(request_time__lte=to_date)
@@ -82,6 +84,7 @@ def home(request):
 
 
 def healthcarereportpreview(request):
+    # query to get the data for the intended date range
     def get_queryset(from_date, to_date):
         RadiologyRecord.positive_record(from_date, to_date)
 

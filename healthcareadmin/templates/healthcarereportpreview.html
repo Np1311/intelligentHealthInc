@@ -1,226 +1,266 @@
-{% extends 'logout.html' %}
-{% block content%}
-{% load static %}
+{% extends 'logout.html' %} {% block content%} {% load static %}
 
 <head>
-    <title>Healthcare Reports</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-   
-    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-       
-        #reportContainer {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-gap: 20px;
-        }
-        
-        #covidCasesReport {
-            grid-column: span 2; /* Span two columns */
-        }
-        
-        .report-container {
-            background-color: #E3ECFA;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            width: 100%; 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-        .report-container p#covidCasesReportCanvas {
-            font-size:60px;
-            font-weight: bold;
-            text-align: center; 
-            margin: 0; 
-        }
-        
-        .report-container h2 {
-            color: #000;
-        }
-        
-        .report-container canvas {
-            width: 100%;
-        }
-        
-        #reportForm {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        
-        #reportForm .form-group {
-            flex: 1;
-            width: 25%;
-            margin-right: 10px;
-        }
-        
-        #generateButton {
-            width: 100%;
-            margin: 20px 0;
-        }
-    </style>
+  <title>Healthcare Reports</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    #reportContainer {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 20px;
+    }
+
+    #covidCasesReport {
+      grid-column: span 2; /* Span two columns */
+    }
+
+    .report-container {
+      background-color: #e3ecfa;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .report-container p#covidCasesReportCanvas {
+      font-size: 60px;
+      font-weight: bold;
+      text-align: center;
+      margin: 0;
+    }
+
+    .report-container h2 {
+      color: #000;
+    }
+
+    .report-container canvas {
+      width: 100%;
+    }
+
+    #reportForm {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    #reportForm .form-group {
+      flex: 1;
+      width: 25%;
+      margin-right: 10px;
+    }
+
+    #generateButton {
+      width: 100%;
+      margin: 20px 0;
+    }
+  </style>
 </head>
 <body>
-    <h1>Healthcare Reports</h1>
-    <form id="reportForm">
-        <div class="form-group">
-            <label for="fromDate">From Date:</label>
-            <input type="date" class="form-control" id="fromDate" name="fromDate">
-        </div>
-        <div class="form-group">
-            <label for="toDate">To Date:</label>
-            <input type="date" class="form-control" id="toDate" name="toDate">
-        </div>
-        <button type="button" class="btn btn-primary" id="generateButton">Generate Report</button>
-    </form>
-   
-    <div id="reportContainer">
-        <div class="report-container" id="covidCasesReport">
-            <h2>Total COVID-19 Cases Report</h2>
-            <p id="covidCasesReportCanvas"> {{data.total_covid}}</p>
-        </div>
-        <div class="report-container" id="demographicAreaReport">
-            <h2>Demographic Report in Area</h2>
-            <canvas id="demographicAreaChartCanvas"></canvas>
-        </div>
-        <div class="report-container" id="demographicNationalityReport">
-            <h2>Demographic Report by Nationality</h2>
-            <canvas id="demographicNationalityChartCanvas"></canvas>
-        </div>
-        <div class="report-container" id="patientVisitsOverTime">
-            <h2>Patient Visits Over Time</h2>
-            <canvas id="patientVisitsChartCanvas"></canvas>
-        </div>
-        <div class="report-container" id="patientAgesReport">
-            <h2>Patient Ages Report</h2>
-            <canvas id="patientAgesChartCanvas"></canvas>
-        </div>
+  <h1>Healthcare Reports</h1>
+  <form id="reportForm">
+    <div class="form-group">
+      <label for="fromDate">From Date:</label>
+      <input type="date" class="form-control" id="fromDate" name="fromDate" />
     </div>
+    <div class="form-group">
+      <label for="toDate">To Date:</label>
+      <input type="date" class="form-control" id="toDate" name="toDate" />
+    </div>
+    <button type="button" class="btn btn-primary" id="generateButton">
+      Generate Report
+    </button>
+  </form>
 
-    <script>
-        $(document).ready(function () {
-            var ageDataString = "{{ data.age_data | safe }}";
-            var correctedAgeData = ageDataString.replace(/'/g, '"');
-            var ageData = JSON.parse(correctedAgeData);
+  <div id="reportContainer">
+    <div class="report-container" id="covidCasesReport">
+      <h2>Total COVID-19 Cases Report</h2>
+      <p id="covidCasesReportCanvas">{{data.total_covid}}</p>
+    </div>
+    <div class="report-container" id="demographicAreaReport">
+      <h2>Demographic Report in Area</h2>
+      <canvas id="demographicAreaChartCanvas"></canvas>
+    </div>
+    <div class="report-container" id="demographicNationalityReport">
+      <h2>Demographic Report by Nationality</h2>
+      <canvas id="demographicNationalityChartCanvas"></canvas>
+    </div>
+    <div class="report-container" id="patientVisitsOverTime">
+      <h2>Patient Visits Over Time</h2>
+      <canvas id="patientVisitsChartCanvas"></canvas>
+    </div>
+    <div class="report-container" id="patientAgesReport">
+      <h2>Patient Ages Report</h2>
+      <canvas id="patientAgesChartCanvas"></canvas>
+    </div>
+  </div>
 
-            var areaDataString = "{{ data.area_data | safe }}";
-            var correctedAreaData = areaDataString.replace(/'/g, '"');
-            var areaData = JSON.parse(correctedAreaData);
+  <script>
+    $(document).ready(function () {
+      //data collection and generation for the chart
+      var ageDataString = "{{ data.age_data | safe }}";
+      var correctedAgeData = ageDataString.replace(/'/g, '"');
+      var ageData = JSON.parse(correctedAgeData);
 
-            var nationalityDataString = "{{ data.nationality_data | safe }}";
-            var correctedNationalityData = nationalityDataString.replace(/'/g, '"');
-            var nationalityData = JSON.parse(correctedNationalityData);
+      var areaDataString = "{{ data.area_data | safe }}";
+      var correctedAreaData = areaDataString.replace(/'/g, '"');
+      var areaData = JSON.parse(correctedAreaData);
 
-            var visitDataString = "{{ data.visit_data | safe }}";
-            var correctedVisitData = visitDataString.replace(/'/g, '"');
-            var visitData = JSON.parse(correctedVisitData);
+      var nationalityDataString = "{{ data.nationality_data | safe }}";
+      var correctedNationalityData = nationalityDataString.replace(/'/g, '"');
+      var nationalityData = JSON.parse(correctedNationalityData);
 
-            $('#generateButton').click(function () {
-                
-                const selectedFromDate = $('#fromDate').val();
-                const selectedToDate = $('#toDate').val();
-    
-               
-                console.log(`Selected date range: From ${selectedFromDate} to ${selectedToDate}`);
+      var visitDataString = "{{ data.visit_data | safe }}";
+      var correctedVisitData = visitDataString.replace(/'/g, '"');
+      var visitData = JSON.parse(correctedVisitData);
 
-                $.ajax({
-                    url: "{% url 'healthcarereportpreview' %}",
-                    method: 'GET',
-                    data: {
-                        fromDate: selectedFromDate,
-                        toDate: selectedToDate
-                    },
-                    success: function (data) {
-                        
-                        console.log('AJAX request succeeded');
-                        console.log(data);
-                        
+      $("#generateButton").click(function () {
+        const selectedFromDate = $("#fromDate").val();
+        const selectedToDate = $("#toDate").val();
 
-                        ageData = data.age_data;
-                        areaData = data.area_data;
-                        nationalityData = data.nationality_data;
-                        visitData = data.visit_data;
-                        var totalCovid = data.total_covid;
+        console.log(
+          `Selected date range: From ${selectedFromDate} to ${selectedToDate}`
+        );
+        //Ajax to django system to handle data and load data handled to webpage
+        $.ajax({
+          url: "{% url 'healthcarereportpreview' %}",
+          method: "GET",
+          data: {
+            fromDate: selectedFromDate,
+            toDate: selectedToDate,
+          },
+          success: function (data) {
+            console.log("AJAX request succeeded");
+            console.log(data);
 
-                        generateChart(ageData, 'Patient Ages', 'patientAgesChartCanvas', 'pie');
-                        generateChart(areaData, 'Demographic by Area', 'demographicAreaChartCanvas', 'bar');
-                        generateChart(nationalityData,  'Demographic by Nationality', 'demographicNationalityChartCanvas', 'bar');
-                        generateChart(visitData, 'Patient Visits Over Time', 'patientVisitsChartCanvas', 'line');
+            ageData = data.age_data;
+            areaData = data.area_data;
+            nationalityData = data.nationality_data;
+            visitData = data.visit_data;
+            var totalCovid = data.total_covid;
 
-                        var totalCovidElement = document.getElementById("covidCasesReportCanvas"); // Change "totalCovidElementId" to your actual element ID
-                        if (totalCovidElement) {
-                            totalCovidElement.innerHTML =  totalCovid;
-                        }
+            generateChart(
+              ageData,
+              "Patient Ages",
+              "patientAgesChartCanvas",
+              "pie"
+            );
+            generateChart(
+              areaData,
+              "Demographic by Area",
+              "demographicAreaChartCanvas",
+              "bar"
+            );
+            generateChart(
+              nationalityData,
+              "Demographic by Nationality",
+              "demographicNationalityChartCanvas",
+              "bar"
+            );
+            generateChart(
+              visitData,
+              "Patient Visits Over Time",
+              "patientVisitsChartCanvas",
+              "line"
+            );
 
-                    },
-                    error: function (error) {
-                        console.error('AJAX request failed', error);
-                    }
-                });
-            });
-            function generateChart(datas, chartTitle, chartId, chartType) {
-                var ctx = document.getElementById(chartId).getContext('2d');
-                if (window.myCharts && window.myCharts[chartId]) {
-                    window.myCharts[chartId].destroy();
-                }
-            
-                if (chartType === 'pie') {
-                    
-                    var backgroundColors = datas.labels.map(function (_, index) {
-                        var transparency = 0.5; 
-                        var randomColor = 'rgba(' + Math.floor(Math.random() * 256) + ',' +
-                                                   Math.floor(Math.random() * 256) + ',' +
-                                                   Math.floor(Math.random() * 256) + ',' +
-                                                   transparency + ')';
-                        return randomColor;
-                    });
-                } else {
-                    var backgroundColors = 'rgba(75, 192, 192, 0.2)';
-                }
-            
-                window.myCharts = window.myCharts || {};
-                window.myCharts[chartId] = new Chart(ctx, {
-                    type: chartType,
-                    data: {
-                        labels: datas.labels,
-                        datasets: [{
-                            label: chartTitle,
-                            data: datas.data,
-                            backgroundColor: backgroundColors,
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                        }
-                    }
-                });
+            var totalCovidElement = document.getElementById(
+              "covidCasesReportCanvas"
+            );
+            if (totalCovidElement) {
+              totalCovidElement.innerHTML = totalCovid;
             }
-            generateChart(ageData, 'Patient Ages', 'patientAgesChartCanvas', 'pie');
-            generateChart(areaData, 'Demographic by Area', 'demographicAreaChartCanvas', 'bar');
-            generateChart(nationalityData,  'Demographic by Nationality', 'demographicNationalityChartCanvas', 'bar');
-            generateChart(visitData, 'Patient Visits Over Time', 'patientVisitsChartCanvas', 'line');
-
+          },
+          error: function (error) {
+            console.error("AJAX request failed", error);
+          },
         });
+      });
 
-        const reloadInterval = 600000;
-
-        function reloadPage() {
-        location.reload();
+      function generateChart(datas, chartTitle, chartId, chartType) {
+        var ctx = document.getElementById(chartId).getContext("2d");
+        if (window.myCharts && window.myCharts[chartId]) {
+          window.myCharts[chartId].destroy();
         }
 
-        // Schedule the page reload
-        setTimeout(reloadPage, reloadInterval);
-    </script>
+        if (chartType === "pie") {
+          var backgroundColors = datas.labels.map(function (_, index) {
+            var transparency = 0.5;
+            var randomColor =
+              "rgba(" +
+              Math.floor(Math.random() * 256) +
+              "," +
+              Math.floor(Math.random() * 256) +
+              "," +
+              Math.floor(Math.random() * 256) +
+              "," +
+              transparency +
+              ")";
+            return randomColor;
+          });
+        } else {
+          var backgroundColors = "rgba(75, 192, 192, 0.2)";
+        }
+
+        window.myCharts = window.myCharts || {};
+        window.myCharts[chartId] = new Chart(ctx, {
+          type: chartType,
+          data: {
+            labels: datas.labels,
+            datasets: [
+              {
+                label: chartTitle,
+                data: datas.data,
+                backgroundColor: backgroundColors,
+                borderColor: "rgba(75, 192, 192, 1)",
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+        });
+      }
+      generateChart(ageData, "Patient Ages", "patientAgesChartCanvas", "pie");
+      generateChart(
+        areaData,
+        "Demographic by Area",
+        "demographicAreaChartCanvas",
+        "bar"
+      );
+      generateChart(
+        nationalityData,
+        "Demographic by Nationality",
+        "demographicNationalityChartCanvas",
+        "bar"
+      );
+      generateChart(
+        visitData,
+        "Patient Visits Over Time",
+        "patientVisitsChartCanvas",
+        "line"
+      );
+    });
+    //data will reload every 600000 milliseconds
+    const reloadInterval = 600000;
+
+    function reloadPage() {
+      location.reload();
+    }
+
+    setTimeout(reloadPage, reloadInterval);
+  </script>
 </body>
 
 {% endblock %}

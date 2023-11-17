@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import pymysql
 from pathlib import Path
 import os
-# import django_heroku
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,11 +23,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-v4=+vc&0%j447_&@6vm%7wfwi8bjblldio=v)v(3jc_q%#ql47'
+
 SECRET_KEY = os.environ.get('SECRET_KEY', default='your secret key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = 'RENDER' not in os.environ
 
 ALLOWED_HOSTS = ['*']
 
@@ -94,12 +94,6 @@ DATABASES = {
         'PASSWORD': 'hdforsure100%',
         'HOST': 'fyp-database.mysql.database.azure.com',
         'PORT': '3306',
-        # 'ENGINE': 'django.db.backends.mysql',
-        # 'NAME': 'fyp',
-        # 'USER': 'root',
-        # 'PASSWORD': 'password',
-        # 'HOST': 'localhost',
-        # 'PORT': '3306',
     }
 }
 
@@ -159,6 +153,3 @@ CSRF_COOKIE_SECURE = True
 
 CSRF_TRUSTED_ORIGINS = [
     'https://*.intelligenthealthinc.azurewebsites.net/.com', 'https://*.127.0.0.1']
-
-
-# django_heroku.settings(locals())

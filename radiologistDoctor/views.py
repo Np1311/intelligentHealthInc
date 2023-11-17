@@ -25,7 +25,6 @@ def login_user(request):
 
         if user is not None:
             try:
-                # Assuming 'account' is the ForeignKey in Profile
                 user_profile = profile.objects.get(account=user.id)
                 if user_profile.role == 'radiologyDoctor':
 
@@ -72,9 +71,9 @@ def createTemplates(request):
         if form.is_valid():
             template = form.save(commit=False)
 
-            template.doctor = user  # Assuming there's a 'user' field in your FindingsTemplate model
+            template.doctor = user
             template.save()
-            # Redirect to a success page or wherever you want
+
             return redirect('radiologistDoctorHome')
     else:
         form = FindingsTemplateForm()
@@ -114,7 +113,6 @@ def deleteTemplate(request, id):
 
 def updateImageFindings(request, record_id):
     if request.method == 'POST':
-        # Get the predictions and form data from the request
         predictions = request.POST.get('predictions')
         examination = request.POST.get('examination')
         findings = request.POST.get('findings')
@@ -123,7 +121,6 @@ def updateImageFindings(request, record_id):
             user = request.session.get('username')
         else:
             user = 'Guest'
-        # Perform the update operation in your model
         try:
             image_record = Image_Record.objects.get(record_id=record_id)
             radiology_record = RadiologyRecord.objects.get(record_id=record_id)

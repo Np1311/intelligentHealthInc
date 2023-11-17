@@ -68,7 +68,6 @@ class RadiologyRecord(models.Model):
     def cancelEmergency(cls, id):
         try:
             record = cls.objects.get(record_id=id)
-            # Assuming you want to update the request_time to the current datetime
             record.status = 'Registered'
             record.update_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             record.save()
@@ -174,7 +173,7 @@ class RadiologyRecord(models.Model):
             visit_data = [value for value in visit_data if value is not None]
 
             if from_date is None or to_date is None:
-                # If from_date or to_date is None, use the date range from filtered records
+
                 if visit_data:
                     min_date = min(visit_data).date()
                     max_date = max(visit_data).date()

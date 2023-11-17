@@ -69,16 +69,16 @@
         cursor: pointer;
     }
     .search-bar:focus-within .clear-button {
-        display: block; /* Show the clear button when the search bar is focused */
+        display: block; 
         position: absolute;
-        right: 30px; /* Adjust this value to control the icon's position */
+        right: 30px; 
         top: 50%;
         transform: translateY(-50%);
         z-index: 999;
     }
     .search-bar .input-group-text {
         position: absolute;
-        right: 30px; /* Adjust this value to control the icon's position */
+        right: 30px; 
         top: 50%;
         transform: translateY(-50%);
         background-color: transparent;
@@ -133,9 +133,6 @@
     <table class="table table-hover">
         <thead id ='table'>
           <tr>
-            {% comment %} <th scope="col" id="select_all">
-                <input type="checkbox" id="selectAllCheckbox">
-            </th>         {% endcomment %}
             <th scope="col">Record ID</th>
             <th scope="col">Patient Name</th>
             <th scope="col">Patient ID</th>
@@ -158,7 +155,7 @@
                 {% else %}
                     <tr data-href = "{% url 'patient_detail' record.record_id %}">
                 {% endif %}
-                    {% comment %} <td><input type="checkbox" class="rowCheckbox" data-record-id="{{ record.record_id }}"></td> {% endcomment %}
+                    
                     <td>{{ record.record_id }}</td>
                     <td>{{ record.patient_name }}</td>
                     <td>{{ record.patient_id }}</td>
@@ -293,7 +290,7 @@
         
         if (path.includes("medicalTech")) {
             $('.update-request-time-form').on('submit', function(event) {
-                event.preventDefault();  // Prevent default form submission
+                event.preventDefault();  
                 
                 var form = $(this);
                 var url = form.attr('action');
@@ -341,8 +338,6 @@
 
             // Remove any existing status class
             $statusSelect.removeClass("Registered EMERGENCY in-progress Queueing");
-            
-            // Add the appropriate class based on the selected status
             
             if (selectedStatus === "Registered") {
                 $(this).addClass("Registered");

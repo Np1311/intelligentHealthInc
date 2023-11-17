@@ -147,7 +147,6 @@ def create_profile(request):
         if form.is_valid():
             profile = form.save()
 
-            # Check the role in the saved profile and redirect accordingly
             if profile.role == 'medicalTech':
                 return redirect('medicalTech')
             elif profile.role == 'healthcareAdmin':
@@ -178,7 +177,6 @@ def update_profile(request, pk):
         form = update_profile_form(request.POST, instance=current_profile)
         if form.is_valid():
             form.save()
-            # Check the user's role and redirect accordingly
             if current_profile.role == 'medicalTech':
                 return redirect('medicalTech')
             elif current_profile.role == 'healthcareAdmin':

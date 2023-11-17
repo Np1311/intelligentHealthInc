@@ -5,8 +5,8 @@
     <style>
       body {
         font-family: "alata", sans-serif !important;
-        background-image: url("{% static "background.png"%}"); /* Replace with the actual path to your image */
-        background-size: cover; /* Cover the entire .table element */
+        background-image: url("{% static "background.png"%}");
+        background-size: cover;
         background-position: center;
         background-repeat: repeat;
         background-attachment: fixed;
@@ -20,17 +20,14 @@
         background: #eee;
       }
       #submit-button {
-        /* Add custom styles for the "Sign in" button */
         width: 520px;
       }
 
       .mb-5 {
-        /* Add custom styles for the bottom paragraph */
         text-align: center;
         color: #393f81;
       }
       #loginlogo {
-        /*resizing of the picture*/
         width: 200px;
         height: 200px;
         object-fit: cover;
@@ -46,7 +43,7 @@
       .centered-h3 {
         text-align: center;
         margin: 0;
-        font-size: 40px; /* Adjust the font size as needed */
+        font-size: 40px;
         font-family: "Kollektif Regular", sans-serif;
         word-wrap: break-word;
         color: #004aad;
@@ -56,7 +53,7 @@
       .centered-h4 {
         text-align: right;
         margin: 20;
-        font-size: 20px; /* Adjust the font size as needed */
+        font-size: 20px;
         font-family: "Kollektif Regular", sans-serif;
         word-wrap: break-word;
         color: #0099cc;
@@ -75,7 +72,6 @@
           <div
             class="col-md-6 col-lg-5 col-xl-4 d-flex flex-column align-items-center"
           >
-            <!-- static is used to load static files such as images, javascript and css file -->
             <img
               id="loginlogo"
               src="{% static 'logo.png' %}"
@@ -142,12 +138,10 @@
     <script src="{% static 'javascript.js' %}"></script>
     <script>
       $(document).ready(function () {
-        // Clear the alert message when the page is refreshed
         window.onbeforeunload = function () {
           $(".alert").remove();
         };
 
-        // Clear the alert message when the user is redirected to the login page
         $('a[href="/login"]').click(function () {
           $(".alert").remove();
         });

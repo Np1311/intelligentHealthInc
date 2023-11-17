@@ -1,6 +1,6 @@
 from django.db import models
 
-# Create your models here.
+
 class findingsTemplate(models.Model):
     id = models.AutoField(primary_key=True)
     template_name = models.CharField(max_length=255)
@@ -11,7 +11,7 @@ class findingsTemplate(models.Model):
     def viewTemplate(cls):
         templates = cls.objects.all()
         return templates
-    
+
     @classmethod
     def deleteTemplateById(cls, template_id, user):
         try:

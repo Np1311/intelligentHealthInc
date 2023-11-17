@@ -29,13 +29,13 @@
     }
 
     .wide-section {
-        flex-basis: calc(60% - 10px); /* Adjusted flex-basis for wider sections */
+        flex-basis: calc(60% - 10px); 
     }
     .grid-container {
         display: grid;
-        grid-template-columns: repeat(2, 1fr); /* You can adjust the number of columns and their width */
-        gap: 10px; /* Adjust the gap between grid items */
-        padding: 20px; /* Add padding for spacing within the grid container */
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 10px; 
+        padding: 20px; 
     }
     p{
         color: black;
@@ -77,9 +77,9 @@
     .back-button,
     .update-save-button{
         display: inline-block;
-        width: 30%; /* Adjust the width as needed */
+        width: 30%; 
         padding: 10px;
-        margin-bottom: 10px; /* Adjust the margin as needed */
+        margin-bottom: 10px; 
         background-color: #007bff;
         color: #fff;
         border: none;
@@ -127,13 +127,13 @@
         font-color black;
     }
     .appointment-bar {
-        background-color: #E3ECFA; /* Change the background color to your desired color */
+        background-color: #E3ECFA; 
         color: white;
         padding: 10px;
         border-radius: 5px;
-        margin: 0 auto; /* Center the bar horizontally */
-        max-width: 500px; /* Limit the width if needed */
-        text-align: center; /* Center the text within the bar */
+        margin: 0 auto; 
+        max-width: 500px; 
+        text-align: center; 
         margin-top: 50px;
     }
     
@@ -144,7 +144,7 @@
     .appointment-title {
         font-size: 28px;
         text-decoration: underline;
-        margin-bottom: 40px; /* Add some space below the title */
+        margin-bottom: 40px; 
     }
     #imageContainer{
         max-width:600px;
@@ -152,9 +152,9 @@
     }
     
     @media (max-width: 768px) {
-        /* Adjust the layout for smaller screens */
+        
         .section {
-            flex-basis: 100%; /* Single column layout */
+            flex-basis: 100%; 
         }
     }
 </style>
@@ -227,7 +227,6 @@
                     {% if 'medicalTech' in path %}
                         <span id="prediction">{{image_record.prediction}}</span>
                         <br>
-                        {% comment %} <button id='rerun-button' style='display: block;'>Re-run</button>  {% endcomment %}
                     
                     {% endif %}
 
@@ -237,8 +236,6 @@
                         
                     {% else %}
                         <span id="prediction" style="display: none;"></span>
-                        {% comment %} </br>
-                        <button id='rerun-button' style='display: none;'>Re-run</button> {% endcomment %}
                     {% endif %}
                 {% endif %}
 
@@ -257,12 +254,12 @@
         {% endif %}      
     </div>
     <div class="section section4">
-        <!-- Content for the fourth section -->
+        
         {% if 'medicalTech' in path %}
             <h2>Notes</h2>
             <div class="notes-container" style="border: 1px solid #000; padding: 10px; border-radius: 10px; background-color: white;">
                 {% if image_available %}
-                    {% comment %} <span id="notesSpan" onclick="makeEditable()" style="display: inline-block;white-space: pre-wrap;">{{ image_record.notes }}</span> {% endcomment %}
+                    
                     <textarea id="notesInput" placeholder="Enter notes..." style="display: block; width: 100%; resize: vertical;" {% if 'medicalTech' not in path %} onclick="addSaveButton()" {% endif %}> {{ image_record.notes }}</textarea>
                 {% else %}
                     <textarea id="notesInput" placeholder="Enter notes..." style="display: block; width: 100%; resize: vertical;"></textarea>
@@ -277,11 +274,10 @@
     </div>
     {% if 'radiologistDoctor' in path %}
     <div class="section section5" style='height: 200px;'>
-        <!-- Content for the fourth section -->
+        
         
         <h2>Notes</h2>
         <div class="notes-container" style="border: 1px solid #000; padding: 10px; border-radius: 10px; background-color: white;">
-                {% comment %} <span id="notesSpan" onclick="makeEditable()" style="display: inline-block;white-space: pre-wrap;">{{ image_record.notes }}</span> {% endcomment %}
             <textarea id="notesInput" placeholder="Enter notes..." style="display: block; width: 100%; resize: vertical;" disabled > {{ image_record.notes }}</textarea>
             
         </div>
@@ -348,7 +344,6 @@
                 $('#timestamp').hide();
                 imageContainer.src = '';
                 prediction.innerHTML = '';
-                //rerunButton.style.display = 'none';
                 timestampSpan.innerHTML = '';
                 
 
@@ -415,7 +410,7 @@
                                     
                                     $("#prediction").show();
                             
-                                   // $("#rerun-button").show();
+                                   
                             
                                 } catch (error) {
                                     console.error("Error running the model:", error);
@@ -480,7 +475,7 @@
                         "X-CSRFToken": getCookie("csrftoken")
                     },
                     beforeSend: function () {
-                        //$('#loading-spinner').show();
+                       
                         alert('Please wait. Your request is being processed...');
                     },
                     success: function (response) {
@@ -530,12 +525,16 @@
                     headers: {
                         "X-CSRFToken": getCookie("csrftoken")
                     },
+                    beforeSend: function () {
+                
+                        alert('Please wait. Your request is being processed...');
+                    },
                     success: function (response) {
                         window.location.href="{% url 'medical_tech_home'%}";
                         console.log(response);
                     },
                     error: function (xhr, status, error) {
-                        // Handle error here
+                        
                         console.error(error);
                     }
                 });
@@ -550,7 +549,6 @@
         if (updatedNote === '') {
             notesInput.value = 'Currently No Available Notes.';
         }
-        // You may also want to implement saving the updated note to the backend here
     }
     
     function handleKeyDown(event) {
@@ -607,7 +605,6 @@
         imageName.innerHTML = '<i class="fa-regular fa-file-image"></i><span style=\'margin-left: 10px;\'>No file selected</span>';
         imageContainer.innerHTML = '';
         prediction.innerHTML = '';
-        rerunButton.style.display = 'none';
         fileInput.value = '';  
         timestamp.innerHTML = '';
 
@@ -615,12 +612,11 @@
             url: "{% url 'delete_files' record.record_id %}",
             type: "GET",
             beforeSend: function () {
-                //$('#loading-spinner').show();
+                
                 alert('Please wait. Your request is being processed...');
             },
             success: function (response) {
-                console.log(response);  // Log the entire response object for debugging
-                //window.location.href = "{% url 'radiologistDoctorHome'%}";
+                console.log(response);  
             },
             error: function (xhr, status, error, response) {
                 // Handle error here
