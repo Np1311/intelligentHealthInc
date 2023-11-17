@@ -139,40 +139,6 @@
             this.classList.remove('visible');
         });
     });
-
-
-    $(document).ready(function () {
-        $("#downloadButton").click(function () {
-            var selectedIds = [];
-            
-            $(".rowCheckbox:checked").each(function () {
-                selectedIds.push($(this).data("record-id"));
-            });
-            
-            console.log(selectedIds);
-            $.ajax({
-                type: "POST", 
-                url: "{% url 'download_images' %}", 
-                data: JSON.stringify(selectedIds),
-                contentType: "application/json",
-                headers: {
-                    "X-CSRFToken": getCookie("csrftoken") 
-                },
-                success: function(data) {
-                    /*var blob = new Blob([data]);
-                    var link = document.createElement('a');
-                    link.href = window.URL.createObjectURL(blob);
-                    link.download = "downloaded_files.zip";
-                    link.click();*/
-                    console.log(data);
-                },
-                error: function(xhr, status, error) {
-                    console.error("AJAX Error:", status, error);
-                    console.log(xhr.responseText);
-                }
-            });
-        });
-    });
   
 
     $(document).ready(function () {
