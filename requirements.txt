@@ -7,5 +7,4 @@ whitenoise
 pydicom
 matplotlib
 gunicorn
-mpld3
 pillow
