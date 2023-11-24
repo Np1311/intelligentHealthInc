@@ -88,17 +88,11 @@ pymysql.install_as_MySQLdb()
 
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.mysql',
-        # 'NAME': 'fyp',
-        # 'USER': 'master',
-        # 'PASSWORD': 'hdforsure100%',
-        # 'HOST': 'fyp-database.mysql.database.azure.com',
-        # 'PORT': '3306',
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'fyp',
-        'USER': 'root',
-        'PASSWORD': 'password',
-        'HOST': 'localhost',
+        'USER': 'master',
+        'PASSWORD': 'hdforsure100%',
+        'HOST': 'fyp-database.mysql.database.azure.com',
         'PORT': '3306',
     }
 }
