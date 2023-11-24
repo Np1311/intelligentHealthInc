@@ -56,7 +56,12 @@
     <div class="content">
         {% if permission_denied %}
             <div class="alert alert-danger" id="permissionAlert" >
+                {% if 'createTemplate' in path %}
+                <strong>Permission Denied:</strong> You are not allowed to create a template, please update instead.
+                {% else %}
                 <strong>Permission Denied:</strong> You are not allowed to change the template
+                {% endif %}
+                
             </div>
         {% endif %}
         

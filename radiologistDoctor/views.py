@@ -62,6 +62,12 @@ def get_record(request):
 
 
 def createTemplates(request):
+    doctors_list = findingsTemplate.objects.values_list(
+        'doctor', flat=True).distinct()
+    current_username = request.session.get('username')
+    permission_denied = current_username in doctors_list
+    path = request.path
+
     if 'username' in request.session:
         user = request.session.get('username')
     else:
@@ -78,7 +84,7 @@ def createTemplates(request):
     else:
         form = FindingsTemplateForm()
 
-    return render(request, 'template_form.html', {'form': form, 'user': user})
+    return render(request, 'template_form.html', {'form': form, 'user': user, 'permission_denied': permission_denied, 'path': path})
 
 
 def updateTemplate(request, id):
