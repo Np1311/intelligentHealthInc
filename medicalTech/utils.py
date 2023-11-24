@@ -1,8 +1,7 @@
 from io import BytesIO
 import os
 import base64
-import tempfile
-import mpld3
+
 from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
